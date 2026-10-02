@@ -65,6 +65,8 @@ npm run test:contract
 - Jika snapshot YouTube gagal atau jendela hasil 15 menit lewat, tick mem-void Call. Bukti snapshot menyertakan waktu, angka, sumber, dan hash. Koreksi views setelah resolusi memerlukan kebijakan sengketa manusia; belum otomatis.
 - Endpoint operator belum memiliki antrean terdistribusi atau rekonsiliasi transaksi otomatis. Jalankan satu worker; periksa status database dan chain setelah gangguan jaringan. Jangan gunakan live mode publik sebelum audit operasional ini.
 - Reputasi Early & Right, Wilson lower bound, dan leaderboard bersyarat belum dihubungkan ke data onchain. Belum ada submission yang dapat mengklaim fitur itu berjalan.
+- `npm audit --omit=dev` saat ini melaporkan advisory pada dependency transitif wallet, termasuk satu tingkat tinggi (`ws`). Tinjau dan perbarui rantai dependency sebelum publikasi. Build juga memberi peringatan optional peer `@farcaster/mini-app-solana` dari Privy; build tetap selesai.
+- Channel dan komentar live belum tersambung ke database; halaman Community yang ada tetap demo lokal.
 
 ## Persiapan submission
 
