@@ -1,0 +1,39 @@
+{
+  "name": "hive-metropolis",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:contract": "node --test test/hive-call.test.mjs",
+    "compile:contract": "node scripts/compile-contract.mjs",
+    "deploy:contract": "node --env-file=.env.local scripts/deploy-contract.mjs",
+    "create:call": "node --env-file=.env.local scripts/create-call.mjs"
+  },
+  "dependencies": {
+    "@privy-io/react-auth": "^3.17.0",
+    "jose": "^6.0.0",
+    "lucide-react": "^0.468.0",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "viem": "^2.38.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.0.0",
+    "ganache": "^7.9.2",
+    "solc": "^0.8.24",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
