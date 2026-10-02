@@ -3,7 +3,7 @@ import { type Hex } from "viem";
 import { contractConfig, db, operatorWallet, privyUser, publicClient, verifyCommitSignature } from "@/lib/server/live";
 
 export const runtime = "nodejs";
-type Intent = { id: string; call_id: string; privy_user_id: string; wallet_address: Hex; commitment_hash: Hex; authorization_digest: Hex; nonce: string; status: string };
+type Intent = { id: string; call_id: string; privy_user_id: string; wallet_address: Hex; commitment_hash: Hex; authorization_digest: Hex; nonce: string; authorization_deadline: string; status: string };
 type DbCall = { chain_call_id: Hex };
 
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
@@ -25,7 +25,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     const claimed = await db<Intent[]>("hive_choice_intents", `?id=eq.${encodeURIComponent(id)}&status=eq.prepared`, { method: "PATCH", body: JSON.stringify({ status: "submitting" }) });
     if (claimed.length !== 1) return Response.json({ error: "Pilihan sedang diproses" }, { status: 409 });
     const wallet = operatorWallet();
-    const hash = await wallet.writeContract({ ...contract, functionName: "commit", args: [calls[0].chain_call_id, intent.commitment_hash, intent.wallet_address, BigInt(intent.nonce), signature as Hex], gas: BigInt(200000) });
+    const hash = await wallet.writeContract({ ...contract, functionName: "commit", args: [calls[0].chain_call_id, intent.commitment_hash, intent.wallet_address, BigInt(intent.nonce), BigInt(intent.authorization_deadline), signature as Hex], gas: BigInt(200000) });
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
     await db("hive_choice_intents", `?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify({ status: receipt.status === "success" ? "locked" : "failed", commit_tx_hash: hash }) });
     if (receipt.status !== "success") throw new Error("Commit ditolak oleh kontrak");

@@ -28,12 +28,13 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
     const ipRecent = await db<Intent[]>("hive_choice_intents", `?client_ip=eq.${encodeURIComponent(ip)}&created_at=gte.${encodeURIComponent(dayAgo)}&select=id`);
     if (ipRecent.length >= 20) return Response.json({ error: "Batas pilihan dari jaringan ini tercapai" }, { status: 429 });
-    const salt = `0x${randomBytes(32).toString("hex")}` as Hex;
-    const commitment = keccak256(encodeAbiParameters(parseAbiParameters("string,uint256,address,bytes32,address,bool,bytes32"), ["HIVE_CHOICE_V2", BigInt(10143), contract.address, call.chain_call_id, wallet as Hex, choice, salt]));
     const nonce = await publicClient.readContract({ ...contract, functionName: "nonces", args: [wallet as Hex] });
-    const digest = await publicClient.readContract({ ...contract, functionName: "authorizationDigest", args: [call.chain_call_id, commitment, wallet as Hex, nonce] });
+    const salt = `0x${randomBytes(32).toString("hex")}` as Hex;
+    const commitment = keccak256(encodeAbiParameters(parseAbiParameters("string,uint256,address,bytes32,address,bool,uint256,bytes32"), ["HIVE_CHOICE_V2", BigInt(10143), contract.address, call.chain_call_id, wallet as Hex, choice, nonce, salt]));
+    const authorizationDeadline = BigInt(Math.min(Number(closesAt), Math.floor(now / 1000) + 10 * 60));
+    const digest = await publicClient.readContract({ ...contract, functionName: "authorizationDigest", args: [call.chain_call_id, commitment, wallet as Hex, nonce, authorizationDeadline] });
     const sealed = seal({ choice, salt });
-    const inserted = await db<Intent[]>("hive_choice_intents", "", { method: "POST", body: JSON.stringify({ call_id: id, privy_user_id: userId, wallet_address: wallet.toLowerCase(), client_ip: ip, sealed_choice: sealed, commitment_hash: commitment, authorization_digest: digest, nonce: nonce.toString(), status: "prepared" }) });
+    const inserted = await db<Intent[]>("hive_choice_intents", "", { method: "POST", body: JSON.stringify({ call_id: id, privy_user_id: userId, wallet_address: wallet.toLowerCase(), client_ip: ip, sealed_choice: sealed, commitment_hash: commitment, authorization_digest: digest, nonce: nonce.toString(), authorization_deadline: authorizationDeadline.toString(), status: "prepared" }) });
     return Response.json({ intentId: inserted[0].id, digest, commitment, chainId: 10143 });
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "Gagal menyiapkan pilihan" }, { status: 400 });

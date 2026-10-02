@@ -7,12 +7,12 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:contract": "node --test test/hive-call.test.mjs",
-    "compile:contract": "node scripts/compile-contract.mjs",
-    "deploy:contract": "node --env-file=.env.local scripts/deploy-contract.mjs",
+    "test:contract": "node scripts/forge.mjs test",
+    "compile:contract": "node scripts/forge.mjs build",
+    "deploy:contract": "node scripts/forge.mjs script script/DeployHiveCallV2.s.sol:DeployHiveCallV2 --rpc-url https://testnet-rpc.monad.xyz --broadcast",
     "create:call": "node --env-file=.env.local scripts/create-call.mjs"
   },
   "dependencies": {
@@ -31,8 +31,6 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.0.0",
-    "ganache": "^7.9.2",
-    "solc": "^0.8.24",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
   }

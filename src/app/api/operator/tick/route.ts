@@ -5,6 +5,8 @@ export const runtime = "nodejs";
 type DbCall = { id: string; content_id: string; chain_call_id: Hex; baseline_views: number; target_views: number; opened_at: string; scheduled_closes_at: string; reveal_deadline: string; evaluation_at: string; status: string };
 type DbContent = { video_id: string };
 type Intent = { id: string; wallet_address: Hex; sealed_choice: string; status: string };
+type ResultSnapshot = { views: number; snapshot_hash: Hex; observed_at: string };
+type PeakSnapshot = { views: number };
 
 async function sampleYoutube(call: DbCall, purpose: "poll" | "result") {
   const content = (await db<DbContent[]>("hive_contents", `?id=eq.${call.content_id}&select=video_id`))[0];
@@ -23,7 +25,7 @@ async function sampleYoutube(call: DbCall, purpose: "poll" | "result") {
   const observedAt = new Date().toISOString();
   const snapshotHash = sha256Hex(JSON.stringify({ videoId: content.video_id, views, observedAt, source: "YouTube Data API" }));
   await db("hive_snapshots", "", { method: "POST", body: JSON.stringify({ call_id: call.id, views, snapshot_hash: snapshotHash, observed_at: observedAt, purpose }) });
-  return { views, snapshotHash };
+  return { views, snapshotHash, observedAt };
 }
 
 async function transaction(functionName: "closeEarly" | "reveal" | "resolve" | "voidCall", args: readonly unknown[]) {
@@ -68,18 +70,35 @@ async function processCall(call: DbCall) {
   }
 
   if (now >= Date.parse(call.evaluation_at)) {
-    try {
-      if (now > Date.parse(call.evaluation_at) + 15 * 60_000) throw new Error("Result snapshot window expired");
-      const sample = await sampleYoutube(call, "result");
-      const hash = await transaction("resolve", [call.chain_call_id, BigInt(sample.views), sample.snapshotHash]);
-      await db("hive_calls", `?id=eq.${call.id}`, { method: "PATCH", body: JSON.stringify({ status: "resolved", result_views: sample.views, result_snapshot_hash: sample.snapshotHash, resolve_tx_hash: hash }) });
-      return "resolved";
-    } catch (error) {
-      const reason = error instanceof Error ? error.message : "Source failed";
+    const windowEnd = Date.parse(call.evaluation_at) + 30 * 60_000;
+    const saved = await db<ResultSnapshot[]>("hive_snapshots", `?call_id=eq.${call.id}&purpose=eq.result&observed_at=gte.${encodeURIComponent(call.evaluation_at)}&observed_at=lte.${encodeURIComponent(new Date(windowEnd).toISOString())}&select=views,snapshot_hash,observed_at&order=observed_at.asc&limit=1`);
+    if (now > windowEnd && !saved.length) {
+      const reason = "source_unavailable";
       const hash = await transaction("voidCall", [call.chain_call_id, sha256Hex(reason)]);
       await db("hive_calls", `?id=eq.${call.id}`, { method: "PATCH", body: JSON.stringify({ status: "void", void_reason: reason, resolve_tx_hash: hash }) });
       return "void";
     }
+    let sample: Awaited<ReturnType<typeof sampleYoutube>>;
+    if (saved.length) {
+      sample = { views: saved[0].views, snapshotHash: saved[0].snapshot_hash, observedAt: saved[0].observed_at };
+    } else {
+      try {
+        sample = await sampleYoutube(call, "result");
+      } catch {
+        return "source retry pending";
+      }
+    }
+    const peak = await db<PeakSnapshot[]>("hive_snapshots", `?call_id=eq.${call.id}&select=views&order=views.desc&limit=1`);
+    if (sample.views < call.baseline_views || (peak[0] && sample.views < peak[0].views)) {
+      const reason = "metric_correction";
+      const reasonHash = sha256Hex(JSON.stringify({ reason, previousPeak: peak[0]?.views ?? call.baseline_views, resultSnapshotHash: sample.snapshotHash }));
+      const hash = await transaction("voidCall", [call.chain_call_id, reasonHash]);
+      await db("hive_calls", `?id=eq.${call.id}`, { method: "PATCH", body: JSON.stringify({ status: "void", void_reason: reason, result_views: sample.views, result_snapshot_hash: sample.snapshotHash, resolve_tx_hash: hash }) });
+      return "void metric correction";
+    }
+    const hash = await transaction("resolve", [call.chain_call_id, BigInt(sample.views), BigInt(Math.floor(Date.parse(sample.observedAt) / 1000)), sample.snapshotHash]);
+    await db("hive_calls", `?id=eq.${call.id}`, { method: "PATCH", body: JSON.stringify({ status: "resolved", result_views: sample.views, result_snapshot_hash: sample.snapshotHash, resolve_tx_hash: hash }) });
+    return "resolved";
   }
   return "waiting";
 }

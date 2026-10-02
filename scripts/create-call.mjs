@@ -25,19 +25,19 @@ const seconds = durationMatch ? Number(durationMatch[1] ?? 0) * 3600 + Number(du
 if (seconds > 180) throw new Error(`Duration ${duration} exceeds 3 minutes; curate a Short manually`);
 
 const account = privateKeyToAccount(process.env.RELAYER_PRIVATE_KEY);
-const chain = { id: 10143, name: "Monad Testnet", nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 }, rpcUrls: { default: { http: ["https://rpc.testnet.monad.xyz"] } }, blockExplorers: { default: { name: "Monadscan", url: "https://testnet.monadscan.com" } }, testnet: true };
+const chain = { id: 10143, name: "Monad Testnet", nativeCurrency: { name: "MON", symbol: "MON", decimals: 18 }, rpcUrls: { default: { http: ["https://testnet-rpc.monad.xyz"] } }, blockExplorers: { default: { name: "Monadscan", url: "https://testnet.monadscan.com" } }, testnet: true };
 const wallet = createWalletClient({ account, chain, transport: http() });
 const client = createPublicClient({ chain, transport: http() });
 const address = process.env.NEXT_PUBLIC_MONAD_CONTRACT_ADDRESS;
 const abi = compileHiveCall().abi;
-const now = Math.floor(Date.now() / 1000);
+const now = Number((await client.getBlock()).timestamp);
 const closesAt = now + Math.floor(horizon * 3600 / 4);
 const evaluationAt = now + horizon * 3600;
-const revealDeadline = closesAt + 30 * 60;
+const revealDeadline = closesAt + 60 * 60;
 const callId = keccak256(toHex(`${videoId}:${now}:${target}`));
 const sourceUrl = `https://www.youtube.com/shorts/${videoId}`;
 const sourceHash = `0x${createHash("sha256").update(JSON.stringify({ videoId, sourceUrl, api: "YouTube Data API v3" })).digest("hex")}`;
-const rulesHash = `0x${createHash("sha256").update(JSON.stringify({ baseline, target, horizon, closesAt, evaluationAt, revealDeadline, earlyClose: "halfway from baseline to target", evaluationWindowMinutes: 15 })).digest("hex")}`;
+const rulesHash = `0x${createHash("sha256").update(JSON.stringify({ baseline, target, horizon, closesAt, evaluationAt, revealDeadline, earlyClose: "halfway from baseline to target", evaluationWindowMinutes: 30 })).digest("hex")}`;
 const hash = await wallet.writeContract({ address, abi, functionName: "createCall", args: [callId, sourceHash, rulesHash, BigInt(now), BigInt(closesAt), BigInt(evaluationAt), BigInt(revealDeadline), BigInt(baseline), BigInt(target)] });
 const receipt = await client.waitForTransactionReceipt({ hash });
 if (receipt.status !== "success") throw new Error(`CreateCall failed ${hash}`);

@@ -1,5 +1,6 @@
 export type CallStatus = "open" | "pending" | "locked" | "closed" | "revealing" | "resolved" | "void";
 export type Choice = "yes" | "no";
+export type PredictionCategory = "sport" | "gaming" | "lagu";
 
 export type Content = {
   id: string;
@@ -12,11 +13,21 @@ export type Content = {
   visual: "purple" | "orange" | "blue" | "green";
   callId?: string;
   minutes: number;
+  video?: {
+    src: string;
+    sourceUrl: string;
+    author: string;
+    license: string;
+    licenseUrl: string;
+    cropPosition: string;
+    hasAudio: boolean;
+  };
 };
 
 export type Call = {
   id: string;
   contentId: string;
+  predictionCategory: PredictionCategory;
   question: string;
   baselineViews: number;
   targetViews: number;
@@ -32,26 +43,68 @@ export type Call = {
 export const contents: Content[] = [
   {
     id: "pixel-rush",
-    creator: "NARA PLAY",
-    handle: "@naraplay",
-    title: "Satu detik sebelum clutch paling absurd minggu ini",
-    description: "Klip ranked yang mulai ramai dibagikan di komunitas FPS Indonesia. Apakah momentumnya akan terus naik?",
-    category: "FPS · Indonesia",
+    creator: "Xbox México",
+    handle: "@xboxmexico",
+    title: "Aksi Dishonored 2 dalam sepuluh detik",
+    description: "Cuplikan gameplay Dishonored 2. Pertanyaan views di samping adalah skenario HIVE, bukan metrik video ini.",
+    category: "Action stealth · Demo Call",
     kind: "predictable",
     visual: "purple",
     callId: "rush-views",
     minutes: 38,
+    video: {
+      src: "/videos/dishonored-2-gameplay.webm",
+      sourceUrl: "https://commons.wikimedia.org/wiki/File:Dishonored_2_gameplay_clip.webm",
+      author: "Xbox México",
+      license: "CC BY 3.0",
+      licenseUrl: "https://creativecommons.org/licenses/by/3.0/",
+      cropPosition: "50% 50%",
+      hasAudio: false,
+    },
   },
   {
     id: "indie-world",
-    creator: "Ruang Indie",
-    handle: "@ruangindie",
-    title: "Game buatan lokal ini punya dunia yang terasa hidup",
-    description: "Insight komunitas: desain dunia dan detail animasinya layak diperhatikan. Konten ini tidak punya Call.",
-    category: "Indie · Insight",
+    creator: "Xbox México",
+    handle: "@xboxmexico",
+    title: "Kembali melihat dunia Minecraft Beta",
+    description: "Cuplikan gameplay Minecraft Beta. Konten insight ini tidak memiliki prediksi.",
+    category: "Minecraft · Insight",
     kind: "insight",
     visual: "orange",
     minutes: 84,
+    video: {
+      src: "/videos/minecraft-beta-gameplay.webm",
+      sourceUrl: "https://commons.wikimedia.org/wiki/File:Minecraft_Beta_Gameplay.webm",
+      author: "Xbox México",
+      license: "CC BY 3.0",
+      licenseUrl: "https://creativecommons.org/licenses/by/3.0/",
+      cropPosition: "50% 50%",
+      hasAudio: false,
+    },
+  },
+  {
+    id: "matchday-highlight",
+    creator: "HIVE Demo",
+    handle: "@hive-demo",
+    title: "Cuplikan laga yang jadi bahan obrolan",
+    description: "Contoh konten Sport untuk menguji tampilan katalog. Video dan metrik sumber belum terhubung.",
+    category: "Sport · Demo Call",
+    kind: "predictable",
+    visual: "blue",
+    callId: "matchday-views",
+    minutes: 28,
+  },
+  {
+    id: "new-track",
+    creator: "HIVE Demo",
+    handle: "@hive-demo",
+    title: "Rilisan lagu baru di feed",
+    description: "Contoh konten Lagu untuk menguji tampilan katalog. Video dan metrik sumber belum terhubung.",
+    category: "Lagu · Demo Call",
+    kind: "predictable",
+    visual: "orange",
+    callId: "new-track-views",
+    minutes: 41,
   },
   {
     id: "speedrun",
@@ -82,7 +135,8 @@ export const calls: Call[] = [
   {
     id: "rush-views",
     contentId: "pixel-rush",
-    question: "Apakah klip ini mencapai 22.000 views dalam 6 jam?",
+    predictionCategory: "gaming",
+    question: "Tembus 22.000 views dalam 6 jam?",
     baselineViews: 12000,
     targetViews: 22000,
     currentViews: 14380,
@@ -92,8 +146,35 @@ export const calls: Call[] = [
     status: "open",
   },
   {
+    id: "matchday-views",
+    contentId: "matchday-highlight",
+    predictionCategory: "sport",
+    question: "Cuplikan laga ini tembus 20.000 views dalam 6 jam?",
+    baselineViews: 9000,
+    targetViews: 20000,
+    currentViews: 9000,
+    horizonHours: 6,
+    scheduledClosesAt: "2026-10-03T15:30:00+07:00",
+    evaluationAt: "2026-10-03T20:00:00+07:00",
+    status: "open",
+  },
+  {
+    id: "new-track-views",
+    contentId: "new-track",
+    predictionCategory: "lagu",
+    question: "Video lagu ini tembus 50.000 views dalam 24 jam?",
+    baselineViews: 35000,
+    targetViews: 50000,
+    currentViews: 35000,
+    horizonHours: 24,
+    scheduledClosesAt: "2026-10-03T18:00:00+07:00",
+    evaluationAt: "2026-10-04T12:00:00+07:00",
+    status: "open",
+  },
+  {
     id: "speedrun-views",
     contentId: "speedrun",
+    predictionCategory: "gaming",
     question: "Apakah speedrun ini mencapai 30.000 views dalam 24 jam?",
     baselineViews: 17400,
     targetViews: 30000,
