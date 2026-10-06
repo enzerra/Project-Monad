@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Compass, TrendingUp, UserRound, Users } from "lucide-react";
+import { VibeBrand } from "@/components/vibe-brand";
 import "./discover-viewer.css";
 
 type SidebarSection = "discover" | "predictions" | "community" | "profile";
@@ -22,7 +23,7 @@ export function HiveSidebar({ active, onExpandedChange }: { active: SidebarSecti
       onFocusCapture={() => onExpandedChange(true)}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null) && !event.currentTarget.matches(":hover")) onExpandedChange(false); }}
     >
-      <Link href="/" className="discover-logo" aria-label="HIVE Discover"><span className="discover-logo-mark">H<span>.</span></span><span className="discover-logo-full">HIVE<span>.</span></span></Link>
+      <Link href="/" className="discover-logo" aria-label="VIBE Discover"><VibeBrand /></Link>
       <div className="discover-sidebar-links">
         {links.map(({ section, href, label, icon: Icon }) => (
           <Link key={section} href={href} className={`discover-nav-link ${active === section ? "is-active" : ""}`} aria-current={active === section ? "page" : undefined} aria-label={label} title={label}><Icon size={24} strokeWidth={1.8} /><span>{label}</span></Link>

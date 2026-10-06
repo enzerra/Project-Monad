@@ -1,13 +1,16 @@
-# HIVE Metropolis
+# VIBE Metropolis
 
-HIVE menghubungkan Discover, Prediction, dan Community untuk konten Gaming. Repositori ini adalah **implementasi baru** untuk Metropolis Track 03. Konsep dan aturan produk ada di [PRD](HIVE_METROPOLIS_FINAL_PRD.md).
+VIBE menghubungkan Discover, Prediction, dan Community untuk konten Gaming, Sports, dan Crypto. Repositori ini adalah **implementasi baru** untuk Metropolis Track 03. Konsep dan aturan produk ada di [PRD](HIVE_METROPOLIS_FINAL_PRD.md).
+
+Nama produk yang tampil kepada pengguna adalah **VIBE**. Beberapa nama teknis lama (`HiveCallV2`, tabel `hive_*`, domain tanda tangan `HIVE_CHOICE_V2`, dan kunci localStorage) tetap dipertahankan agar kontrak, data, dan pilihan demo yang sudah ada tetap kompatibel. Logo VIBE berasal dari aset pemilik proyek dan tercatat di [ASSETS.md](ASSETS.md).
 
 ## Status saat ini
 
-- Frontend interaktif memakai **fixtures berlabel demo** dan menyimpan pilihan/komentar hanya di browser.
+- Saldo gratis **1.000 VIBE per sesi server**, nominal **10–500 VIBE per Call**. Benar mengembalikan **2×** nominal; void mengembalikan nominal sekali. Saldo/Call/bukti tersimpan atomik di SQLite. Aturan: [PRD Call Shorts](VIBE_SOURCE_CALL_PRD.md).
+- Discover/Prediksi memakai Shorts dan metrik YouTube nyata. Call dibuka setelah dua pemeriksaan minimal 30 menit dan pertumbuhan positif. Komentar/Community tetap lokal.
 - `contracts/HiveCallV2.sol` adalah kontrak commit–reveal untuk Monad yang dibangun dan diuji dengan Foundry; alamat deployment belum ada.
-- Halaman Result yang berlabel demo **bukan bukti transaksi atau snapshot YouTube nyata**.
-- Kode integrasi Privy, relayer, database, API YouTube, dan proof live tersedia, tetapi **belum diaktifkan atau diuji end-to-end** karena kredensial belum tersedia.
+- Call Shorts menampilkan bukti pemeriksaan YouTube dan riwayat saldo; tidak mengklaim proof onchain. Call fixture lama menjadi arsip demo dan tidak menerima kredit server.
+- Jalur Privy, relayer, dan Supabase/Monad tetap belum dikonfigurasi. Cookie anonim mengenali saldo server; belum sinkron akun lintas perangkat. Data saldo browser lama tidak diimpor atau dihapus.
 
 ## Jalankan lokal
 
@@ -20,6 +23,16 @@ npm run dev
 ```
 
 Buka <http://localhost:3000>. Biarkan variabel pada `.env.local` kosong untuk mode demo. Jangan menaruh private key atau API key di variabel `NEXT_PUBLIC_` atau commit ke Git.
+
+Jika `YOUTUBE_API_KEY` diisi, Discover menampilkan 20 Shorts publik terkurasi dari Gaming, Sports, dan Crypto. Server memeriksa judul, kreator, izin embed, durasi, orientasi, dan views melalui YouTube Data API; pemutaran memakai player resmi. Collector memeriksa views setiap 30 detik, dan penerbitan Call memakai dua pemeriksaan berjarak minimal 30 menit. API gagal menampilkan opsi mencoba lagi tanpa metrik buatan. Angka dapat tetap sama sampai YouTube memperbarui data. Jangan menaruh key pada `.env.example`.
+
+### Penyimpanan server dan collector
+
+Node.js 22.15+ menyediakan `node:sqlite` (masih experimental pada versi ini). Development menyimpan `.vibe-data/vibe.sqlite`, diabaikan Git. Production wajib `VIBE_STORE_PATH` pada volume persisten dan satu host Node yang terus hidup; backend saldo menolak production tanpa path ini. Jangan gunakan filesystem sementara/serverless untuk timer dan saldo ini.
+
+`src/instrumentation.ts` memeriksa API setiap 30 detik, termasuk saat tab ditutup. Saldo, kalibrasi, Call, dan hasil bertahan saat restart. Server yang mati sampai melewati jendela evaluasi 30 menit memicu void/refund, bukan hasil dari views terlambat. Cadangkan database menggunakan backup SQLite yang konsisten dengan WAL.
+
+Player mencoba autoplay dengan suara. Jika browser memblokirnya, player melanjutkan tanpa suara dan tombol play dapat dipakai untuk mengaktifkan suara. Kontrol pemutaran VIBE hanya play/pause; branding dan elemen asli player YouTube tetap mengikuti aturan YouTube.
 
 ```sh
 npm run typecheck
@@ -35,26 +48,26 @@ npm run compile:contract
 
 Untuk setiap Call, komitmen mengikat chain ID, alamat kontrak, Call ID, wallet, pilihan Ya/Tidak, nonce wallet, dan salt acak. Otorisasi relayer ditandatangani wallet melalui `personal_sign` dan memiliki deadline sendiri. Kontrak menerima satu komitmen per wallet/Call; reveal baru dapat dilakukan setelah penutupan efektif. Tally resmi tersedia setelah semua pilihan terungkap atau batas reveal terlewati. Hasil memakai snapshot yang waktu observasinya berada dalam 30 menit sejak evaluasi. Resolver tetap merupakan pihak tepercaya untuk angka dan waktu snapshot YouTube; hash di chain tidak mengubah API menjadi oracle trustless.
 
-## Alur demo lokal
+## Alur Call Shorts lokal
 
-1. Buka `/` untuk masuk langsung ke Discover. Bandingkan video insight dan video dengan Call.
-2. Pilih Ya/Tidak pada Call di samping video. Status pilihan demo disimpan **lokal**; tidak ada transaksi blockchain.
+1. Isi key API YouTube dan jalankan server. Buka Discover. Setelah pengamatan 30 menit dan pertumbuhan positif, Call muncul pada maksimum satu video per kategori; Prediksi menunjukkan status pengamatan selama menunggu.
+2. Ketuk Call di dock mobile atau katalog. Pilih Ya/Tidak dengan nominal 50 VIBE; potensi kembali 100 ditampilkan sebelum konfirmasi. Saldo dan pilihan disimpan di server, tanpa transaksi blockchain.
 3. Buka Predictions untuk melihat kumpulan Call, lalu bagikan Call yang sama ke channel Community dan tulis pesan.
-4. Buka hasil Call Speedrun untuk melihat skenario Result. Angka dan outcome pada layar itu adalah fixture.
+4. Pada evaluasi 6 jam: pilihan benar menerima 2×, salah tidak menerima pengembalian, void menerima refund. Bukti dan riwayat tersedia di detail/profil. Hasil live belum boleh diklaim sebelum evaluasi nyata; tes memakai waktu terkontrol.
 
 ## Arsitektur target
 
 - Next.js/React untuk antarmuka dan API.
 - Privy Google login dan embedded wallet; tanda tangan otorisasi eksplisit per Call.
 - Kontrak V2 di Monad Testnet untuk commit, closeEarly, reveal, tally, resolve/void. `foundry.toml`, tes Solidity di `test/foundry`, dan skrip deploy di `script` menjadi sumber build kontrak. Skrip aplikasi membaca ABI/bytecode dari `out/HiveCallV2.sol/HiveCallV2.json`.
-- Relayer HIVE membayar gas; resolver mengambil angka YouTube Data API. Bukti waktu pilihan dan hasil onchain tidak membuktikan kebenaran sumber YouTube secara trustless.
+- Relayer VIBE membayar gas; resolver mengambil angka YouTube Data API. Bukti waktu pilihan dan hasil onchain tidak membuktikan kebenaran sumber YouTube secara trustless.
 - Data sosial dan snapshot operasional disimpan offchain; event kontrak dapat diindeks Envio setelah alur inti stabil.
 
 ## Mengaktifkan alur live
 
 1. Buat aplikasi Privy dengan Google login dan embedded EVM wallet. Salin app ID dan verification key ke `.env.local`.
 2. Buat proyek Supabase baru dan jalankan [migrasi SQL](supabase/migrations/202610020001_hive_metropolis.sql). Simpan URL dan service-role key hanya di server.
-3. Aktifkan YouTube Data API v3 dan buat API key. Operator harus memeriksa video Gaming, hak kurasi, dan status Shorts sebelum membuat Call.
+3. Aktifkan YouTube Data API v3 dan buat API key. Operator harus memeriksa video dari kategori Gaming, Sports, atau Crypto, hak kurasi, dan status Shorts sebelum membuat Call.
 4. Buat wallet operator khusus Testnet, isi `RELAYER_PRIVATE_KEY`, dan beri MON Testnet. Wallet ini menjadi owner, keeper, resolver, dan pembayar gas.
 5. Buat kunci enkripsi pilihan 32 byte, misalnya `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`, lalu isi `CHOICE_ENCRYPTION_KEY`. Simpan cadangan aman; tanpa kunci ini pilihan tidak bisa di-reveal.
 6. Isi `OPERATOR_API_KEY` acak yang kuat. Jalankan `npm run compile:contract` dan `npm run test:contract`. Untuk deploy Foundry, masukkan `RELAYER_PRIVATE_KEY` ke environment terminal yang menjalankan Forge, lalu jalankan `npm run deploy:contract`. Ambil alamat dari output/broadcast Foundry dan isi `NEXT_PUBLIC_MONAD_CONTRACT_ADDRESS`. Jangan deploy sebelum kredensial dan gas Testnet siap.
@@ -80,7 +93,7 @@ Sebelum submission: deploy kontrak dan aplikasi, catat chain ID/alamat/hash cont
 
 ## Atribusi dan asal kode
 
-Kode aplikasi dalam repositori ini dibuat sebagai proyek baru selama Metropolis. Repo HIVE lama dipakai hanya sebagai referensi produk; tidak ada file kode atau aset yang dipindahkan ke sini. Dependency open source tercantum di `package.json` dan `package-lock.json`. Dua cuplikan video berlisensi CC BY 3.0 dipakai untuk demo Discover; sumber, kredit, dan lisensinya dicatat di [ASSETS.md](ASSETS.md).
+Kode aplikasi dalam repositori ini dibuat sebagai proyek baru selama Metropolis. Repo HIVE lama dipakai hanya sebagai referensi produk; tidak ada file kode atau aset yang dipindahkan ke sini. Dependency open source tercantum di `package.json` dan `package-lock.json`. Discover memakai 20 YouTube Shorts pilihan (7 Gaming, 7 Sports, 6 Crypto) melalui player resmi. API memeriksa status publik, izin embed, durasi maksimal 3 menit, dan rasio vertikal sebelum menampilkan klip. Saat API gagal, feed menampilkan opsi mencoba lagi. Dua cuplikan CC BY 3.0 lama tetap tersimpan sebagai aset demo Prediksi; seluruh sumber dan kredit dicatat di [ASSETS.md](ASSETS.md).
 
 AI coding tools digunakan untuk membantu penulisan kode, dokumentasi, dan peninjauan. Semua hasilnya perlu diuji dan ditinjau manusia sebelum submission.
 

@@ -21,7 +21,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     if (Date.now() >= Number(closesAt) * 1000) return Response.json({ error: "Jendela pilihan telah tutup" }, { status: 409 });
     const dayAgo = new Date(Date.now() - 24 * 60 * 60_000).toISOString();
     const daily = await db<Intent[]>("hive_choice_intents", `?status=in.(submitting,locked,revealed,unrevealed)&created_at=gte.${encodeURIComponent(dayAgo)}&select=id`);
-    if (daily.length >= Number(process.env.MAX_DAILY_COMMITS ?? 50)) return Response.json({ error: "Plafon gas harian HIVE tercapai" }, { status: 429 });
+    if (daily.length >= Number(process.env.MAX_DAILY_COMMITS ?? 50)) return Response.json({ error: "Plafon gas harian VIBE tercapai" }, { status: 429 });
     const claimed = await db<Intent[]>("hive_choice_intents", `?id=eq.${encodeURIComponent(id)}&status=eq.prepared`, { method: "PATCH", body: JSON.stringify({ status: "submitting" }) });
     if (claimed.length !== 1) return Response.json({ error: "Pilihan sedang diproses" }, { status: 409 });
     const wallet = operatorWallet();

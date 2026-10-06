@@ -1,5 +1,7 @@
 # PRD Final — HIVE
 
+> **Pembaruan 4 Oktober 2026:** nama produk VIBE dan perluasan simulasi saldo gratis tercatat di [addendum saldo virtual](VIBE_VIRTUAL_TOKEN_PRD.md). Dokumen ini tetap merupakan versi historis.
+
 > **Dokumen ini telah digantikan** oleh [PRD HIVE untuk Metropolis Hackathon](HIVE_METROPOLIS_FINAL_PRD.md), yang menggabungkan aturan Call, commit–reveal Monad, dan batas scope hackathon.
 
 **Versi:** 1.0 · 1 Oktober 2026  

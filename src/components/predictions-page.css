@@ -37,7 +37,7 @@
 .predictions-card-top { display: flex; align-items: center; gap: 11px; min-width: 0; }
 .predictions-card-icon { display: grid; place-items: center; flex: 0 0 auto; width: 42px; height: 42px; border: 1px solid #3e3d59; border-radius: 9px; background: #272639; color: #c2bfff; }
 .predictions-card-icon.category-sport { border-color: #3b4950; background: #202d33; color: #a8d8db; }
-.predictions-card-icon.category-lagu { border-color: #4b403b; background: #332922; color: #efc7a1; }
+.predictions-card-icon.category-crypto { border-color: #4b403b; background: #332922; color: #efc7a1; }
 .predictions-card-category { color: #bfc3cc; font-size: 12px; font-weight: 800; }
 .predictions-card-status { margin-left: auto; color: #aaa5ff; font-size: 11px; font-weight: 800; text-align: right; }
 .predictions-card-status.is-finished { color: #b1b6c0; }

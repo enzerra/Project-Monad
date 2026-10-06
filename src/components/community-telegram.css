@@ -1,0 +1,71 @@
+.community-shell.hive-theme .telegram-page { grid-template-columns:344px minmax(0,1fr); }
+.telegram-page .community-channels-head { padding:24px 20px 17px; }
+.telegram-page .community-channels-head h1 { margin:7px 0 3px; font-size:29px; }
+.telegram-page .community-search { margin:0 12px 12px; padding:0 11px; }
+.telegram-page .community-search input { font-size:12px; }
+.telegram-page .community-search button { display:grid; place-items:center; flex:0 0 25px; width:25px; height:25px; border:0; border-radius:6px; background:transparent; color:#aebbb0; cursor:pointer; }
+.telegram-page .community-search button:hover { background:#ffffff13; }
+.telegram-page .community-channel-list { padding:2px 8px 10px; }
+.telegram-list-label { display:block; padding:14px 13px 7px; color:#9caea0; font-size:10px; font-weight:720; letter-spacing:.05em; }
+.telegram-page .community-channel { min-height:67px; padding:10px; }
+.telegram-page .community-channel-icon { width:42px; height:42px; border-radius:50%; }
+.telegram-page .icon-gaming { background:#30483d; color:#c7e8d5; }
+.telegram-page .icon-sport { background:#493e38; color:#e8d0bc; }
+.telegram-page .icon-crypto { background:#3c3c52; color:#d4d1f1; }
+.telegram-page .community-channel-copy strong { font-size:13px; }
+.telegram-page .community-channel-copy small { max-width:208px; font-size:11px; }
+.telegram-page .community-channel-count { background:#39564b; }
+.telegram-search-result { display:flex; flex-direction:column; gap:4px; width:100%; min-height:57px; padding:8px 12px; border:0; border-radius:10px; background:transparent; color:#dfe7dd; text-align:left; cursor:pointer; }
+.telegram-search-result:hover { background:#ffffff10; }
+.telegram-search-result span { color:#8cd6c8; font-size:10px; }
+.telegram-search-result strong { overflow:hidden; max-width:100%; font-size:11px; font-weight:500; text-overflow:ellipsis; white-space:nowrap; }
+.telegram-page .community-search-empty { margin:8px 13px 13px; line-height:1.45; }
+.telegram-page .community-chat-head { min-height:66px; gap:11px; padding:10px 20px; }
+.telegram-chat-title { flex:1; min-width:0; }
+.telegram-chat-title h2 { font-size:15px; }
+.telegram-chat-title p { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.telegram-header-icon { display:grid; place-items:center; flex:0 0 37px; width:37px; height:37px; border:0; border-radius:9px; background:transparent; color:#b6c9bb; cursor:pointer; }
+.telegram-header-icon:hover,.telegram-header-icon[aria-expanded=true] { background:#ffffff13; color:#f3faf2; }
+.telegram-member-action { flex:0 0 auto; min-height:36px; padding:0 9px; border:1px solid #ffffff22; border-radius:8px; background:#19241e; color:#9cafa1; font-size:11px; cursor:pointer; }
+.telegram-member-action:hover { color:#f1f6ef; border-color:#8abca4; }
+.telegram-member-action.is-join { border-color:#518c78; background:#285345; color:#dff5e6; font-weight:700; }
+.telegram-page .community-share-button { min-height:36px; margin-left:0; }
+.telegram-chat-search { display:flex; align-items:center; gap:10px; min-height:49px; padding:7px 22px; border-bottom:1px solid #ffffff18; background:#15211c; color:#adc3b2; }
+.telegram-chat-search input { flex:1; min-width:0; border:0; outline:0; background:transparent; color:#edf3ea; font:400 12px Geist,sans-serif; }
+.telegram-chat-search input::placeholder { color:#92a79a; }
+.telegram-chat-search span { color:#9aada0; font-size:10px; white-space:nowrap; }
+.telegram-chat-search button { display:grid; place-items:center; width:27px; height:27px; border:0; border-radius:6px; background:none; color:#adbeb1; cursor:pointer; }
+.telegram-chat-search button:hover { background:#ffffff12; }
+.telegram-pinned-call { display:flex; align-items:center; gap:10px; width:100%; min-height:48px; padding:7px 23px; border:0; border-bottom:1px solid #ffffff1c; background:#15211c; color:#dce9dc; text-align:left; cursor:pointer; }
+.telegram-pinned-call:hover { background:#1c2d24; }
+.telegram-pin-line { align-self:stretch; width:2px; border-radius:2px; background:#77d6c5; }
+.telegram-pinned-call>span:nth-child(2) { display:flex; flex:1; flex-direction:column; gap:2px; min-width:0; }
+.telegram-pinned-call strong { color:#8ed6c7; font-size:10px; }
+.telegram-pinned-call small { overflow:hidden; color:#d1ded1; font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+.telegram-page .community-chat-content { width:min(700px,calc(100% - 56px)); padding-top:4px; }
+.telegram-thread { padding-bottom:17px; }
+.telegram-thread+.telegram-thread { border-top:1px solid #ffffff16; }
+.telegram-page .community-chat-divider { margin:14px 0 18px; }
+.telegram-page .community-call-message { margin-bottom:14px; }
+.telegram-page .community-chat-message { margin-bottom:5px; }
+.telegram-page .community-call-bubble { border-radius:12px 12px 12px 4px; }
+.telegram-page .community-call-links { flex-wrap:wrap; gap:14px; }
+.telegram-page .community-call-links button { min-height:26px; }
+.telegram-page .community-chat-bubble { border-radius:12px 12px 12px 4px; }
+.telegram-page .community-chat-message.is-mine .community-chat-bubble { border-radius:12px 12px 4px 12px; }
+.telegram-first-reply { display:inline-flex; align-items:center; gap:6px; margin:2px 0 5px 40px; padding:6px 8px; border:0; border-radius:6px; background:transparent; color:#a7ccba; font-size:10px; cursor:pointer; }
+.telegram-first-reply:hover { background:#ffffff13; color:#e5f4e9; }
+.telegram-page .community-composer.telegram-composer { display:flex; flex-direction:column; align-items:stretch; gap:0; min-height:72px; padding:0; overflow:hidden; }
+.telegram-reply-context { overflow:hidden; padding:7px 14px 2px; border-left:2px solid #79d3bf; color:#9bbbab; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.telegram-reply-context strong { color:#dcebdd; font-weight:600; }
+.telegram-composer-row { display:flex; align-items:center; gap:8px; padding:4px 7px 6px 14px; }
+.telegram-composer-row textarea { flex:1; min-width:0; min-height:25px; resize:none; padding:5px 0; border:0; outline:0; background:none; color:#edf3ea; font:400 13px/1.5 Geist,sans-serif; }
+.telegram-composer-row textarea::placeholder { color:#94a59a; }
+.telegram-composer-row button { flex:0 0 39px; }
+.telegram-join-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:61px; padding:10px 20px; border-top:1px solid #ffffff20; background:#15211b; color:#abbcae; font-size:11px; }
+.telegram-join-bar button { min-height:36px; padding:0 12px; border:1px solid #6db39a; border-radius:8px; background:#2a5949; color:#e6f5e9; font-weight:700; cursor:pointer; }
+.telegram-join-bar button:hover { background:#38735b; }
+.telegram-page :is(button,a,input,textarea):focus-visible { outline:2px solid #89e6d3; outline-offset:2px; }
+@media(max-width:1100px){ .community-shell.hive-theme .telegram-page { grid-template-columns:295px minmax(0,1fr); }.telegram-page .community-share-button span { display:none; }.telegram-page .community-share-button { width:36px; padding:0; }.telegram-page .community-chat-head { padding-inline:13px; } }
+@media(max-width:700px){ .community-shell.hive-theme .telegram-page { display:flex; flex-direction:column; height:calc(100dvh - 64px); }.telegram-page .community-channels { max-height:236px; }.telegram-page .community-channels-head { padding:12px 16px 7px; }.telegram-page .community-channels-head h1 { font-size:21px; }.telegram-page .community-search { height:37px; margin-bottom:7px; }.telegram-page .community-channel-list { display:flex; gap:4px; min-height:55px; overflow-x:auto; overflow-y:hidden; padding:0 10px 8px; }.telegram-page .telegram-list-label,.telegram-page .telegram-search-result,.telegram-page .community-search-empty { display:none; }.telegram-page .community-channel { min-width:115px; min-height:46px; }.telegram-page .community-channel-icon { width:31px; height:31px; }.telegram-page .community-channel-copy small,.telegram-page .community-channel-count { display:none; }.telegram-page .community-chat { flex:1; min-height:0; }.telegram-page .community-chat-head { min-height:53px; }.telegram-page .community-chat-head .community-channel-icon { width:34px; height:34px; }.telegram-page .community-share-button { display:none; }.telegram-page .telegram-member-action { min-height:31px; }.telegram-page .telegram-header-icon { flex-basis:32px; width:32px; }.telegram-page .community-chat-content { width:calc(100% - 28px); }.telegram-page .community-composer.telegram-composer { min-height:69px; margin-bottom:10px; }.telegram-join-bar { min-height:52px; }.telegram-chat-search { padding-inline:12px; } }
+@media(prefers-reduced-motion:reduce){ .telegram-page .community-channel,.telegram-pinned-call,.telegram-header-icon { transition:none; }.telegram-page .community-channel:hover { transform:none; } }

@@ -8,6 +8,7 @@ cache/
 .env.local
 .env.*.local
 *.tsbuildinfo
+.vibe-data/
 .chrome-preview*/
 .edge-*/
 preview-*.png

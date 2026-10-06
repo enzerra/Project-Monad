@@ -1,0 +1,106 @@
+.predictions-shell.hive-theme .predictions-rework { background:#0e1212; padding:42px clamp(24px,4vw,64px) 68px; }
+.predictions-shell.hive-theme .predictions-rework {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 54% 32% at 83% 4%,#23544b27,transparent 76%),
+    radial-gradient(ellipse 38% 26% at 8% 48%,#60535b1b,transparent 80%),
+    linear-gradient(#a4d5bd05 1px,transparent 1px),
+    linear-gradient(90deg,#a4d5bd05 1px,transparent 1px),
+    #0e1212;
+  background-size:auto,auto,72px 72px,72px 72px,auto;
+}
+.predictions-shell.hive-theme .predictions-rework::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:url("/brand/charcoal-plaster.webp") 0 0/720px 720px repeat;
+  opacity:.44;
+  mix-blend-mode:screen;
+}
+.predictions-shell.hive-theme .predictions-rework::after {
+  content:"";
+  position:absolute;
+  top:-260px;
+  right:-210px;
+  z-index:-1;
+  width:710px;
+  height:710px;
+  pointer-events:none;
+  border-radius:50%;
+  background:radial-gradient(circle,#3fb4a017,transparent 67%);
+  animation:prediction-ambient-drift 22s ease-in-out infinite alternate;
+}
+@keyframes prediction-ambient-drift { to { transform:translate3d(-90px,100px,0); } }
+.predictions-rework .predictions-inner { max-width:1160px; }
+.predictions-new-header { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; padding-bottom:38px; }
+.predictions-kicker { color:#a9c3af; font-size:11px; font-weight:700; letter-spacing:.09em; }
+.predictions-new-header h1 { max-width:760px; margin:20px 0 8px; color:#f0eee6; font:650 clamp(42px,5vw,68px)/1.02 Geist,sans-serif; letter-spacing:-.07em; }
+.predictions-new-header h1 em { color:#d6b4a4; font:italic 400 1.05em/1 "Instrument Serif",Georgia,serif; letter-spacing:-.025em; }
+.predictions-new-header p { margin:0; color:#a4afa6; font-size:14px; }
+.predictions-demo-label { margin-top:4px; flex:0 0 auto; color:#a8bca9; font-size:11px; }
+.predictions-discovery-bar { display:flex; justify-content:space-between; gap:24px; align-items:center; padding:18px 0; border-block:1px solid #ffffff18; }
+.predictions-rework .predictions-category-tabs { display:flex; gap:8px; padding:0; border:0; }
+.predictions-rework .predictions-category-tabs button { min-height:38px; border-radius:999px; padding:0 15px; color:#aeb8ad; font:600 12px Geist,sans-serif; }
+.predictions-rework .predictions-category-tabs button:hover { background:#ffffff12; }
+.predictions-shell.hive-theme .predictions-rework .predictions-category-tabs button.is-selected { background:#e3e1d6; color:#19201a; border-color:#e3e1d6; }
+.predictions-rework .predictions-category-tabs small { color:inherit!important; opacity:.62; }
+.predictions-shell.hive-theme .predictions-rework .predictions-search-wrap { width:260px; min-height:40px; border-radius:999px; border-color:#ffffff1c; background:#1a2220; padding:0 13px; gap:9px; }
+.predictions-rework .predictions-search-wrap input { height:39px; font-size:12px; font-family:Geist,sans-serif; }
+.predictions-rework .predictions-section-head { padding:32px 0 18px; }
+.predictions-rework .predictions-section-head h2 { font:650 24px/1.1 Geist,sans-serif; color:#eeeae2; }
+.predictions-rework .predictions-section-head>div:first-child>span { color:#85948a; }
+.predictions-rework .predictions-status-tabs button { font-family:Geist,sans-serif; border-radius:999px; padding:0 13px; }
+.predictions-shell.hive-theme .predictions-rework .predictions-status-tabs button.is-selected { color:#e5eee4; background:#304138; }
+.prediction-feature { display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr); min-height:330px; overflow:hidden; border:1px solid #ffffff22; border-radius:18px; background:#19211f; color:#eeeae2!important; transition:border-color .25s ease,transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s ease; }
+.prediction-feature:hover { border-color:#a6bda9; transform:translateY(-3px); box-shadow:0 24px 50px #0004; }
+.prediction-feature-art { position:relative; min-height:330px; overflow:hidden; background:radial-gradient(circle at 52% 42%,#667872,#283430 48%,#151c1a 78%); display:grid; place-items:center; }
+.prediction-feature.subject-pixel-rush .prediction-feature-art { background:linear-gradient(90deg,#0002,#19211f55),url("/prediction-brands/dishonored-still-dark.jpg") center/cover no-repeat; }
+.prediction-feature-art::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent 62%,#19211f 100%); pointer-events:none; }
+.prediction-feature-art .prediction-subject { position:relative; z-index:1; width:74%; height:90px; border:0; background:#101513a8; backdrop-filter:blur(12px); border-radius:14px; box-shadow:0 14px 40px #0006; }
+.prediction-feature-art .prediction-subject img { max-width:82%; max-height:45px; }
+.prediction-feature-index { position:absolute; z-index:2; bottom:24px; left:26px; font-size:11px; font-weight:700; letter-spacing:.08em; color:#ebeee6; }
+.prediction-feature-copy { display:flex; flex-direction:column; padding:28px 32px 24px; }
+.prediction-feature-top { display:flex; align-items:center; gap:7px; color:#b0c0b0; font-size:11px; font-weight:600; }
+.prediction-feature-top>span:first-child { margin-right:auto; }
+.prediction-feature-top>span:first-child span { padding:0 5px; }
+.prediction-live-dot { width:6px; height:6px; border-radius:50%; background:#abd6ac; }
+.prediction-feature-copy h3 { max-width:17ch; margin:31px 0 8px; color:#f0eee6; font:650 clamp(25px,2.55vw,34px)/1.1 Geist,sans-serif; letter-spacing:-.055em; }
+.prediction-feature-copy>p { margin:0; color:#a5afa5; font-size:12px; line-height:1.4; }
+.prediction-feature-progress { display:flex; justify-content:space-between; gap:12px; margin-top:auto; padding-top:22px; color:#91a297; font-size:11px; }
+.prediction-feature-progress strong { color:#e6eae2; font-size:12px; }
+.prediction-progress-track { height:4px; margin-top:9px; border-radius:99px; background:#53655a; overflow:hidden; }
+.prediction-progress-track span { display:block; height:100%; border-radius:inherit; background:#d6bdab; }
+.prediction-feature-footer { display:flex; justify-content:space-between; align-items:center; margin-top:22px; color:#92a199; font-size:11px; }
+.prediction-feature-footer strong { display:inline-flex; align-items:center; gap:8px; color:#e8ede5; font-size:12px; }
+.prediction-list { display:flex; flex-direction:column; margin-top:10px; }
+.prediction-list-row { display:grid; grid-template-columns:35px 76px minmax(0,1fr) 105px 32px; gap:20px; align-items:center; min-height:126px; padding:15px 18px; border-bottom:1px solid #ffffff16; color:#eeeae2!important; transition:background .2s ease,transform .2s ease; }
+.prediction-list-row:hover { background:#ffffff09; transform:translateX(3px); }
+.prediction-row-number { color:#77867d; font-size:11px; }
+.prediction-subject { width:76px; height:76px; display:grid; place-items:center; flex:0 0 auto; border-radius:13px; overflow:hidden; background:#283330; }
+.prediction-subject img { display:block; max-width:86%; max-height:50px; width:auto; height:auto; object-fit:contain; }
+.subject-pixel-rush img { filter:brightness(0) invert(1); }
+.prediction-subject.subject-crypto-explainer { background:#3a3122; }
+.prediction-subject.subject-crypto-explainer img { width:43px; height:43px; }
+.prediction-subject.subject-matchday-highlight { background:#284c40; }
+.prediction-subject.subject-speedrun { background:#3e3241; }
+.prediction-subject-type { color:#e9efe7; font:800 17px/.88 Geist,sans-serif; letter-spacing:-.07em; text-align:center; }
+.prediction-subject-spark { color:#e5baa9; font-size:12px; vertical-align:top; }
+.prediction-row-copy { display:flex; flex-direction:column; gap:5px; min-width:0; }
+.prediction-row-copy small { color:#a5b3a4; font-size:11px; }
+.prediction-row-copy strong { color:#eeeae2; font:600 clamp(16px,1.45vw,20px)/1.22 Geist,sans-serif; letter-spacing:-.035em; }
+.prediction-row-copy>span { color:#849088; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.prediction-row-target { display:flex; flex-direction:column; gap:2px; text-align:right; }
+.prediction-row-target small { color:#85958b; font-size:10px; }
+.prediction-row-target strong { color:#e9ede6; font:650 18px Geist,sans-serif; letter-spacing:-.04em; }
+.prediction-row-arrow { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; color:#b7ccbb; transition:background .2s ease,transform .2s ease; }
+.prediction-list-row:hover .prediction-row-arrow { background:#31473a; transform:translateX(2px); }
+.predictions-rework .predictions-disclaimer { margin-top:30px; max-width:720px; }
+@media(max-width:900px){ .predictions-discovery-bar { flex-wrap:wrap; }.predictions-rework .predictions-search-wrap { width:100%!important; }.prediction-feature { grid-template-columns:1fr; }.prediction-feature-art { min-height:240px; }.prediction-feature-copy { min-height:300px; }.prediction-feature-art::after { background:linear-gradient(0deg,#19211f,transparent 42%); } }
+@media(max-width:600px){ .predictions-shell.hive-theme .predictions-rework { padding:27px 16px 90px; }.predictions-new-header { padding-bottom:25px; }.predictions-new-header h1 { font-size:41px; }.predictions-demo-label { display:none; }.predictions-rework .predictions-category-tabs { overflow-x:auto; max-width:100%; }.predictions-rework .predictions-category-tabs button { flex:0 0 auto; }.prediction-list-row { grid-template-columns:58px minmax(0,1fr) 26px; gap:12px; padding-inline:0; }.prediction-list-row .prediction-subject { width:58px; height:58px; }.prediction-list-row .prediction-subject img { max-width:85%; max-height:34px; }.prediction-row-number,.prediction-row-target { display:none; }.prediction-row-copy strong { font-size:16px; }.prediction-feature-copy { padding:24px; }.prediction-feature-copy h3 { margin-top:24px; }.predictions-rework .predictions-section-head { align-items:flex-start; } }
+@media(prefers-reduced-motion:reduce){ .prediction-feature,.prediction-list-row,.prediction-row-arrow { transition:none; } }
+@media(prefers-reduced-motion:reduce){ .predictions-shell.hive-theme .predictions-rework::after { animation:none; } }
+@media(prefers-reduced-motion:reduce){ .prediction-feature:hover,.prediction-list-row:hover,.prediction-list-row:hover .prediction-row-arrow { transform:none; } }

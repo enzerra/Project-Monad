@@ -1,0 +1,25 @@
+.source-call-progress { padding: 20px 0; border-block: 1px solid var(--border, #36343f); margin: 20px 0; }
+.source-view-row, .source-countdown { display: flex; justify-content: space-between; gap: 16px; }
+.source-view-row > div { display: grid; gap: 7px; }
+.source-view-row > div:last-child { text-align: right; }
+.source-view-row span, .source-outcome > span { font: 11px/1.5 monospace; letter-spacing: .08em; color: #a6a1b4; }
+.source-view-row strong { font-size: clamp(22px, 4vw, 32px); font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
+.source-progress-track { height: 4px; margin-top: 16px; background: #35313e; overflow: hidden; }
+.source-progress-track span { display: block; height: 100%; background: #ad92ff; transform-origin: left; }
+.source-observed { font-size: 12px; color: #b6afc4; display: flex; align-items: center; gap: 5px; }
+.source-dot { width: 6px; height: 6px; background: #ad92ff; border-radius: 50%; flex: 0 0 auto; }
+.source-dot.is-stale { background: #e2ba72; }
+.source-countdown { font-size: 12px; padding-top: 10px; color: #b6afc4; }
+.source-countdown strong { color: #f4f0f9; font-variant-numeric: tabular-nums; }
+.source-outcome { border: 1px solid #49434f; background: #1d1a23; padding: 20px; margin-block: 20px; }
+.source-outcome.is-win { border-color: #89734e; background: #272217; }
+.source-outcome h3 { margin: 8px 0; font-size: 22px; }
+.source-outcome p { font-size: 14px; line-height: 1.6; color: #c6bed1; }
+.source-outcome details { font-size: 12px; margin-top: 16px; }
+.source-outcome summary { cursor: pointer; padding-block: 10px; }
+.source-outcome a { color: #bda5ff; }
+.source-outcome code, .source-outcome small { display: block; overflow-wrap: anywhere; margin-top: 10px; color: #ada5bd; }
+.source-calibration { grid-column: 1 / -1; border: 1px solid #38313e; padding: 28px; background: #18151d; }
+.source-calibration h3 { font-size: 22px; margin: 0 0 12px; }
+.source-calibration p { color: #b7afc4; line-height: 1.6; font-size: 14px; }
+.source-calibration a { display: inline-flex; padding: 12px 0; color: #bda5ff; }

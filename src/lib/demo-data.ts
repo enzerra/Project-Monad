@@ -1,6 +1,6 @@
 export type CallStatus = "open" | "pending" | "locked" | "closed" | "revealing" | "resolved" | "void";
 export type Choice = "yes" | "no";
-export type PredictionCategory = "sport" | "gaming" | "lagu";
+export type PredictionCategory = "sport" | "gaming" | "crypto";
 
 export type Content = {
   id: string;
@@ -14,6 +14,7 @@ export type Content = {
   callId?: string;
   minutes: number;
   video?: {
+    provider?: "local";
     src: string;
     sourceUrl: string;
     author: string;
@@ -21,6 +22,11 @@ export type Content = {
     licenseUrl: string;
     cropPosition: string;
     hasAudio: boolean;
+  } | {
+    provider: "youtube";
+    videoId: string;
+    sourceUrl: string;
+    hasAudio: true;
   };
 };
 
@@ -46,7 +52,7 @@ export const contents: Content[] = [
     creator: "Xbox México",
     handle: "@xboxmexico",
     title: "Aksi Dishonored 2 dalam sepuluh detik",
-    description: "Cuplikan gameplay Dishonored 2. Pertanyaan views di samping adalah skenario HIVE, bukan metrik video ini.",
+    description: "Cuplikan gameplay Dishonored 2. Pertanyaan views di samping adalah skenario VIBE, bukan metrik video ini.",
     category: "Action stealth · Demo Call",
     kind: "predictable",
     visual: "purple",
@@ -84,26 +90,26 @@ export const contents: Content[] = [
   },
   {
     id: "matchday-highlight",
-    creator: "HIVE Demo",
-    handle: "@hive-demo",
+    creator: "VIBE Demo",
+    handle: "@vibe-demo",
     title: "Cuplikan laga yang jadi bahan obrolan",
-    description: "Contoh konten Sport untuk menguji tampilan katalog. Video dan metrik sumber belum terhubung.",
-    category: "Sport · Demo Call",
+    description: "Contoh konten Sports untuk menguji tampilan katalog. Video dan metrik sumber belum terhubung.",
+    category: "Sports · Demo Call",
     kind: "predictable",
     visual: "blue",
     callId: "matchday-views",
     minutes: 28,
   },
   {
-    id: "new-track",
-    creator: "HIVE Demo",
-    handle: "@hive-demo",
-    title: "Rilisan lagu baru di feed",
-    description: "Contoh konten Lagu untuk menguji tampilan katalog. Video dan metrik sumber belum terhubung.",
-    category: "Lagu · Demo Call",
+    id: "crypto-explainer",
+    creator: "VIBE Demo",
+    handle: "@vibe-demo",
+    title: "Video edukasi Bitcoin di feed",
+    description: "Contoh konten Crypto untuk menguji katalog. Video dan metrik sumber Call demo ini belum terhubung.",
+    category: "Crypto · Demo Call",
     kind: "predictable",
     visual: "orange",
-    callId: "new-track-views",
+    callId: "crypto-explainer-views",
     minutes: 41,
   },
   {
@@ -159,10 +165,10 @@ export const calls: Call[] = [
     status: "open",
   },
   {
-    id: "new-track-views",
-    contentId: "new-track",
-    predictionCategory: "lagu",
-    question: "Video lagu ini tembus 50.000 views dalam 24 jam?",
+    id: "crypto-explainer-views",
+    contentId: "crypto-explainer",
+    predictionCategory: "crypto",
+    question: "Video edukasi Bitcoin ini tembus 50.000 views dalam 24 jam?",
     baselineViews: 35000,
     targetViews: 50000,
     currentViews: 35000,

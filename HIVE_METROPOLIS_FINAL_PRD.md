@@ -1,5 +1,7 @@
 # HIVE — PRD Final untuk Metropolis Hackathon
 
+> **Addendum 5 Oktober 2026:** nama produk VIBE. Call Shorts dan saldo gratis kini memakai penyimpanan server, metrik YouTube nyata, dan pengembalian kredit 2× sesuai [PRD Call Shorts](VIBE_SOURCE_CALL_PRD.md). Ini jalur kredit gratis terpisah dari commit–reveal Monad. Larangan nilai uang, stake finansial, token finansial onchain, dan cash-out tetap berlaku.
+
 **Versi:** 2.0, 1 Oktober 2026  
 **Status:** spesifikasi build; tidak menyatakan fitur telah terimplementasi  
 **Track:** 03 — Social, Attention & Culture  

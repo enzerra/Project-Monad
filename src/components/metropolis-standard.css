@@ -1,0 +1,282 @@
+/* VIBE's shared product language: Metropolis structure, restrained Makiō motion. */
+.predictions-shell.hive-theme,
+body .community-shell.hive-theme {
+  --dv-bg: #0b0c10;
+  --dv-surface: #15151a;
+  --dv-border: #2a2932;
+  --dv-text: #f5f3f1;
+  --dv-muted: #a4a4b0;
+  --dv-accent: #9b85ff;
+  background: #0b0c10;
+}
+@media (min-width: 781px) {
+  .predictions-shell.hive-theme,
+  body .community-shell.hive-theme {
+    grid-template-columns: 76px minmax(0, 1fr);
+    transition: grid-template-columns 560ms cubic-bezier(.22,1,.36,1);
+  }
+  .predictions-shell.hive-theme.is-sidebar-expanded,
+  body .community-shell.hive-theme.is-sidebar-expanded { grid-template-columns: 248px minmax(0,1fr); }
+  .predictions-shell.hive-theme .discover-sidebar,
+  body .community-shell.hive-theme .discover-sidebar,
+  .predictions-shell.hive-theme.is-sidebar-expanded .discover-sidebar,
+  body .community-shell.hive-theme.is-sidebar-expanded .discover-sidebar {
+    width: 100%;
+    background: #0d0d12;
+    border-color: #26262e;
+    box-shadow: none;
+    backdrop-filter: none;
+    transition: background 300ms ease;
+  }
+}
+.predictions-shell.hive-theme .discover-nav-link,
+body .community-shell.hive-theme .discover-nav-link { border-radius: 3px; }
+.predictions-shell.hive-theme .discover-nav-link.is-active,
+body .community-shell.hive-theme .discover-nav-link.is-active {
+  background: #191723;
+  color: #f7f4ff!important;
+  border-color: #6656aa;
+  box-shadow: inset 2px 0 #9b85ff;
+}
+.predictions-shell.hive-theme .discover-nav-link:hover:not(.is-active),
+body .community-shell.hive-theme .discover-nav-link:hover:not(.is-active) { background:#1b1a21; }
+
+/* A fine material layer stays behind content instead of competing with it. */
+.predictions-shell.hive-theme .predictions-rework,
+body .community-shell.hive-theme .community-chat-scroll {
+  background:
+    linear-gradient(#b9b0d108 1px,transparent 1px),
+    linear-gradient(90deg,#b9b0d108 1px,transparent 1px),
+    linear-gradient(135deg,#121219,#0e0e13 65%);
+  background-size: 78px 78px,78px 78px,auto;
+}
+.predictions-shell.hive-theme .predictions-rework::before {
+  background: url("/brand/charcoal-plaster.webp") 0 0/900px 900px repeat;
+  opacity: .085;
+  mix-blend-mode: screen;
+}
+.predictions-shell.hive-theme .predictions-rework::after { display:none; }
+.predictions-shell.hive-theme .market-page { padding: 47px clamp(30px,4vw,70px) 85px; }
+.market-layout { max-width: 1560px; }
+.market-header { min-height: 188px; align-items:flex-start; border-bottom:1px solid #303039; }
+.market-kicker,body .telegram-page .community-kicker,.telegram-list-label {
+  color:#aaa1bd;
+  font: 600 11px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.market-header h1 {
+  margin: 17px 0 11px;
+  color:#f5f3f1;
+  font: 560 clamp(43px,4vw,61px)/1.05 Geist,sans-serif;
+  letter-spacing:-.07em;
+  animation: vibe-title-enter 690ms cubic-bezier(.22,1,.36,1) both;
+}
+.market-header p { color:#aba9b4; font-size:15px; line-height:1.5; }
+.market-demo-chip { border-color:#494553; border-radius:2px; background:#17161c; color:#d5d1dc; font:600 10px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.04em; }
+.market-search-row { display:flex; justify-content:flex-end; margin-top:-79px; min-height:79px; padding:0; }
+.market-search { width:min(360px,100%); height:42px; border-color:#373641; border-radius:3px; background:#19191f; color:#aaa9b5; }
+.market-search:focus-within { border-color:#9b85ff; box-shadow:0 0 0 2px #9b85ff22; }
+.market-search input { color:#f5f3f1; }
+.market-search input::placeholder { color:#898997; }
+.market-search kbd { border-radius:2px; color:#a6a3b1; }
+.market-categories { gap:28px; padding:0; border-color:#303039; }
+.market-categories button {
+  min-height:58px;
+  padding:0 1px;
+  border-radius:0;
+  color:#a3a3ae;
+  background:none;
+  font:600 12px Geist,sans-serif;
+  transition:color 220ms ease;
+}
+.market-categories button:hover { color:#f3f1f5; background:none; }
+.market-categories button::after {
+  content:"";
+  position:absolute;
+  right:0;
+  bottom:0;
+  left:0;
+  height:2px;
+  background:#9b85ff;
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform 420ms cubic-bezier(.22,1,.36,1);
+}
+.market-categories button.is-active { color:#f5f3f1; background:none; box-shadow:none; }
+.market-categories button.is-active::after { transform:scaleX(1); }
+.market-categories small { color:#9691a4; opacity:1; font:600 10px ui-monospace,SFMono-Regular,Consolas,monospace; }
+.market-main-grid { grid-template-columns:minmax(0,1fr) 280px; gap:30px; padding-top:39px; }
+.market-list-head { margin-bottom:21px; }
+.market-list-head h2 { color:#f5f3f1; font:570 27px/1.15 Geist,sans-serif; letter-spacing:-.055em; }
+.market-list-head>div:first-child>span { color:#8f8e9b; font:500 10px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.05em; text-transform:uppercase; }
+.market-status-tabs { gap:0; padding:0; border:1px solid #36343e; border-radius:3px; background:#16161c; }
+.market-status-tabs button { min-height:37px; padding:0 13px; border-radius:0; color:#9c9aa8; }
+.market-status-tabs button.is-active { background:#292438; color:#f4f0ff; }
+.market-sort { min-height:39px; border-color:#36343e; border-radius:3px; background:#16161c; color:#b0aaba; }
+.market-sort select { color:#edeaf1; }
+.market-sort option { background:#17161e; }
+.market-cards { gap:1px; border:1px solid #303039; background:#303039; }
+.market-card {
+  min-height:286px;
+  padding:23px 24px 19px;
+  border:0;
+  border-radius:0;
+  background:#17171d;
+  box-shadow:none;
+  transition:background 300ms ease,box-shadow 300ms ease;
+}
+.market-card:hover { border:0; transform:none; background:#1e1c26; box-shadow:inset 0 2px #7560d2; }
+.market-subject { width:52px; height:52px; flex-basis:52px; border:1px solid #43414e; border-radius:3px; background:#24232c; }
+.market-subject.subject-crypto-explainer,
+.market-subject.subject-matchday-highlight,
+.market-subject.subject-speedrun { background:#24232c; }
+.market-card-title>span,.market-card-signal,.market-card-progress>div:first-child { color:#a3a0ad; font:500 10px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.025em; }
+.market-card-title h3 { margin-top:9px; color:#f5f3f1; font:590 clamp(17px,1.55vw,21px)/1.22 Geist,sans-serif; letter-spacing:-.045em; }
+.market-card-title h3 a:hover { color:#bcaeff; }
+.market-card-source { margin-top:19px; color:#a8a7b2; font-size:12px; }
+.market-status>span { background:#a88cff; }
+.market-status.is-done>span { background:#8e8c98; }
+.market-choice-state { color:#bbaaff; }
+.market-card-progress { padding-top:21px; }
+.market-card-progress strong { color:#eceaf0; }
+.market-progress-track { height:3px; margin:10px 0 18px; border-radius:0; background:#3c3b46; }
+.market-progress-track span { border-radius:0; background:#a88cff; }
+.market-card-bottom { padding-top:14px; border-color:#35343d; }
+.market-outcomes a,.market-result-link,.market-card-details { border-radius:3px; }
+.market-outcomes a,.market-result-link { min-height:39px; }
+.market-outcomes a:hover,.market-result-link:hover { transform:none; }
+.market-outcome-yes { border-color:#8170c8; background:#755de4; color:#fff!important; }
+.market-outcome-yes:hover { background:#8a74ed; }
+.market-outcome-no { border-color:#474550; background:#222129; color:#f3f1f4!important; }
+.market-outcome-no:hover { background:#302d38; }
+.market-card-details { height:39px; flex-basis:39px; border-color:#474550; color:#d9d5e2!important; }
+.market-activity { top:24px; border-color:#35343e; border-radius:3px; background:#17171d; }
+.market-activity-head { padding:19px; border-color:#34333e; }
+.market-activity-head h2 { color:#f5f3f1; }
+.market-activity-icon { border-radius:3px; background:#302941; color:#b6a7ff; }
+.market-activity-empty p,.market-activity-note p { color:#aaa8b4; }
+.market-activity-list a span { color:#b6a7ff; }
+.market-activity-note { background:#1d1b25; border-color:#35313f; }
+.market-activity-note strong { color:#ece9f2; }
+.market-empty { border-color:#474450; border-radius:3px; background:#18171e; }
+.market-empty button { border-color:#8f7ae3; border-radius:3px; background:#6d57cf; }
+.market-page :is(a,button,select,input):focus-visible,
+body .telegram-page :is(a,button,input,textarea):focus-visible { outline-color:#b9aaff; }
+
+/* Community keeps Telegram's conversation model within the same visual grammar. */
+body .community-shell.hive-theme .telegram-page { grid-template-columns:305px minmax(0,1fr); background:#101015; }
+body .community-shell.hive-theme .community-channels { border-color:#2c2b34; background:#111116; }
+body .telegram-page .community-channels-head { padding:35px 24px 23px; }
+body .telegram-page .community-channels-head h1 { margin:14px 0 7px; color:#f5f3f1; font:560 35px/1.05 Geist,sans-serif; letter-spacing:-.065em; }
+body .telegram-page .community-channels-head h1 { animation:vibe-title-enter 690ms cubic-bezier(.22,1,.36,1) both; }
+body .community-shell.hive-theme .community-channels-head h1 span { color:#b9aaff; }
+body .telegram-page .community-channels-head p { color:#a2a1ad; font-size:12px; line-height:1.5; }
+body .community-shell.hive-theme .community-search { height:43px; margin:0 16px 20px; border-color:#373640; border-radius:3px; background:#1b1b22; color:#a3a1af; }
+body .community-shell.hive-theme .community-search:focus-within { border-color:#9b85ff; background:#1e1d27; }
+body .community-shell.hive-theme .community-search input { color:#f4f1f6; }
+.telegram-list-label { padding:17px 14px 9px; }
+body .telegram-page .community-channel-list { padding:0 10px 10px; }
+body .community-shell.hive-theme .community-channel,
+body .telegram-page .community-channel { min-height:72px; padding:11px 12px; border:1px solid transparent; border-radius:3px; }
+body .community-shell.hive-theme .community-channel:hover { transform:none; background:#1c1b23; }
+body .community-shell.hive-theme .community-channel.is-active { background:#211e2b; border-color:#494153; box-shadow:inset 2px 0 #a88cff; }
+body .community-shell.hive-theme .community-channel-icon,
+body .telegram-page .community-channel-icon { width:40px; height:40px; border:1px solid #514b60; border-radius:3px; background:#292434; color:#d3c8ff; }
+body .telegram-page .icon-gaming,body .telegram-page .icon-sport,body .telegram-page .icon-crypto { background:#292434; color:#d3c8ff; }
+body .community-shell.hive-theme .community-channel-copy strong { color:#f1eff3; font-weight:600; }
+body .community-shell.hive-theme .community-channel-copy small { color:#9997a6; }
+body .community-channel-count,body .telegram-page .community-channel-count { background:#6951be; color:#fff; }
+body .community-shell.hive-theme .community-side-note { border-color:#2e2d35; color:#918e9b; }
+body .community-shell.hive-theme .community-chat { background:#101015; }
+body .community-shell.hive-theme .community-chat-head,
+body .telegram-page .community-chat-head { min-height:72px; padding:11px 28px; border-color:#303039; background:#15151b; }
+body .community-shell.hive-theme .community-chat-head .community-channel-icon { border-radius:3px; }
+body .community-shell.hive-theme .community-chat-head h2 { color:#f6f4f7; font-size:16px; }
+body .community-shell.hive-theme .community-chat-head p { color:#9d9aa7; }
+body .telegram-header-icon,body .telegram-member-action,
+body .community-shell.hive-theme .community-share-button { border-radius:3px; }
+body .telegram-header-icon { color:#c8c3d2; }
+body .telegram-header-icon:hover,body .telegram-header-icon[aria-expanded=true] { background:#272531; }
+body .telegram-member-action { border-color:#47444f; background:#1a1920; color:#d6d2df; }
+body .telegram-member-action.is-join,body .community-shell.hive-theme .community-share-button { border-color:#7a67c9; background:#6952d0; color:#fff; }
+body .telegram-member-action:hover,body .community-shell.hive-theme .community-share-button:hover { border-color:#a58df7; background:#7e68dc; }
+body .telegram-chat-search,body .telegram-pinned-call { border-color:#303039; background:#1a1921; color:#e0dce7; }
+body .telegram-pinned-call:hover { background:#24212f; }
+body .telegram-pin-line { border-radius:0; background:#a88cff; }
+body .telegram-pinned-call strong { color:#bdadff; }
+body .telegram-pinned-call small { color:#c8c4d2; }
+body .telegram-page .community-chat-content { width:min(760px,calc(100% - 68px)); padding-top:8px; }
+body .community-shell.hive-theme .community-chat-divider { color:#9693a1; }
+body .community-shell.hive-theme .community-chat-divider::before,
+body .community-shell.hive-theme .community-chat-divider::after { background:#34323e; }
+body .community-shell.hive-theme .community-message-avatar { background:#34313e; color:#efeaf7; }
+body .community-shell.hive-theme .community-message-avatar.hive { background:#2a233e; }
+body .community-shell.hive-theme .community-call-bubble,
+body .telegram-page .community-call-bubble { width:min(530px,calc(100% - 40px)); padding:22px 23px 18px; border:1px solid #4b4658; border-radius:4px; background:#1b1a22; box-shadow:none; }
+body .community-shell.hive-theme .community-call-label { color:#b4a2ff; font:600 10px ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.08em; }
+body .community-shell.hive-theme .community-call-bubble h3 { max-width:34ch; margin:10px 0; color:#f5f3f1; font:560 23px/1.2 Geist,sans-serif; }
+body .community-shell.hive-theme .community-call-bubble p,
+body .community-shell.hive-theme .community-call-metric { color:#aca9b7; }
+body .community-shell.hive-theme .community-call-metric { border-color:#37343e; }
+body .community-shell.hive-theme .community-call-metric span:nth-child(2),
+body .community-shell.hive-theme .community-call-links a { color:#beaaff; }
+body .community-shell.hive-theme .community-call-links button { color:#aaa6b4; }
+body .community-shell.hive-theme .community-chat-bubble,
+body .telegram-page .community-chat-bubble { max-width:min(500px,100%); border:1px solid #383641; border-radius:4px; background:#222129; }
+body .community-shell.hive-theme .community-chat-bubble strong { color:#b8a6ff; }
+body .community-shell.hive-theme .community-chat-bubble p { color:#eeecf2; }
+body .community-shell.hive-theme .community-chat-message.is-mine .community-chat-bubble,
+body .telegram-page .community-chat-message.is-mine .community-chat-bubble { border-color:#5a4d7e; border-radius:4px; background:#302a40; }
+body .community-shell.hive-theme .community-chat-message.is-mine .community-message-avatar { background:#59497b; }
+body .community-message-actions button { border-radius:3px; }
+body .telegram-first-reply { color:#bbaaff; }
+body .community-shell.hive-theme .community-composer.telegram-composer { border-color:#555068; border-radius:4px; background:#1c1b23; box-shadow:0 12px 28px #0003; }
+body .community-shell.hive-theme .community-composer:focus-within { border-color:#ad94ff; box-shadow:0 0 0 2px #ad94ff22; }
+body .telegram-reply-context { border-color:#aa93ff; color:#b8b1c7; }
+body .community-shell.hive-theme .community-composer button { border-radius:3px; background:#9178f0; color:#fff; }
+body .community-shell.hive-theme .community-composer button:disabled { background:#484255; color:#b5aebf; }
+body .telegram-join-bar { border-color:#33313c; background:#17161e; color:#b3afbe; }
+body .telegram-join-bar button { border-color:#8974db; border-radius:3px; background:#755ede; color:#fff; }
+body .community-shell.hive-theme .community-picker { border-color:#4e495b; border-radius:4px; background:#1b1a21; }
+body .community-shell.hive-theme .community-picker-list>button { border-radius:3px; background:#25232e; }
+
+@media (max-width:1120px) {
+  .market-main-grid { grid-template-columns:1fr; }
+  .market-activity { position:static; }
+  body .community-shell.hive-theme .telegram-page { grid-template-columns:270px minmax(0,1fr); }
+}
+@media (max-width:780px) {
+  .predictions-shell.hive-theme,body .community-shell.hive-theme { display:block; }
+  .predictions-shell.hive-theme .discover-sidebar,
+  body .community-shell.hive-theme .discover-sidebar { width:auto; background:#111116; }
+}
+@media (max-width:700px) {
+  .predictions-shell.hive-theme .market-page { padding:27px 18px 88px; }
+  .market-header { min-height:165px; }
+  .market-header h1 { font-size:42px; }
+  .market-search-row { margin-top:0; min-height:70px; align-items:center; }
+  .market-search { width:100%; }
+  .market-categories { gap:20px; }
+  .market-main-grid { padding-top:29px; }
+  .market-cards { grid-template-columns:1fr; }
+  .market-card { min-height:270px; }
+  body .community-shell.hive-theme .telegram-page { display:flex; flex-direction:column; height:calc(100dvh - 64px); }
+  body .telegram-page .community-channels-head { padding:15px 16px 8px; }
+  body .telegram-page .community-channels-head h1 { margin-top:5px; font-size:24px; }
+  body .telegram-page .community-channel-list { gap:4px; }
+  body .community-shell.hive-theme .community-channel { min-height:48px; padding:7px; }
+  body .community-shell.hive-theme .community-channel-icon { width:32px; height:32px; }
+  body .community-shell.hive-theme .community-chat-head { min-height:54px; padding:8px 13px; }
+  body .telegram-page .community-chat-content { width:calc(100% - 28px); }
+  body .community-shell.hive-theme .community-call-bubble { width:min(530px,calc(100% - 39px)); padding:16px; }
+  body .community-shell.hive-theme .community-call-bubble h3 { font-size:19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .predictions-shell.hive-theme,body .community-shell.hive-theme { transition:none; }
+  .market-header h1,body .telegram-page .community-channels-head h1 { animation:none; }
+}
+@keyframes vibe-title-enter {
+  from { opacity:0; transform:translateY(14px); }
+  to { opacity:1; transform:translateY(0); }
+}

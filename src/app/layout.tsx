@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
+import "@/components/hive-theme.css";
+import "@/components/product-standard.css";
+import "@/components/virtual-token.css";
 
 export const metadata: Metadata = {
-  title: "HIVE — Temukan lebih awal",
-  description: "Temukan konten gaming, buat prediksi, dan buktikan bersama komunitas.",
+  title: "VIBE — Temukan lebih awal",
+  description: "Temukan konten gaming, sports, dan crypto. Prediksi lebih awal, lalu buktikan bersama komunitas.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
