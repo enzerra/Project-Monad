@@ -9,6 +9,7 @@ import { PredictionIdentity, predictionCategoryLabels } from "@/components/predi
 import { VirtualAmount, type VirtualAccount } from "@/components/virtual-wallet";
 import { validateVirtualAmount, VIRTUAL_TOKEN } from "@/lib/virtual-token";
 import { SourceCallProgress, SourceCallOutcome } from "@/components/source-call-progress";
+import { AuthControl } from "@/components/auth-control";
 
 type CallDetailState = VirtualAccount & { shareCall: (callId: string) => void; };
 
@@ -20,7 +21,7 @@ export function CallDetailPage({ id, state }: { id: string; state: CallDetailSta
   const searchParams = useSearchParams();
   const sourceCall = state.calls?.find((call) => call.id === id);
   const call = sourceCall ?? findCall(id);
-  if (!call) return <main className="section-wrap not-found"><h1>{state.walletReady ? "Call tidak ditemukan." : "Memuat Call…"}</h1><Link href="/predictions">Kembali ke prediksi</Link></main>;
+  if (!call) return <main className="section-wrap not-found"><h1>{(state.feedReady ?? state.walletReady) ? "Call tidak ditemukan." : "Memuat Call…"}</h1><Link href="/predictions">Kembali ke prediksi</Link></main>;
   const content = state.contents?.find((content) => content.id === call.contentId) ?? findContent(call.contentId);
   if (!content) return <main className="section-wrap not-found"><h1>Konten sumber belum tersedia.</h1><Link href="/predictions">Kembali ke prediksi</Link></main>;
   const chosen = state.choices.find((item) => item.callId === id);
@@ -54,6 +55,7 @@ export function CallDetailPage({ id, state }: { id: string; state: CallDetailSta
           {open && !chosen && <VirtualAmount account={state} amount={amount} onChange={setAmount} disabled={submitting} />}
           {choiceError && <p className="virtual-error" role="alert">{choiceError}</p>}
           {state.walletError && <p className="virtual-error" role="alert">{state.walletError}</p>}
+          {state.loginRequired && <AuthControl />}
           {open && !chosen ? <div className="choice-buttons">
             {(["yes", "no"] as const).map((choice) => <button type="button" key={choice} disabled={submitting || !state.walletReady || Boolean(amountError)} onClick={() => void choose(choice)} className={`choice-button reference-panel ${suggestion === choice ? "is-suggested" : ""}`} aria-label={`Pilih ${choice === "yes" ? "Ya" : "Tidak"} untuk ${call.question}`}>
               <span className="choice-card-head"><span className="choice-mark">{choice === "yes" ? <Check size={24} /> : <X size={24} />}</span><span><strong>{choice === "yes" ? "Ya, tercapai" : "Tidak tercapai"}</strong><small>{predictionCategoryLabels[call.predictionCategory]} · {call.horizonHours} JAM</small></span></span>

@@ -27,6 +27,7 @@ import { HiveSidebar } from "@/components/hive-sidebar";
 import { YoutubePlayer, type YoutubePlayerHandle } from "@/components/youtube-player";
 import { LiveVideoViews } from "@/components/live-video-views";
 import { SourceCallProgress, SourceCallOutcome } from "@/components/source-call-progress";
+import { AuthControl } from "@/components/auth-control";
 import { PredictionIdentity } from "@/components/prediction-subject";
 import { VirtualAmount, VirtualBalance, type VirtualAccount } from "@/components/virtual-wallet";
 import { validateVirtualAmount, VIRTUAL_TOKEN } from "@/lib/virtual-token";
@@ -386,6 +387,7 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed }: DiscoverViewe
                 ) : (
                   <Link href={call.status === "resolved" ? "/results/" + call.id : "/calls/" + call.id} className="discover-call-link">{call.status === "resolved" ? "Lihat hasil" : "Lihat detail Call"}<ChevronRight size={17} /></Link>
                 )}
+                {state.loginRequired && <div className="call-login-prompt"><p>Masuk untuk memilih Call dan menyimpan saldo VIBE.</p><AuthControl /></div>}
                 {call.status === "open" && !chosen && state.walletReady && state.balance < VIRTUAL_TOKEN.minAmount && <p className="virtual-error" role="status">Saldo tidak cukup untuk memilih Call.</p>}
                 <p className="discover-demo-note">Benar: 2× nominal kembali. Hasil memakai views YouTube saat evaluasi. VIBE gratis, tanpa nilai uang.</p>
                 <Link href={"/calls/" + call.id} className="discover-detail-link">Lihat aturan lengkap <ChevronRight size={16} /></Link>

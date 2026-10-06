@@ -6,11 +6,11 @@ Nama produk yang tampil kepada pengguna adalah **VIBE**. Beberapa nama teknis la
 
 ## Status saat ini
 
-- Saldo gratis **1.000 VIBE per sesi server**, nominal **10–500 VIBE per Call**. Benar mengembalikan **2×** nominal; void mengembalikan nominal sekali. Saldo/Call/bukti tersimpan atomik di SQLite. Aturan: [PRD Call Shorts](VIBE_SOURCE_CALL_PRD.md).
+- Saldo gratis **1.000 VIBE per akun Privy** saat integrasi dikonfigurasi (sesi cookie pada mode lokal), nominal **10–500 VIBE per Call**. Benar mengembalikan **2×** nominal; void mengembalikan nominal sekali. Saldo/Call/bukti tersimpan atomik di Supabase atau SQLite lokal. Aturan: [PRD Call Shorts](VIBE_SOURCE_CALL_PRD.md).
 - Discover/Prediksi memakai Shorts dan metrik YouTube nyata. Call dibuka setelah dua pemeriksaan minimal 30 menit dan pertumbuhan positif. Komentar/Community tetap lokal.
 - `contracts/HiveCallV2.sol` adalah kontrak commit–reveal untuk Monad yang dibangun dan diuji dengan Foundry; alamat deployment belum ada.
 - Call Shorts menampilkan bukti pemeriksaan YouTube dan riwayat saldo; tidak mengklaim proof onchain. Call fixture lama menjadi arsip demo dan tidak menerima kredit server.
-- Jalur Privy, relayer, dan Supabase/Monad tetap belum dikonfigurasi. Cookie anonim mengenali saldo server; belum sinkron akun lintas perangkat. Data saldo browser lama tidak diimpor atau dihapus.
+- Branch `feat/google-auth-supabase` sudah digabung. Root provider menyinkronkan profil Google ke `hive_users`. API memverifikasi JWT Privy; saldo mengikuti DID akun dan bisa dibuka lintas perangkat. Kredensial lokal harus diisi sebelum login/database live bisa diuji. Relayer/Monad terpisah. Data saldo lama tidak diimpor atau dihapus.
 
 ## Jalankan lokal
 
@@ -28,7 +28,22 @@ Jika `YOUTUBE_API_KEY` diisi, Discover menampilkan 20 Shorts publik terkurasi da
 
 ### Penyimpanan server dan collector
 
-Node.js 22.15+ menyediakan `node:sqlite` (masih experimental pada versi ini). Development menyimpan `.vibe-data/vibe.sqlite`, diabaikan Git. Production wajib `VIBE_STORE_PATH` pada volume persisten dan satu host Node yang terus hidup; backend saldo menolak production tanpa path ini. Jangan gunakan filesystem sementara/serverless untuk timer dan saldo ini.
+#### Aktifkan Google login dan Supabase
+
+1. Jalankan migrasi yang belum diterapkan secara berurutan di Supabase SQL Editor: `202610020001_hive_metropolis.sql`, `202610020002_commit_deadline.sql`, `202610030001_hive_users.sql`, lalu `202610060001_vibe_source_state.sql`. Semua ada di `supabase/migrations/`.
+2. Isi `.env.local`: `NEXT_PUBLIC_PRIVY_APP_ID`, `PRIVY_VERIFICATION_KEY` (PEM publik), `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`. Pertahankan `YOUTUBE_API_KEY`. Aktifkan Google pada Privy dan izinkan origin lokal/deployment di dashboard Privy.
+3. Restart `npm run dev`. Buka Profil → Masuk Google, atau tombol login pada panel Call/saldo. Verifikasi satu baris `hive_users` untuk DID yang sama saat login ulang.
+4. Setelah login, saldo awal diberikan sekali per DID. Akun sama di perangkat lain membuka saldo/riwayat yang sama. Logout segera menyembunyikan saldo akun; pengunjung tetap dapat melihat Shorts dan Call tanpa mendapat kredit.
+
+`hive_vibe_state` menyimpan snapshot engine dan ledger dalam JSONB. RPC `hive_commit_vibe_state` mengunci satu baris, membandingkan revision, dan menolak penulisan lama; server mengulang transisi setelah konflik. RLS aktif, akses tabel/fungsi hanya untuk service role. API mengambil DID dari JWT, bukan body atau alamat wallet yang dikirim browser. Metadata profil dari browser hanya untuk tampilan dan tidak membuktikan kepemilikan email/wallet.
+
+Adapter snapshot tunggal ini cocok untuk MVP kecil; seluruh saldo dibaca/diperiksa saat transisi. Sebelum trafik besar, pisahkan wallet/ledger/Call ke tabel dengan transaksi PostgreSQL per akun. Jika Supabase gagal atau konfigurasinya setengah terisi, saldo tidak dialihkan diam-diam ke SQLite. Data sesi lokal lama tetap di `.vibe-data/` dan tidak otomatis menjadi saldo akun Google. Supabase baru mulai kalibrasi sendiri.
+
+Supabase tidak menjalankan collector dengan sendirinya. Tetap gunakan host Node yang hidup untuk polling/evaluasi 30 detik; tidak perlu volume SQLite pada mode Supabase. Tes lokal memakai JWT bertanda tangan dan transport DB terkendali; ini bukan klaim bahwa Google OAuth/proyek Supabase live sudah diuji.
+
+#### Mode sesi lokal
+
+Tanpa konfigurasi Privy maupun Supabase, Node.js 22.15+ menyediakan `node:sqlite` (masih experimental pada versi ini). Development menyimpan `.vibe-data/vibe.sqlite`, diabaikan Git. Production mode lokal wajib `VIBE_STORE_PATH` pada volume persisten dan satu host Node yang terus hidup. Jangan gunakan filesystem sementara/serverless untuk timer dan saldo ini.
 
 `src/instrumentation.ts` memeriksa API setiap 30 detik, termasuk saat tab ditutup. Saldo, kalibrasi, Call, dan hasil bertahan saat restart. Server yang mati sampai melewati jendela evaluasi 30 menit memicu void/refund, bukan hasil dari views terlambat. Cadangkan database menggunakan backup SQLite yang konsisten dengan WAL.
 

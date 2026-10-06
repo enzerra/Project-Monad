@@ -10,7 +10,8 @@ export async function refreshSourceCalls(): Promise<void> {
   if (running) return running;
   running = (async () => {
     const feed = await getYoutubeFeed();
-    vibeStore().transaction((state) => observeSource(state, feed, Date.now(), hash));
+    const now = Date.now();
+    await vibeStore().transaction((state) => observeSource(state, feed, now, hash));
   })().finally(() => { running = undefined; });
   return running;
 }
@@ -28,9 +29,9 @@ export function startSourceWorker() {
 
 export function sessionId(token: string) { return hash(token); }
 
-export function orderFeedForCalls(feed: YoutubeFeedItem[]): YoutubeFeedItem[] {
+export async function orderFeedForCalls(feed: YoutubeFeedItem[]): Promise<YoutubeFeedItem[]> {
   try {
-    const active = vibeStore().transaction((state) => state.calls.filter((call) => call.status === "open").map((call) => call.contentId));
+    const active = (await vibeStore().read()).calls.filter((call) => call.status === "open").map((call) => call.contentId);
     return [...feed].sort((a, b) => Number(active.includes(b.id)) - Number(active.includes(a.id)));
   } catch { return feed; }
 }

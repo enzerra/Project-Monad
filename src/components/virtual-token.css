@@ -19,3 +19,8 @@ body .viewer-standard.hive-theme .discover-confirm .virtual-amount-presets butto
 body .viewer-standard.hive-theme .discover-confirm .virtual-amount-presets button[aria-pressed=true] { background:#6849a4; border-color:#b091e3; color:#fff; }
 .discover-confirm>div>button:disabled { opacity:.4; cursor:not-allowed; }
 @media(prefers-reduced-motion:reduce){.virtual-balance,.virtual-balance::after,.vibe-token-coin { transition:none; }.virtual-balance:hover,.virtual-balance:active,.virtual-balance:hover .vibe-token-coin { transform:none; }}
+.call-login-prompt { display: grid; justify-items: start; gap: 12px; margin-top: 20px; }
+.call-login-prompt p { margin: 0; color: #b8b3c3; font-size: 14px; line-height: 1.5; }
+.hive-theme .auth-control, .virtual-wallet-dialog .auth-control { min-height: 44px; padding: 10px 16px; border: 1px solid #5e4e85; border-radius: 4px; background: #282134; color: #f4f0fa; font-size: 14px; font-weight: 600; cursor: pointer; }
+.hive-theme .auth-control:hover, .virtual-wallet-dialog .auth-control:hover { background: #352b48; border-color: #a891e9; }
+.hive-theme .auth-control:focus-visible, .virtual-wallet-dialog .auth-control:focus-visible { outline: 2px solid #bba1ff; outline-offset: 3px; }

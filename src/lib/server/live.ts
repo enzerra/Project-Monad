@@ -2,38 +2,10 @@ import "server-only";
 import { randomBytes, createCipheriv, createDecipheriv, createHash } from "node:crypto";
 import { createPublicClient, createWalletClient, http, isAddress, verifyMessage, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { importSPKI, jwtVerify } from "jose";
 import { configuredContractAddress, hiveCallAbi, monadTestnet } from "@/lib/chain";
-
-export function required(name: string) {
-  const value = process.env[name];
-  if (!value) throw new Error(`${name} is not configured`);
-  return value;
-}
-
-export async function privyUser(request: Request) {
-  const bearer = request.headers.get("authorization");
-  if (!bearer?.startsWith("Bearer ")) throw new Error("Login required");
-  const key = await importSPKI(required("PRIVY_VERIFICATION_KEY").replaceAll("\\n", "\n"), "ES256");
-  const { payload } = await jwtVerify(bearer.slice(7), key, {
-    issuer: "privy.io", audience: required("NEXT_PUBLIC_PRIVY_APP_ID"), algorithms: ["ES256"],
-  });
-  if (!payload.sub) throw new Error("Invalid user token");
-  return payload.sub;
-}
-
-export async function db<T>(table: string, query = "", init?: RequestInit): Promise<T> {
-  if (!/^hive_[a-z_]+$/.test(table)) throw new Error("Invalid table");
-  const url = `${required("SUPABASE_URL")}/rest/v1/${table}${query}`;
-  const key = required("SUPABASE_SERVICE_ROLE_KEY");
-  const response = await fetch(url, {
-    ...init,
-    headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json", prefer: "return=representation", ...init?.headers },
-    cache: "no-store",
-  });
-  if (!response.ok) throw new Error(`Database request failed (${response.status}): ${await response.text()}`);
-  return response.json() as Promise<T>;
-}
+import { required } from "@/lib/server/database";
+export { required, db } from "@/lib/server/database";
+export { privyUser } from "@/lib/server/auth";
 
 export function seal(value: unknown) {
   const key = Buffer.from(required("CHOICE_ENCRYPTION_KEY"), "base64");

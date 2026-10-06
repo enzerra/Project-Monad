@@ -4,6 +4,10 @@ Tanggal: 5 Oktober 2026. Pengguna menyetujui saldo gratis, hasil dari views YouT
 
 ## Saldo dan identitas
 
+**Addendum 6 Oktober 2026:** branch autentikasi tim digabung. Saat Privy/Supabase dikonfigurasi, identitas memakai DID dari JWT Privy ES256 yang diverifikasi server (issuer, audience, expiry). Saldo awal diberikan sekali per DID, bukan per perangkat. Profil disinkronkan oleh root provider; metadata tampilan dari client tidak dipakai untuk otorisasi. Pengunjung tanpa login bisa melihat Call tetapi tidak mendapat saldo atau memasang pilihan. Saldo lama langsung disembunyikan saat logout/ganti akun.
+
+Supabase menyimpan engine, kalibrasi, Call, bukti, dan ledger pada `hive_vibe_state`; commit RPC memakai row lock dan revision untuk mencegah kehilangan penulisan bersamaan. RLS dan privilege membatasi akses ke service role server. Tidak ada fallback ke SQLite jika Supabase gagal. Mode sesi/SQLite di bawah berlaku hanya jika Privy dan Supabase sama-sama belum diatur. Sesi lokal lama tetap tersimpan terpisah; tidak diimpor ke akun Google otomatis.
+
 - Server memberi 1.000 VIBE sekali per sesi anonim. Nominal bulat 10–500 VIBE; default 50.
 - Cookie HttpOnly, SameSite=Lax, Secure dalam production mengenali sesi. Belum ada login/sinkronisasi lintas perangkat. Menghapus cookie memutus akses ke saldo sesi tersebut.
 - SQLite menyimpan saldo, pilihan, Call, dan bukti. Debit/hasil/hadiah berada dalam transaksi atomik. Duplikat ditolak. Client tidak dapat menentukan saldo, target, hasil, atau multiplier.
@@ -36,9 +40,13 @@ Tanggal: 5 Oktober 2026. Pengguna menyetujui saldo gratis, hasil dari views YouT
 - Collector pada src/instrumentation.ts berjalan saat tab ditutup selama server hidup. Restart mempertahankan saldo, kalibrasi, Call, dan settlement.
 - Jika server mati hingga lewat jendela hasil tanpa snapshot, Call void; tidak merekonstruksi views historis dari angka sekarang.
 - Cadangkan SQLite menggunakan mekanisme backup SQLite yang konsisten dengan WAL. Backend saldo menolak production tanpa path persisten.
-- Jalur commit–reveal HiveCallV2/Privy/Supabase/relayer tetap terpisah dan belum dikonfigurasi. Saldo gratis ini tidak menandatangani transaksi blockchain.
+- Privy/Supabase terhubung ke saldo gratis setelah konfigurasi dan migrasi diterapkan. Jalur commit–reveal HiveCallV2/relayer tetap terpisah. Saldo gratis ini tidak menandatangani transaksi blockchain.
 - Community/komentar tetap tersimpan lokal. Tidak ada klaim chat tersinkron antaruser.
 
 ## Verifikasi
 
 Tes mencakup debit/duplikat/overspend, tenggat, early close, kedua sisi hasil, target tepat tercapai, hadiah sekali, source outage, koreksi views, rollback SQLite, restart penyimpanan, origin request, dan isolasi sesi. Tes hasil 6 jam memakai waktu terkontrol; hasil live tidak diklaim sebelum evaluasi nyata.
+
+Tes integrasi tambahan memverifikasi JWT bertanda tangan (termasuk expired/audience salah), isolasi DID, login ulang tanpa welcome tambahan, sync profil/body tak tepercaya, konflik commit Supabase, dan outage tanpa reset saldo. Transport Supabase dalam tes terkendali; pengujian OAuth Google dan migrasi pada proyek Supabase live memerlukan konfigurasi pemilik proyek.
+
+Verifikasi SQL lokal pada PostgreSQL WASM (PGlite) berhasil menerapkan migrasi profil/state, menerima revision yang benar, menolak revision lama/tidak valid, serta menolak SELECT/EXECUTE untuk role anon dan authenticated. Ini menguji SQL dan privilege pada engine PostgreSQL lokal, bukan koneksi proyek Supabase live.

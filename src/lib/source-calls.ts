@@ -24,6 +24,7 @@ export type SourceState = {
 export type SourceAccountSnapshot = {
   revision: number; wallet: VirtualWallet; calls: SourceCall[]; contents: ObservedContent[];
   calibrationStartedAt?: string; lastCheckedAt?: string; serverNow: string;
+  accountId?: string | null;
 };
 
 export function emptySourceState(): SourceState {
@@ -35,7 +36,7 @@ const categoryOf = (item: Content): PredictionCategory => item.category.startsWi
 
 /** Pure transition: only observed API data can create/resolve Calls. Never uses fixture views. */
 export function observeSource(state: SourceState, feed: ObservedContent[], now: number, hash: (value: string) => string): void {
-  const eligible = feed.filter((item) => Number.isSafeInteger(item.youtubeViews) && item.youtubeViews >= 0 && fresh(item.observedAt, now));
+  const eligible = feed.filter((item) => Number.isSafeInteger(item.youtubeViews) && item.youtubeViews >= 0 && fresh(item.observedAt, now) && (!state.calibration[item.video.videoId] || Date.parse(item.observedAt) >= Date.parse(state.calibration[item.video.videoId].last.observedAt)));
   const byVideo = new Map(eligible.map((item) => [item.video.videoId, item]));
   for (const item of eligible) {
     const observation = { videoId: item.video.videoId, views: item.youtubeViews, observedAt: item.observedAt };
