@@ -16,8 +16,10 @@ export type SourceCall = Call & {
   proof?: ViewObservation & { hash: string; source: "YouTube Data API" };
 };
 export type ObservedContent = Content & { youtubeViews: number; observedAt: string; video: { provider: "youtube"; videoId: string; sourceUrl: string; hasAudio: true } };
+export type UploadedContent = Content & { ownerId: string; uploadedAt: string; video: { provider: "upload"; src: string; sourceUrl: string; cropPosition: string; hasAudio: true } };
 export type SourceState = {
   version: 1; revision: number; calls: SourceCall[]; contents: ObservedContent[];
+  uploads?: UploadedContent[];
   calibration: Record<string, { first: ViewObservation; last: ViewObservation }>;
   wallets: Record<string, VirtualWallet>; lastCheckedAt?: string;
 };
@@ -28,7 +30,7 @@ export type SourceAccountSnapshot = {
 };
 
 export function emptySourceState(): SourceState {
-  return { version: 1, revision: 0, calls: [], contents: [], calibration: {}, wallets: {} };
+  return { version: 1, revision: 0, calls: [], contents: [], uploads: [], calibration: {}, wallets: {} };
 }
 
 const fresh = (at: string, now: number) => Number.isFinite(Date.parse(at)) && Date.parse(at) <= now && now - Date.parse(at) <= FRESH_MS;

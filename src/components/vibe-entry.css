@@ -1,0 +1,33 @@
+.vibe-entry { position:fixed; inset:0; z-index:200; min-height:100dvh; overflow:hidden; display:grid; place-items:center; background:#0b0d0f; color:#f6f1e8; isolation:isolate; font-family:Geist,sans-serif; }
+.vibe-entry::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:-1; opacity:.13; background:url("/brand/charcoal-plaster.webp") center/700px; mask-image:radial-gradient(ellipse at center,black,transparent 85%); }
+.vibe-entry-aura { position:absolute; z-index:-1; width:min(780px,130vw); aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,#0d74752b,transparent 66%); pointer-events:none; }
+.vibe-entry-symbol:focus-visible { outline:2px solid #42d9d2; outline-offset:8px; }
+.vibe-entry-stage { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; width:min(560px,90vw); aspect-ratio:1; perspective:900px; }
+.vibe-entry-object { position:relative; z-index:2; width:clamp(176px,24vw,260px); aspect-ratio:1; transform-style:preserve-3d; }
+.vibe-entry-symbol { position:relative; z-index:2; display:grid; place-items:center; width:clamp(176px,24vw,260px); aspect-ratio:1; padding:0; border:0; background:none; border-radius:50%; cursor:grab; touch-action:none; -webkit-tap-highlight-color:transparent; }
+.vibe-entry-symbol:active { cursor:grabbing; }
+.vibe-entry-symbol img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 8px 16px #18bfc01a); user-select:none; pointer-events:none; }
+.vibe-entry-fragment { position:absolute; inset:0; pointer-events:none; }
+.fragment-0 { mask-image:conic-gradient(from -60deg,#000 0deg 120deg,transparent 120deg 360deg); }
+.fragment-1 { mask-image:conic-gradient(from 60deg,#000 0deg 120deg,transparent 120deg 360deg); }
+.fragment-2 { mask-image:conic-gradient(from 180deg,#000 0deg 120deg,transparent 120deg 360deg); }
+.vibe-entry-glint { position:absolute; inset:-12%; border-radius:50%; background:conic-gradient(transparent 0deg 300deg,#59eee99c 325deg,transparent 350deg); mask-image:radial-gradient(closest-side,transparent 96%,#000 97%); pointer-events:none; }
+.vibe-entry-orbits { position:absolute; inset:-4% 0 18%; pointer-events:none; }
+.vibe-entry-orbit { position:absolute; inset:8%; border:1px solid #69d0c42b; border-radius:50%; }
+.vibe-entry-orbit::after { content:""; position:absolute; width:6px; height:6px; top:13%; left:14%; border-radius:50%; background:#54d7c4; box-shadow:0 0 18px #54d7c450; }
+.vibe-entry-orbit.orbit-1 { inset:0; border-style:dashed; border-color:#e2d2ae22; }
+.vibe-entry-orbit.orbit-1::after { top:84%; left:84%; width:4px; height:4px; background:#d9c5a3; }
+.vibe-entry-orbit.orbit-2 { inset:-12%; border-color:#ffffff0b; }
+.vibe-entry-orbit.orbit-2::after { display:none; }
+.vibe-entry-burst { position:absolute; z-index:3; inset:0; pointer-events:none; }
+.vibe-entry-ripple { position:absolute; inset:0; border:1px solid #60e3d080; border-radius:50%; }
+.vibe-entry-spark { position:absolute; top:50%; left:50%; width:4px; height:4px; margin:-2px; border-radius:50%; background:#68eee3; box-shadow:0 0 10px #68eee380; }
+.vibe-entry-spark:nth-of-type(3n) { background:#e3d0a4; }
+.vibe-entry-word { position:relative; z-index:2; margin-top:26px; font:500 clamp(40px,5vw,60px)/1 "Instrument Serif",Georgia,serif; text-align:center; perspective:600px; }
+.vibe-entry-letters { display:flex; gap:.07em; }
+.vibe-entry-letters > span { display:inline-block; transform-origin:center bottom; }
+.vibe-entry-tagline { display:block; margin-top:15px; font:400 13px/1.5 Geist,sans-serif; letter-spacing:.025em; color:#a7b6b2; }
+.vibe-entry-content { min-height:100dvh; }
+@media(max-width:780px) { .vibe-entry-stage { width:min(410px,90vw); } .vibe-entry-orbits { inset:-10% 0 22%; } }
+@media(max-height:500px) { .vibe-entry-stage { width:280px; } .vibe-entry-symbol,.vibe-entry-object { width:120px; } .vibe-entry-word { margin-top:14px; font-size:32px; } .vibe-entry-tagline { margin-top:10px; } }
+@media(prefers-reduced-motion:reduce) { .vibe-entry-orbits,.vibe-entry-burst,.vibe-entry-glint { display:none; } .vibe-entry-symbol { touch-action:manipulation; cursor:pointer; } }

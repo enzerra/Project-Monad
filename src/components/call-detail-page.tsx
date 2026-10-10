@@ -10,10 +10,12 @@ import { VirtualAmount, type VirtualAccount } from "@/components/virtual-wallet"
 import { validateVirtualAmount, VIRTUAL_TOKEN } from "@/lib/virtual-token";
 import { SourceCallProgress, SourceCallOutcome } from "@/components/source-call-progress";
 import { AuthControl } from "@/components/auth-control";
+import { useAccountAuth } from "@/components/auth-provider";
 
 type CallDetailState = VirtualAccount & { shareCall: (callId: string) => void; };
 
 export function CallDetailPage({ id, state }: { id: string; state: CallDetailState }) {
+  const auth = useAccountAuth();
   const [amount, setAmount] = useState<number>(VIRTUAL_TOKEN.defaultAmount);
   const [submitting, setSubmitting] = useState(false);
   const [choiceError, setChoiceError] = useState("");
@@ -33,6 +35,7 @@ export function CallDetailPage({ id, state }: { id: string; state: CallDetailSta
   const amountError = validateVirtualAmount(amount, state.balance);
   const choose = async (choice: Choice) => {
     if (submitting) return;
+    if (state.loginRequired) { auth.login(); return; }
     setSubmitting(true);
     setChoiceError("");
     const result = await state.selectChoice(id, choice, amount);
@@ -52,16 +55,16 @@ export function CallDetailPage({ id, state }: { id: string; state: CallDetailSta
         <section className="choice-section" aria-labelledby="choice-heading">
           <div className="section-label-row"><h2 id="choice-heading">Tentukan pilihanmu</h2><span>Satu pilihan per Call</span></div>
           {(suggestion === "yes" || suggestion === "no") && !chosen && open && <p className="choice-suggestion" id="choice-suggestion">Kamu memilih {suggestion === "yes" ? "Ya" : "Tidak"} dari katalog. Tekan kartunya untuk mengonfirmasi.</p>}
-          {open && !chosen && <VirtualAmount account={state} amount={amount} onChange={setAmount} disabled={submitting} />}
+          {open && !chosen && !state.loginRequired && <VirtualAmount account={state} amount={amount} onChange={setAmount} disabled={submitting} />}
           {choiceError && <p className="virtual-error" role="alert">{choiceError}</p>}
           {state.walletError && <p className="virtual-error" role="alert">{state.walletError}</p>}
           {state.loginRequired && <AuthControl />}
           {open && !chosen ? <div className="choice-buttons">
-            {(["yes", "no"] as const).map((choice) => <button type="button" key={choice} disabled={submitting || !state.walletReady || Boolean(amountError)} onClick={() => void choose(choice)} className={`choice-button reference-panel ${suggestion === choice ? "is-suggested" : ""}`} aria-label={`Pilih ${choice === "yes" ? "Ya" : "Tidak"} untuk ${call.question}`}>
+            {(["yes", "no"] as const).map((choice) => <button type="button" key={choice} disabled={submitting || !auth.ready || (!state.loginRequired && (!state.walletReady || Boolean(amountError)))} onClick={() => void choose(choice)} className={`choice-button reference-panel ${suggestion === choice ? "is-suggested" : ""}`} aria-label={`Pilih ${choice === "yes" ? "Ya" : "Tidak"} untuk ${call.question}`}>
               <span className="choice-card-head"><span className="choice-mark">{choice === "yes" ? <Check size={24} /> : <X size={24} />}</span><span><strong>{choice === "yes" ? "Ya, tercapai" : "Tidak tercapai"}</strong><small>{predictionCategoryLabels[call.predictionCategory]} · {call.horizonHours} JAM</small></span></span>
               <span className="choice-card-description">{choice === "yes" ? "Video mencapai target views saat evaluasi." : "Views video masih di bawah target saat evaluasi."}</span>
               <span className="reference-tag">{choice === "yes" ? "TARGET TERCAPAI" : "DI BAWAH TARGET"}</span>
-              <span className="virtual-choice-cost">{Number.isFinite(amount) ? formatCount(amount) : "—"} VIBE · konfirmasi pilihan</span><span className="choice-card-bottom"><strong>{choice === "yes" ? "≥" : "<"} {formatCount(call.targetViews)} <span>views</span></strong><ArrowUpRight size={18} /></span>
+              <span className="virtual-choice-cost">{state.loginRequired ? "Masuk untuk memilih" : `${Number.isFinite(amount) ? formatCount(amount) : "—"} VIBE · konfirmasi pilihan`}</span><span className="choice-card-bottom"><strong>{choice === "yes" ? "≥" : "<"} {formatCount(call.targetViews)} <span>views</span></strong><ArrowUpRight size={18} /></span>
             </button>)}
           </div> : chosen ? <div className={`choice-feedback ${chosen.status}`} role="status"><span className="choice-feedback-icon"><Check size={23} /></span><div><strong>Pilihanmu: {chosen.choice === "yes" ? "Ya" : "Tidak"}</strong><p>Pilihan terkunci dan tersimpan di server.</p><span className="virtual-choice-cost">{formatCount(chosen.amount)} VIBE digunakan</span></div></div> : <div className="choice-feedback"><Clock3 size={22} /><div><strong>{sourceCall ? "Pilihan telah ditutup" : "Arsip demo"}</strong><p>{call.status === "resolved" ? "Hasil Call ini sudah tersedia." : sourceCall ? "Tunggu evaluasi untuk melihat hasilnya." : "Call lama ini memakai data contoh dan tidak menerima kredit."}</p></div></div>}
           <p className="choice-disclaimer"><ShieldCheck size={15} />{sourceCall ? "Views YouTube nyata · VIBE gratis tanpa nilai uang · benar mengembalikan 2× nominal." : "Data contoh, bukan hasil pemeriksaan YouTube."}</p>

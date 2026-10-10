@@ -1,0 +1,28 @@
+/* Keep a fixed rail in the page grid. Reveal navigation over the quiet margin. */
+@media(min-width:781px) {
+  body .discover-shell.hive-theme:has(> .discover-sidebar[data-expanded]) { grid-template-columns:76px minmax(0,1fr); transition:none; }
+  body .discover-shell.hive-theme:is(.is-sidebar-expanded,:not(.is-sidebar-expanded)) > .discover-sidebar[data-expanded] {
+    width:244px; padding:22px 12px 20px; z-index:20; overflow:hidden;
+    clip-path:inset(0 168px 0 0); background:#0d0d12; border-right:1px solid #302d39;
+    transition:clip-path 420ms cubic-bezier(.22,1,.36,1),box-shadow 420ms ease;
+  }
+  body .discover-shell.hive-theme:is(.is-sidebar-expanded,:not(.is-sidebar-expanded)) > .discover-sidebar[data-expanded="true"] { clip-path:inset(0); box-shadow:12px 0 36px #0005; }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-nav-link {
+    width:52px; height:52px; padding:0 13px; gap:16px; justify-content:flex-start; transform:none;
+    transition:width 420ms cubic-bezier(.22,1,.36,1),background 180ms ease,color 180ms ease;
+  }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded="true"] .discover-nav-link { width:220px; }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-nav-link span { display:block; max-width:140px; opacity:0; transform:translateX(-8px); transition:opacity 180ms ease,transform 320ms cubic-bezier(.22,1,.36,1); }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded="true"] .discover-nav-link span { opacity:1; transform:translateX(0); transition-delay:55ms; }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-nav-link.is-active::before { display:none; }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-logo { padding-left:3px; }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-logo .hive-brand-name { max-width:170px; opacity:0; transform:translateX(-8px); transition:opacity 180ms ease,transform 350ms cubic-bezier(.22,1,.36,1); }
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded="true"] .discover-logo .hive-brand-name { opacity:1; transform:translateX(0); transition-delay:70ms; }
+}
+@media(prefers-reduced-motion:reduce) {
+  body .discover-shell.hive-theme > .discover-sidebar[data-expanded],
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-nav-link,
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-nav-link span,
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-logo .hive-brand-name,
+  body .discover-shell.hive-theme .discover-sidebar[data-expanded] .discover-logo .hive-brand-mark { transition:none; }
+}

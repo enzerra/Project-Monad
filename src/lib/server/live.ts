@@ -4,6 +4,7 @@ import { createPublicClient, createWalletClient, http, isAddress, verifyMessage,
 import { privateKeyToAccount } from "viem/accounts";
 import { configuredContractAddress, hiveCallAbi, monadTestnet } from "@/lib/chain";
 import { required } from "@/lib/server/database";
+import { serializeOperator } from "@/lib/server/operator-queue";
 export { required, db } from "@/lib/server/database";
 export { privyUser } from "@/lib/server/auth";
 
@@ -29,6 +30,18 @@ export const publicClient = createPublicClient({ chain: monadTestnet, transport:
 export function operatorWallet() {
   const account = privateKeyToAccount(required("RELAYER_PRIVATE_KEY") as Hex);
   return createWalletClient({ account, chain: monadTestnet, transport: http() });
+}
+
+export function operatorTransaction(functionName: "commit" | "closeEarly" | "reveal" | "resolve" | "voidCall", args: readonly unknown[], submitted?: (hash: Hex) => Promise<void>) {
+  return serializeOperator(async () => {
+    const wallet = operatorWallet();
+    const hash = await wallet.writeContract({ ...contractConfig(), functionName, args } as Parameters<typeof wallet.writeContract>[0]);
+    // Persist the hash before waiting, so a timeout can be reconciled on the next tick.
+    if (submitted) await submitted(hash);
+    const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 60_000 });
+    if (receipt.status !== "success") throw new Error("Operator transaction reverted");
+    return hash;
+  });
 }
 
 export async function verifyCommitSignature(digest: Hex, address: string, signature: Hex) {

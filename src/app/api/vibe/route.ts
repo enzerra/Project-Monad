@@ -6,6 +6,7 @@ import { refreshSourceCalls, sessionId } from "@/lib/server/vibe";
 import { vibeStore } from "@/lib/server/vibe-store";
 import { AuthError, privyUser } from "@/lib/server/auth";
 import type { SourceState } from "@/lib/source-calls";
+import { trustedOrigin } from "@/lib/server/request";
 
 export const runtime = "nodejs";
 const cookieName = "vibe-session";
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
 
 const choiceBody = z.object({ callId: z.string().min(1).max(100), choice: z.enum(["yes", "no"]), amount: z.number().int().min(10).max(500) }).strict();
 export async function POST(request: NextRequest) {
-  if (request.headers.get("origin") !== new URL(request.url).origin) return NextResponse.json({ error: "Origin tidak valid." }, { status: 403, headers: privateHeaders });
+  if (!trustedOrigin(request)) return NextResponse.json({ error: "Origin tidak valid." }, { status: 403, headers: privateHeaders });
   // POST cannot mint a session; initialize the account through GET first.
   let session: Session;
   try { session = await identity(request); }

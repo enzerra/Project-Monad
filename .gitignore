@@ -11,4 +11,5 @@ cache/
 .vibe-data/
 .chrome-preview*/
 .edge-*/
+.railway/
 preview-*.png

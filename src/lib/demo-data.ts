@@ -8,6 +8,7 @@ export type Content = {
   handle: string;
   title: string;
   description: string;
+  hashtags?: string[];
   category: string;
   kind: "insight" | "predictable" | "resolved";
   visual: "purple" | "orange" | "blue" | "green";
@@ -26,6 +27,12 @@ export type Content = {
     provider: "youtube";
     videoId: string;
     sourceUrl: string;
+    hasAudio: true;
+  } | {
+    provider: "upload";
+    src: string;
+    sourceUrl: string;
+    cropPosition: string;
     hasAudio: true;
   };
 };

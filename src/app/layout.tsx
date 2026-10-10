@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/auth-provider";
+import { VibeEntry } from "@/components/vibe-entry";
 import "./globals.css";
 import "@/components/hive-theme.css";
 import "@/components/product-standard.css";
 import "@/components/virtual-token.css";
+import "@/components/sidebar-motion.css";
 
 export const metadata: Metadata = {
   title: "VIBE — Temukan lebih awal",
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id">
-      <body><AuthProvider>{children}</AuthProvider></body>
+      <body><AuthProvider><VibeEntry>{children}</VibeEntry></AuthProvider></body>
     </html>
   );
 }

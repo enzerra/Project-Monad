@@ -1,0 +1,11 @@
+.animated-view-count { position:relative; display:inline-flex; max-width:100%; vertical-align:middle; font:inherit; font-variant-numeric:tabular-nums; letter-spacing:0; }
+.view-count-digits { display:inline-flex; align-items:center; line-height:1.2; }
+.view-count-place { position:relative; display:inline-block; width:.62em; height:1.2em; overflow:hidden; }
+.view-count-glyph { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font:inherit; }
+.view-count-separator { width:.24em; text-align:center; font:inherit; }
+.animated-view-count .view-count-delta { position:absolute; top:calc(100% + 4px); left:0; display:inline-flex; align-items:center; white-space:nowrap; pointer-events:none; font:600 11px/1.2 Geist,sans-serif; letter-spacing:0; color:#7ee1c9; }
+.animated-view-count .view-count-delta.is-correction { color:#e2ba72; }
+.discover-view-island .view-count-delta { left:50%; transform:translateX(-50%); top:calc(100% + 10px); border:1px solid #7ee1c92b; border-radius:999px; padding:4px 8px; background:#0c1715; box-shadow:0 3px 12px #0005; }
+@media (prefers-reduced-motion: reduce) {
+  .view-count-glyph { transform:none !important; }
+}

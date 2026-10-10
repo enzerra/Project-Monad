@@ -6,6 +6,8 @@ import { AnimatePresence, motion, useMotionTemplate, useReducedMotion, useSpring
 import { ArrowRight, ArrowUpRight, Check, Clock3, Coins, Gamepad2, Search, SlidersHorizontal, Trophy, X } from "lucide-react";
 import { findContent, formatCount, type Call, type Choice, type Content, type PredictionCategory } from "@/lib/demo-data";
 import { HiveSidebar } from "@/components/hive-sidebar";
+import { useAccountAuth } from "@/components/auth-provider";
+import { LiveCallList } from "@/components/live-call-list";
 
 import { PredictionSubject } from "@/components/prediction-subject";
 import { VirtualBalance, type VirtualAccount } from "@/components/virtual-wallet";
@@ -31,6 +33,10 @@ const labels: Record<PredictionCategory, string> = { gaming: "Gaming", sport: "S
 const destination = (call: Call) => call.status === "resolved" ? `/results/${call.id}` : `/calls/${call.id}`;
 
 function MarketCard({ call, content: sourceContent, selected, reduceMotion, index }: { call: Call; content?: Content; selected?: SavedChoice; reduceMotion: boolean; index: number }) {
+  const auth = useAccountAuth();
+  const requireLogin = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (auth.configured && !auth.authenticated) { event.preventDefault(); if (auth.ready) auth.login(); }
+  };
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const active = hovered || focused;
@@ -61,7 +67,7 @@ function MarketCard({ call, content: sourceContent, selected, reduceMotion, inde
     <p className="source-observed">{formatCount(call.currentViews)} views · YouTube · pengembalian 2×</p>
     <div className="market-card-signal"><span className={`market-status ${completed ? "is-done" : ""}`}><span />{statusLabel}</span>{selected && <span className="market-choice-state"><Check size={13} /> Sudah pilih {selected.choice === "yes" ? "Ya" : "Tidak"}</span>}</div>
     <div className="market-card-progress"><div><span>Awal <strong>{formatCount(call.baselineViews)}</strong></span><span>Target <strong>{formatCount(call.targetViews)}</strong></span></div><div className="market-progress-track"><motion.span style={{ width: `${progress}%`, originX: 0 }} initial={{ scaleX: reduceMotion ? 1 : 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: reduceMotion ? 0 : .95, delay: reduceMotion ? 0 : .2 + index * .07, ease: [.22, 1, .36, 1] }} /></div></div>
-    <div className="market-card-bottom">{completed ? <Link href={destination(call)} className="market-result-link">{call.status === "resolved" ? "Lihat hasil" : "Lihat detail"} <ArrowUpRight size={16} /></Link> : <div className="market-outcomes" aria-label={`Pilihan untuk ${call.question}`}><Link href={`/calls/${call.id}?choice=yes`} className="market-outcome-yes" aria-label={`Lanjutkan pilihan Ya untuk ${call.question}`}>Ya <ArrowUpRight size={15} /></Link><Link href={`/calls/${call.id}?choice=no`} className="market-outcome-no" aria-label={`Lanjutkan pilihan Tidak untuk ${call.question}`}>Tidak <ArrowUpRight size={15} /></Link></div>}<Link href={destination(call)} className="market-card-details" aria-label={`Buka detail ${call.question}`}><ArrowRight size={17} /></Link></div>
+    <div className="market-card-bottom">{completed ? <Link href={destination(call)} className="market-result-link">{call.status === "resolved" ? "Lihat hasil" : "Lihat detail"} <ArrowUpRight size={16} /></Link> : <div className="market-outcomes" aria-label={`Pilihan untuk ${call.question}`}><Link href={`/calls/${call.id}?choice=yes`} className="market-outcome-yes" onClick={requireLogin} aria-label={`Lanjutkan pilihan Ya untuk ${call.question}`}>Ya <ArrowUpRight size={15} /></Link><Link href={`/calls/${call.id}?choice=no`} className="market-outcome-no" onClick={requireLogin} aria-label={`Lanjutkan pilihan Tidak untuk ${call.question}`}>Tidak <ArrowUpRight size={15} /></Link></div>}<Link href={destination(call)} className="market-card-details" aria-label={`Buka detail ${call.question}`}><ArrowRight size={17} /></Link></div>
   </motion.article>;
 }
 
@@ -112,6 +118,7 @@ export function PredictionsPage({ choices, account }: { choices: SavedChoice[]; 
         <AnimatePresence initial={false} mode="wait"><motion.div className="market-cards" key={`${category}-${status}-${sort}`} initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -5 }} transition={{ duration: reduceMotion ? 0.1 : 0.2 }}>{visible.map((call, index) => <MarketCard index={index} key={call.id} content={account.contents?.find((item) => item.id === call.contentId)} call={call} selected={choices.find((choice) => choice.callId === call.id)} reduceMotion={Boolean(reduceMotion)} />)}{calls.length === 0 ? <div className="source-calibration" role="status"><h3>{(account.feedReady ?? account.walletReady) ? "Menyiapkan Call dari Shorts nyata" : "Memuat prediksi…"}</h3><p>Dua pemeriksaan views berjarak minimal 30 menit diperlukan untuk menentukan target. Video yang sedang mendapat tambahan views akan mendapat Call; maksimal satu Call aktif per kategori.</p>{account.calibrationStartedAt && <p>Pengamatan dimulai {new Date(account.calibrationStartedAt).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta" })} WIB.</p>}<Link href="/discover">Tonton Shorts sambil menunggu <ArrowRight size={16} /></Link></div> : visible.length === 0 && <div className="market-empty"><Search size={24} /><h3>Tidak ada prediksi yang cocok</h3><p>Coba kata kunci lain atau kembali ke semua kategori.</p><button type="button" onClick={resetFilters}>Lihat semua prediksi</button></div>}</motion.div></AnimatePresence>
       </section><motion.aside initial={{ opacity: 0, x: reduceMotion ? 0 : 18 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: reduceMotion ? 0 : .65, delay: reduceMotion ? 0 : .12, ease: [.22, 1, .36, 1] }} className="market-activity" aria-label="Aktivitas pilihan"><div className="market-activity-head"><span className="market-activity-icon"><Clock3 size={18} /></span><h2>Pilihanmu</h2></div>{choices.length ? <div className="market-activity-list">{choices.map((choice) => { const call = calls.find((item) => item.id === choice.callId); return call ? <Link href={destination(call)} key={choice.callId}><span>{choice.choice === "yes" ? "Ya" : "Tidak"} · {choice.status === "locked" ? "Tersimpan" : "Diproses"}</span><strong>{call.question}</strong><ArrowUpRight size={15} /></Link> : null; })}</div> : <div className="market-activity-empty"><p>Belum ada pilihan. Mulai dari Call yang menarik perhatianmu.</p></div>}<div className="market-activity-note"><strong>Tentang angka di sini</strong><p>Views diperiksa dari YouTube setiap 30 detik. Pilihan dan saldo disimpan di server. Prediksi benar mengembalikan 2× nominal; VIBE gratis dan tidak memiliki nilai uang.</p></div></motion.aside></div>
 
+      <LiveCallList />
     </div></main>
   </div>;
 }

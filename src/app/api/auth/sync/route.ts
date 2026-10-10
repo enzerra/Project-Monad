@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { AuthError, privyUser } from "@/lib/server/auth";
 import { db, supabaseConfigured } from "@/lib/server/database";
+import { trustedOrigin } from "@/lib/server/request";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", Vary: "Authorization" };
@@ -14,7 +15,7 @@ const profileBody = z.object({
 }).strict();
 
 export async function POST(request: Request) {
-  if (request.headers.get("origin") !== new URL(request.url).origin) return NextResponse.json({ error: "Origin tidak valid." }, { status: 403, headers });
+  if (!trustedOrigin(request)) return NextResponse.json({ error: "Origin tidak valid." }, { status: 403, headers });
   try {
     const userId = await privyUser(request);
     if (!supabaseConfigured()) return NextResponse.json({ error: "Database akun belum dikonfigurasi." }, { status: 503, headers });

@@ -7,16 +7,25 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
+    "start:production": "node scripts/start-production.mjs",
+    "check:deploy": "node --env-file=.env.local scripts/check-deploy.mjs",
+    "check:deploy:local": "node --env-file=.env.local scripts/check-deploy.mjs --local",
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
     "test:contract": "node scripts/forge.mjs test",
     "compile:contract": "node scripts/forge.mjs build",
-    "deploy:contract": "node scripts/forge.mjs script script/DeployHiveCallV2.s.sol:DeployHiveCallV2 --rpc-url https://testnet-rpc.monad.xyz --broadcast",
+    "deploy:contract": "node --env-file=.env.local scripts/deploy-contract.mjs",
     "create:call": "node --env-file=.env.local scripts/create-call.mjs"
   },
+  "engines": {
+    "node": ">=22.15.0 <23"
+  },
+  "overrides": {
+    "ws@^8.0.0": "^8.22.0"
+  },
   "dependencies": {
-    "@privy-io/react-auth": "^3.17.0",
+    "@privy-io/react-auth": "3.46.0",
     "jose": "^6.0.0",
     "lucide-react": "^0.468.0",
     "motion": "^13.5.1",

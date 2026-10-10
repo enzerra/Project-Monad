@@ -11,6 +11,15 @@ Nama produk yang tampil kepada pengguna adalah **VIBE**. Beberapa nama teknis la
 - `contracts/HiveCallV2.sol` adalah kontrak commit–reveal untuk Monad yang dibangun dan diuji dengan Foundry; alamat deployment belum ada.
 - Call Shorts menampilkan bukti pemeriksaan YouTube dan riwayat saldo; tidak mengklaim proof onchain. Call fixture lama menjadi arsip demo dan tidak menerima kredit server.
 - Branch `feat/google-auth-supabase` sudah digabung. Root provider menyinkronkan profil Google ke `hive_users`. API memverifikasi JWT Privy; saldo mengikuti DID akun dan bisa dibuka lintas perangkat. Kredensial lokal harus diisi sebelum login/database live bisa diuji. Relayer/Monad terpisah. Data saldo lama tidak diimpor atau dihapus.
+- Profil dan Upload adalah halaman terpisah. Upload mendukung preview MP4/WebM, judul, caption, kategori dan hashtag; file publik tersimpan di Supabase Storage, maksimal 40 MB. Intro otomatis masuk Discover; saldo dan pengiriman Call/upload memerlukan login.
+
+## Deploy dan submission
+
+Website MVP: [VIBE di Railway](https://web-production-5e33e.up.railway.app). Deploy publik telah lulus healthcheck dan pemeriksaan API pengunjung pada 9 Oktober 2026. Uji login Google, dua akun, upload dan hasil Call nyata masih diperlukan sebelum submission.
+
+Ikuti [panduan Railway](docs/RAILWAY_DEPLOYMENT.md) dan [checklist submission](docs/SUBMISSION_CHECKLIST.md). `railway.json` menyiapkan satu server Node 22 yang tetap aktif, build produksi, pemeriksaan konfigurasi saat start, dan healthcheck `/api/health`. Konfigurasi Privy, Supabase, YouTube dan origin HTTPS wajib untuk deployment ini. Kredensial tidak disertakan dalam repo.
+
+Preflight lokal: `npm run check:deploy:local`. Pemeriksaan ini membaca schema/state/bucket Supabase dan metrik YouTube; tidak menggantikan uji login Google, upload dan pilihan Call pada domain publik. Website deployment dan kontrak Monad adalah dua gate terpisah.
 
 ## Jalankan lokal
 
@@ -85,26 +94,26 @@ Untuk setiap Call, komitmen mengikat chain ID, alamat kontrak, Call ID, wallet, 
 3. Aktifkan YouTube Data API v3 dan buat API key. Operator harus memeriksa video dari kategori Gaming, Sports, atau Crypto, hak kurasi, dan status Shorts sebelum membuat Call.
 4. Buat wallet operator khusus Testnet, isi `RELAYER_PRIVATE_KEY`, dan beri MON Testnet. Wallet ini menjadi owner, keeper, resolver, dan pembayar gas.
 5. Buat kunci enkripsi pilihan 32 byte, misalnya `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`, lalu isi `CHOICE_ENCRYPTION_KEY`. Simpan cadangan aman; tanpa kunci ini pilihan tidak bisa di-reveal.
-6. Isi `OPERATOR_API_KEY` acak yang kuat. Jalankan `npm run compile:contract` dan `npm run test:contract`. Untuk deploy Foundry, masukkan `RELAYER_PRIVATE_KEY` ke environment terminal yang menjalankan Forge, lalu jalankan `npm run deploy:contract`. Ambil alamat dari output/broadcast Foundry dan isi `NEXT_PUBLIC_MONAD_CONTRACT_ADDRESS`. Jangan deploy sebelum kredensial dan gas Testnet siap.
+6. Isi `OPERATOR_API_KEY` acak yang kuat. Jalankan `npm run compile:contract` dan `npm run test:contract`. Jalankan `npm run deploy:contract`; skrip membaca `.env.local`, menyimpan hash sebelum menunggu receipt, memverifikasi bytecode/peran, dan mengisi `NEXT_PUBLIC_MONAD_CONTRACT_ADDRESS`. Bukti lokal berada di `.vibe-data/monad-deployment.json`. Jangan deploy sebelum kredensial dan gas Testnet siap.
 7. Terbitkan Call nyata: `npm run create:call -- VIDEO_ID TARGET_VIEWS 6 "Judul" "Kreator"`. Skrip membaca baseline YouTube, membuat Call onchain, lalu menyimpan rekamannya di database. Jika database gagal setelah transaksi sukses, rekonsiliasi manual dari hash transaksi diperlukan.
-8. Jalankan operator tick tiap 1–5 menit dengan `POST /api/operator/tick` dan header `Authorization: Bearer <OPERATOR_API_KEY>`. Tick mengambil snapshot, menutup dini pada 50% jarak baseline–target, melakukan reveal, lalu resolve atau void. Sumber yang gagal akan dicoba ulang sampai jendela evaluasi 30 menit berakhir. Gunakan scheduler server yang tepercaya; jangan mengekspos kunci operator ke browser.
-9. Di halaman Predictions, “Call nyata” membuka `/live/calls/{id}`. Pengguna login, menandatangani digest spesifik Call, dan melihat hash commit setelah receipt sukses. Halaman yang sama menampilkan snapshot serta hash resolve/void.
+8. Jalankan operator tick tiap 1–5 menit dengan `POST /api/operator/tick` dan header `Authorization: Bearer <OPERATOR_API_KEY>`. Tick mengambil snapshot, menutup dini pada 50% jarak baseline–target, melakukan reveal, lalu resolve atau void. Sumber yang gagal akan dicoba ulang sampai jendela evaluasi 30 menit berakhir. Di Railway production, instrumentation menjalankan keeper ini otomatis setiap menit. Jangan menjalankan scheduler tambahan atau mengekspos kunci operator ke browser.
+9. Di halaman Predictions, “Buktikan pilihanmu” membuka `/live/calls/{id}`. Pengguna login, menandatangani digest spesifik Call, dan melihat hash commit setelah receipt sukses. Halaman yang sama menampilkan snapshot serta hash resolve/void.
 
 `.env.example` adalah daftar variabel, bukan kredensial berfungsi. Mode demo tetap ditandai secara eksplisit meski alur live diaktifkan.
 
 ### Batasan operasional
 
-- Relayer mempunyai plafon 200.000 gas per commit dan batas jumlah commit harian (`MAX_DAILY_COMMITS`, default 50). API juga membatasi 5 intent per akun dan 20 per IP per 24 jam. Multi-akun dan IP bersama tetap dapat mengganggu pembatasan; monitor sebelum membuka beta.
+- Relayer mengestimasi gas per transaksi dan mempunyai batas jumlah commit harian (`MAX_DAILY_COMMITS`, default 50). API juga membatasi 5 intent per akun dan 20 per IP per 24 jam. Multi-akun dan IP bersama tetap dapat mengganggu pembatasan; monitor sebelum membuka beta.
 - Operator menyimpan pilihan terenkripsi dan dapat melihat plaintext saat reveal. Kerahasiaan terhadap operator **tidak dijamin**. Kontrak membuktikan komitmen dan hasil yang diumumkan, sedangkan kebenaran angka YouTube tetap bergantung pada API dan operator.
 - Jika snapshot YouTube tidak tersedia selama jendela hasil 30 menit, tick mem-void Call. Penurunan views sebelum resolusi juga memicu void `metric_correction`; kontrak menolak resolve di bawah baseline atau angka closeEarly. Bukti snapshot menyertakan waktu, angka, sumber, dan hash. Koreksi views setelah resolusi memerlukan kebijakan sengketa manusia; belum otomatis.
-- Endpoint operator belum memiliki antrean terdistribusi atau rekonsiliasi transaksi otomatis. Jalankan satu worker; periksa status database dan chain setelah gangguan jaringan. Jangan gunakan live mode publik sebelum audit operasional ini.
+- Operator mempunyai antrean transaksi dalam satu proses, tick tanpa overlap, dan rekonsiliasi commit/reveal serta status terminal dari chain. Ini bukan antrean terdistribusi: jalankan satu replica/worker dan periksa hash setelah gangguan jaringan. Pembuatan Call menyimpan bukti transaksi untuk rekonsiliasi manual bila penulisan database gagal.
 - Reputasi Early & Right, Wilson lower bound, dan leaderboard bersyarat belum dihubungkan ke data onchain. Belum ada submission yang dapat mengklaim fitur itu berjalan.
-- `npm audit --omit=dev` saat ini melaporkan advisory pada dependency transitif wallet, termasuk satu tingkat tinggi (`ws`). Tinjau dan perbarui rantai dependency sebelum publikasi. Build juga memberi peringatan optional peer `@farcaster/mini-app-solana` dari Privy; build tetap selesai.
+- Pemeriksaan `npm audit --omit=dev` pada 9 Oktober 2026 melaporkan 23 advisory tingkat sedang, tanpa tingkat tinggi/kritis. `ws` 8.x dipatok ke versi patched melalui override. Privy 3.46.0 dipatok untuk rilis yang diuji; konektor Farcaster/Solana opsional tidak dipakai dan dikecualikan dari bundle. Advisory transitif wallet yang tersisa perlu ditinjau sebelum beta besar; jalankan audit lagi untuk rilis berikutnya. Audit dependency development masih memiliki temuan tingkat tinggi/kritis dan tidak boleh dianggap bersih.
 - Channel dan komentar live belum tersambung ke database; halaman Community yang ada tetap demo lokal.
 
 ## Persiapan submission
 
-Sebelum submission: deploy kontrak dan aplikasi, catat chain ID/alamat/hash contoh, uji dua akun end-to-end, siapkan demo publik ≤3 menit, lisensi/atribusi, dokumentasi deploy, serta isi portal. **Belum ada alamat kontrak untuk dicantumkan.**
+Sebelum submission: deploy kontrak dan aplikasi, catat chain ID/alamat/hash contoh, uji dua akun end-to-end, siapkan demo publik ≤3 menit, lisensi/atribusi, dokumentasi deploy, serta isi portal. Kontrak Monad Testnet saat ini: **0x1a4914ec33c242b8fc781b3780c4bb0ab9bc09a5**. Bukti dan acceptance yang tersisa dicatat di [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md).
 
 ## Atribusi dan asal kode
 

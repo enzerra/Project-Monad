@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { formatCount, formatTime } from "@/lib/demo-data";
+import { AnimatedViewCount } from "./animated-view-count";
 
 export function LiveVideoViews({ videoId, initialViews, initialObservedAt }: {
   videoId: string; initialViews: number; initialObservedAt: string;
 }) {
   const [snapshot, setSnapshot] = useState({ views: initialViews, observedAt: initialObservedAt });
   const [unavailable, setUnavailable] = useState(false);
-  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     let disposed = false;
@@ -51,8 +50,6 @@ export function LiveVideoViews({ videoId, initialViews, initialObservedAt }: {
 
   const description = `${formatCount(snapshot.views)} views YouTube. Diperiksa ${formatTime(snapshot.observedAt)}.${unavailable ? " Pembaruan sementara tidak tersedia; menampilkan angka terakhir." : ""}`;
   return <div className="discover-view-island" role="status" aria-label={`${formatCount(snapshot.views)} views YouTube${unavailable ? ", pembaruan tertunda" : ""}`} title={description}>
-    <motion.span key={snapshot.views} aria-hidden="true" initial={reducedMotion ? false : { opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .18 }}>
-      {formatCount(snapshot.views)}
-    </motion.span>
+    <AnimatedViewCount value={snapshot.views} />
   </div>;
 }

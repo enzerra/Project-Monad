@@ -34,6 +34,7 @@ function TokenCoin() {
 
 export function VirtualWalletPanel({ account }: { account: VirtualAccount }) {
   const auth = useAccountAuth();
+  if (auth.configured && !auth.authenticated) return <section className="virtual-wallet-panel" aria-label="Masuk ke VIBE"><h2>Mulai pilih Call.</h2><p className="virtual-wallet-note">Masuk Google untuk mendapatkan 1.000 VIBE gratis.</p><AuthControl /></section>;
   return <section className="virtual-wallet-panel" aria-label="Saldo dan riwayat token VIBE">
     <span className="virtual-eyebrow">VIBE / SALDO SIMULASI</span>
     <div className="virtual-wallet-total"><TokenCoin /><strong>{account.walletReady ? formatCount(account.balance) : "—"}</strong><span>VIBE</span></div>
@@ -54,7 +55,9 @@ export function VirtualWalletPanel({ account }: { account: VirtualAccount }) {
 export function VirtualBalance({ account }: { account: VirtualAccount }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const reduceMotion = useReducedMotion();
+  const auth = useAccountAuth();
   const displayedBalance = account.walletReady ? formatCount(account.balance) : "—";
+  if (auth.configured && (!auth.ready || !auth.authenticated)) return null;
   return <><button type="button" className="virtual-balance" onClick={() => dialog.current?.showModal()} aria-label={`Buka saldo token, ${account.walletReady ? displayedBalance : "belum dimuat"} VIBE`}><TokenCoin /><span className="token-balance-value" role="status" aria-atomic="true"><span className="token-balance-number"><AnimatePresence initial={false} mode="popLayout"><motion.strong key={displayedBalance} initial={reduceMotion ? false : { opacity: 0, y: 7, filter: "blur(3px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} exit={reduceMotion ? undefined : { opacity: 0, y: -7, filter: "blur(3px)" }} transition={{ duration: reduceMotion ? 0 : .32, ease: [.22, 1, .36, 1] }}>{displayedBalance}</motion.strong></AnimatePresence></span><span className="token-balance-name">VIBE</span></span></button><dialog className="virtual-wallet-dialog" ref={dialog} aria-labelledby="virtual-wallet-title"><div className="virtual-dialog-top"><h2 id="virtual-wallet-title">Saldo VIBE</h2><button type="button" onClick={() => dialog.current?.close()} aria-label="Tutup saldo VIBE"><X size={20} /></button></div><VirtualWalletPanel account={account} /></dialog></>;
 }
 
