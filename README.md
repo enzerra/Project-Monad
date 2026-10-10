@@ -8,14 +8,14 @@ Nama produk yang tampil kepada pengguna adalah **VIBE**. Beberapa nama teknis la
 
 - Saldo gratis **1.000 VIBE per akun Privy** saat integrasi dikonfigurasi (sesi cookie pada mode lokal), nominal **10–500 VIBE per Call**. Benar mengembalikan **2×** nominal; void mengembalikan nominal sekali. Saldo/Call/bukti tersimpan atomik di Supabase atau SQLite lokal. Aturan: [PRD Call Shorts](VIBE_SOURCE_CALL_PRD.md).
 - Discover/Prediksi memakai Shorts dan metrik YouTube nyata. Call dibuka setelah dua pemeriksaan minimal 30 menit dan pertumbuhan positif. Komentar/Community tetap lokal.
-- `contracts/HiveCallV2.sol` adalah kontrak commit–reveal untuk Monad yang dibangun dan diuji dengan Foundry; alamat deployment belum ada.
+- `contracts/HiveCallV2.sol` adalah kontrak commit–reveal untuk Monad yang dibangun dan diuji dengan Foundry; sudah dideploy pada Monad Testnet di `0x1a4914ec33c242b8fc781b3780c4bb0ab9bc09a5`. Dua komitmen pengguna sudah diverifikasi; reveal dan hasil Call pertama masih menunggu jadwal.
 - Call Shorts menampilkan bukti pemeriksaan YouTube dan riwayat saldo; tidak mengklaim proof onchain. Call fixture lama menjadi arsip demo dan tidak menerima kredit server.
-- Branch `feat/google-auth-supabase` sudah digabung. Root provider menyinkronkan profil Google ke `hive_users`. API memverifikasi JWT Privy; saldo mengikuti DID akun dan bisa dibuka lintas perangkat. Kredensial lokal harus diisi sebelum login/database live bisa diuji. Relayer/Monad terpisah. Data saldo lama tidak diimpor atau dihapus.
+- Branch `feat/google-auth-supabase` sudah digabung. Root provider menyinkronkan profil Google ke `hive_users`. API memverifikasi JWT Privy; saldo mengikuti DID akun dan bisa dibuka lintas perangkat. Login Google dan saldo dua akun sudah diuji pemilik pada domain Railway; masing-masing mempunyai satu grant awal 1.000 VIBE yang tersimpan di Supabase. Relayer/Monad terpisah. Data saldo lama tidak diimpor atau dihapus.
 - Profil dan Upload adalah halaman terpisah. Upload mendukung preview MP4/WebM, judul, caption, kategori dan hashtag; file publik tersimpan di Supabase Storage, maksimal 40 MB. Intro otomatis masuk Discover; saldo dan pengiriman Call/upload memerlukan login.
 
 ## Deploy dan submission
 
-Website MVP: [VIBE di Railway](https://web-production-5e33e.up.railway.app). Deploy publik telah lulus healthcheck dan pemeriksaan API pengunjung pada 9 Oktober 2026. Uji login Google, dua akun, upload dan hasil Call nyata masih diperlukan sebelum submission.
+Website MVP: [VIBE di Railway](https://web-production-5e33e.up.railway.app). Deploy publik telah lulus healthcheck dan pemeriksaan API pengunjung pada 9 Oktober 2026. Login Google, saldo dua akun, serta dua pilihan Monad berhasil diuji pada 10 Oktober 2026. Uji upload dan hasil Call Monad masih diperlukan sebelum submission.
 
 Ikuti [panduan Railway](docs/RAILWAY_DEPLOYMENT.md) dan [checklist submission](docs/SUBMISSION_CHECKLIST.md). `railway.json` menyiapkan satu server Node 22 yang tetap aktif, build produksi, pemeriksaan konfigurasi saat start, dan healthcheck `/api/health`. Konfigurasi Privy, Supabase, YouTube dan origin HTTPS wajib untuk deployment ini. Kredensial tidak disertakan dalam repo.
 

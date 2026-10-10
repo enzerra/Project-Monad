@@ -9,15 +9,15 @@ Work through these gates in order. A code build is not a completed submission.
 | Upload | Authenticated upload with preview, caption and hashtags | Implemented; public deployment acceptance pending |
 | YouTube | Source metadata, real observation timestamps, worker runs without open tabs | Public views API and hosted health report fresh observations |
 | Monad | Testnet contract address, create/commit/reveal/result transaction hashes | Deployed on Testnet; create and first signed commit verified. Reveal and final result pending |
-| Repository | Public source, MIT license, README, build history, AI disclosure | Verify pushed branch contains the tested release |
+| Repository | Public source, MIT license, README, build history, AI disclosure | Public branch contains tested code release d402cb4, MIT license and AI disclosure |
 | Demo | Public accessible video, maximum 3 minutes, real Monad interaction | English script available; recording pending |
 | Portal | Project/team details, one primary track, requested links/docs and final submit | Pending |
 
 ## Record release evidence
 
 - Website URL: https://web-production-5e33e.up.railway.app
-- Verified Railway deployment: `c8a29ac2-fa71-49cf-b220-56fd9e3ac31a` (10 October 2026)
-- GitHub release branch/commit:
+- Verified Railway deployment: `029e72d2-7a04-4e3c-9cae-0befd9e5f125` (10 October 2026)
+- GitHub release branch/commit: codex/integrate-privy-supabase / d402cb4
 - Monad network/chain ID: Testnet / 10143
 - Contract address: 0x1a4914ec33c242b8fc781b3780c4bb0ab9bc09a5
 - Create Call transaction: 0xb447a6b8845a34b433cb5c3805ab593b59db9d1fa46f3eb6c9cf9222881ca01b
@@ -36,9 +36,9 @@ Work through these gates in order. A code build is not a completed submission.
 - Guest `/api/vibe` has no account or balance; Call/upload/profile-sync writes without authentication return 401. Foreign origins return 403.
 - Public Short views endpoint returns actual YouTube observations with a timestamp.
 - Railway starts `scripts/start-production.mjs`, listens on port 8080, uses `/api/health`, one replica, sleep disabled, and ON_FAILURE retries.
-- Profile login no longer clips on a narrow viewport. A full Google login and two-account acceptance test must be completed by the project owner.
+- Profile login no longer clips on a narrow viewport. Google login, two balances, and two signed Testnet choices have now been confirmed by the owner and verified against storage/chain.
 - Production dependency audit: 23 moderate findings, zero high/critical at verification time. Development dependencies still have unresolved advisories; this is not a security audit certificate.
-- Deployment uses the local working-tree snapshot. Recent changes have not yet been committed/pushed as a release; confirm the public repository matches before submission.
+- Code release d402cb4 has been pushed to the public codex/integrate-privy-supabase branch and deployed to Railway. Documentation acceptance notes can have later commits.
 
 ## Demo outline
 
@@ -55,3 +55,5 @@ Verify the portal's current deadline and mandatory fields before submission. The
 - Scheduled close: 2026-10-10T07:02:40.000Z; evaluation: 2026-10-10T11:32:40.000Z.
 - Hosted keeper runs every minute with one replica and serializes transactions with sponsored commits. API smoke check returned polled; anonymous prepare/submit requests returned 401.
 - Full reveal/resolve acceptance, upload and visual checks across phone widths remain pending.
+
+- Supabase ledger audit confirmed two separate persisted balances of 1,000 VIBE, with one welcome grant each.
