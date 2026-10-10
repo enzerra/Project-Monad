@@ -227,6 +227,9 @@ html body .product-standard.hive-theme .content-actions>* { background:#f9f3e5; 
 html body .product-standard.hive-theme .creator-avatar { background:#dfe9db; color:var(--vibe-accent); border-radius:50%; }
 html body .live-proof-page { color:var(--vibe-text); }
 html body .live-proof-page :is(p,small,.live-proof-time) { color:var(--vibe-muted); }
+html body .live-proof-page a { color:var(--vibe-accent); }
+html body .live-proof-page .choice-feedback.locked { background:#e2eadd; border-color:#b8c8af; color:var(--vibe-text); border-radius:14px; }
+html body .live-proof-page .live-proof-details { border-color:var(--vibe-border); }
 html body .live-proof-card .choice-button { background:#f2ecdd; color:var(--vibe-text); border-color:var(--vibe-border); }
 html body .live-proof-card .choice-button:first-child { background:var(--vibe-accent); color:#fffaf0; }
 html body .button-primary { background:var(--vibe-accent); color:#fffaf0; }
