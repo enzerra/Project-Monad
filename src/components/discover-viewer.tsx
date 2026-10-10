@@ -230,7 +230,9 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
     if (!start || start.pointerId !== event.pointerId) return;
     const dx = event.clientX - start.x;
     const dy = event.clientY - start.y;
-    if (Math.abs(dy) >= 58 && Math.abs(dy) > Math.abs(dx) * 1.35) {
+    // The compact Shorts header is the touch surface outside the official iframe.
+    const threshold = (event.target as HTMLElement).closest(".discover-story-top") ? 24 : 58;
+    if (Math.abs(dy) >= threshold && Math.abs(dy) > Math.abs(dx) * 1.35) {
       lastSwipeRef.current = Date.now();
       navigate(dy < 0 ? 1 : -1);
     }
@@ -327,10 +329,11 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
 
       <main className={`discover-main ${call ? "has-call" : "is-insight"}`} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { swipeStartRef.current = null; }} onWheel={onWheel}>
         <div className="discover-layout">
-          {youtubeStats && <LiveVideoViews key={content.id} videoId={youtubeStats.video.videoId} initialViews={youtubeStats.youtubeViews} initialObservedAt={youtubeStats.observedAt} />}
-          {isYoutube && <div className="discover-swipe-area" aria-label="Swipe up or down to change video" role="region" />}
           <section className="discover-story" aria-label="Video information">
-            <div className="discover-story-top"><VirtualBalance account={state} /></div>
+            <div className="discover-story-top" role="region" aria-label="Video stats. Swipe up or down, or use the arrow keys, to browse videos." tabIndex={0}>
+              {youtubeStats && <LiveVideoViews key={content.id} videoId={youtubeStats.video.videoId} initialViews={youtubeStats.youtubeViews} initialObservedAt={youtubeStats.observedAt} />}
+              <VirtualBalance account={state} />
+            </div>
             <motion.div className="discover-story-bottom" key={`story-${content.id}`} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35, ease: [.22, 1, .36, 1] }}>
               <div className="discover-author"><span className="discover-author-mark" aria-hidden="true">{content.creator.slice(0, 1).toUpperCase()}</span><div><strong>{content.creator}</strong><span>{isYoutube ? content.category.split(" · ")[0] : content.category}</span></div></div>
               <h1>{content.title.replace(/\s*#\S+/g, "").trim() || content.title}</h1>

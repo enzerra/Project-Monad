@@ -1,7 +1,7 @@
-/* Mobile feed: local clips fill the screen; official YouTube players retain an
-   unobstructed frame with VIBE controls beside it. */
+/* Mobile feed: local clips fill the screen; official Shorts use the full width
+   beneath a compact stats bar, keeping their controls unobstructed. */
 .discover-call-dock,.discover-mobile-menu,.discover-mobile-for-you,.discover-mobile-avatar,.discover-actions .discover-mobile-reaction,.discover-sheet-handle { display:none; }
-.discover-view-island,.discover-swipe-area { display:none; }
+.discover-view-island { display:none; }
 .discover-shell.viewer-standard .discover-empty-feed { min-height:calc(100dvh - 100px); width:min(440px,100%); margin:auto; padding:32px 24px; display:flex; align-items:flex-start; justify-content:center; flex-direction:column; gap:16px; }
 .discover-shell.viewer-standard .discover-empty-feed>span { color:#a9b4b3; font:500 12px/1.4 Geist,sans-serif; letter-spacing:.1em; }
 .discover-shell.viewer-standard .discover-empty-feed h1 { margin:0; font:650 28px/1.15 Geist,sans-serif; letter-spacing:-.04em; }
@@ -108,15 +108,18 @@
  body .discover-shell.viewer-standard.hive-theme .discover-story-bottom::-webkit-scrollbar,
  body .discover-shell.viewer-standard.hive-theme .discover-side-content::-webkit-scrollbar { display:none; }
 
- /* Keep the action rail beside the official player, with a small attribution
-    strip below it. Neither region overlaps the YouTube iframe. */
- body .discover-shell.viewer-standard.hive-theme.is-youtube-video { --youtube-header:calc(48px + env(safe-area-inset-top)); --youtube-footer:62px; --youtube-rail:54px; }
- body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-player-column { inset:var(--youtube-header) var(--youtube-rail) var(--youtube-footer) 0; }
- body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-swipe-area { display:block; position:absolute; z-index:1; inset:var(--youtube-header) 0 var(--youtube-footer) auto; width:var(--youtube-rail); touch-action:pan-x; }
+ /* VIBE stats stay above the iframe; YouTube supplies its own video information
+    and controls. The header also accepts short vertical swipes between videos. */
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video { --youtube-header:calc(56px + env(safe-area-inset-top)); }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-player-column { inset:var(--youtube-header) 0 0; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-player { width:100%; height:100%; aspect-ratio:auto; background:#000; }
- body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-top { inset:auto 10px 20px auto; height:26px; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-top { inset:0 0 auto; height:var(--youtube-header); padding:env(safe-area-inset-top) 12px 0; gap:8px; justify-content:center; touch-action:pan-x; user-select:none; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-top:has(.virtual-balance) { justify-content:space-between; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-top .discover-view-island { position:static; transform:none; min-width:0; max-width:55%; flex-shrink:1; padding:0 12px; font-size:13px; letter-spacing:.01em; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-top .virtual-balance { min-height:44px; max-width:52%; flex-shrink:0; align-self:center; padding:5px 9px; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video.is-drawer-open .discover-story-top { visibility:hidden; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-mobile-for-you { display:none; }
- body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-bottom { inset:auto 114px 5px 12px; max-height:56px; overflow:hidden; text-shadow:none; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story-bottom { display:none; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-author { margin-bottom:2px; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-author strong { font-size:14px; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-story h1 { font-size:13px; margin-bottom:2px; -webkit-line-clamp:1; }
@@ -124,7 +127,7 @@
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-live-stats { display:none; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-attribution { font-size:11px; white-space:nowrap; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-source-note { display:none; }
- body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-actions { inset:auto 3px calc(var(--youtube-footer) + 12px) auto; width:48px; height:auto; flex-direction:column; justify-content:flex-end; align-items:center; gap:10px; }
+ body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-actions { display:none; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-actions button { min-height:48px; width:48px; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-actions button svg { width:29px; height:29px; }
  body .discover-shell.viewer-standard.hive-theme.is-youtube-video .discover-actions > button:first-of-type { display:none; }
