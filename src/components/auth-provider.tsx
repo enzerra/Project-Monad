@@ -8,7 +8,7 @@ type AccountAuth = {
   name: string; walletAddress?: string; syncError: string;
   login: () => void; logout: () => Promise<void>; requestHeaders: () => Promise<Record<string, string>>;
 };
-const localAuth: AccountAuth = { configured: false, ready: true, authenticated: false, accountId: null, name: "Penjelajah VIBE", syncError: "", login: () => {}, logout: async () => {}, requestHeaders: async () => ({}) };
+const localAuth: AccountAuth = { configured: false, ready: true, authenticated: false, accountId: null, name: "VIBE explorer", syncError: "", login: () => {}, logout: async () => {}, requestHeaders: async () => ({}) };
 const AccountContext = createContext<AccountAuth>(localAuth);
 export const useAccountAuth = () => useContext(AccountContext);
 
@@ -17,14 +17,14 @@ function AccountBridge({ children }: { children: React.ReactNode }) {
   const { wallets } = useWallets();
   const walletAddress = (wallets.find((item) => item.walletClientType === "privy") ?? wallets[0])?.address ?? user?.wallet?.address;
   const accountId = authenticated ? user?.id ?? null : null;
-  const name = user?.google?.name ?? "Akun VIBE";
+  const name = user?.google?.name ?? "VIBE account";
   const email = user?.google?.email ?? user?.email?.address ?? null;
   const [sync, setSync] = useState({ id: "", error: "" });
 
   const requestHeaders = useCallback(async (): Promise<Record<string, string>> => {
     if (!authenticated || !accountId) return {};
     const token = await getAccessToken();
-    if (!token) throw new Error("Sesi login berakhir. Masuk lagi.");
+    if (!token) throw new Error("Your session expired. Sign in again.");
     return { Authorization: `Bearer ${token}` };
   }, [authenticated, accountId, getAccessToken]);
 
@@ -38,13 +38,13 @@ function AccountBridge({ children }: { children: React.ReactNode }) {
     async function syncProfile() {
       try {
         const response = await fetch("/api/auth/sync", { method: "POST", headers: { "Content-Type": "application/json", ...await requestHeaders() }, body: JSON.stringify({ email, name, walletAddress: walletAddress ?? null }), signal: AbortSignal.any([controller.signal, AbortSignal.timeout(12_000)]) });
-        if (!response.ok) throw new Error("Sinkronisasi akun tertunda. Kami akan mencoba lagi.");
+        if (!response.ok) throw new Error("Account sync delayed. Retrying shortly.");
         const result = await response.json();
-        if (!result.success || result.userId !== accountId) throw new Error("Akun belum tersinkron.");
+        if (!result.success || result.userId !== accountId) throw new Error("Account sync pending.");
         if (!disposed) setSync({ id: accountId!, error: "" });
       } catch {
         if (!disposed) {
-          setSync({ id: accountId!, error: "Sinkronisasi akun tertunda. Kami akan mencoba lagi." });
+          setSync({ id: accountId!, error: "Account sync delayed. Retrying shortly." });
           retry = setTimeout(() => void syncProfile(), 30_000);
         }
       }
@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
   if (!appId) return <>{children}</>;
   return (
-    <PrivyProvider appId={appId} config={{ loginMethods: ["google"], embeddedWallets: { ethereum: { createOnLogin: "users-without-wallets" } } }}>
+    <PrivyProvider appId={appId} config={{ appearance: { theme: "light", accentColor: "#267d76" }, loginMethods: ["google"], embeddedWallets: { ethereum: { createOnLogin: "users-without-wallets" } } }}>
       <AccountBridge>{children}</AccountBridge>
     </PrivyProvider>
   );

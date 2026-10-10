@@ -1,25 +1,25 @@
 .live-proof-page { max-width: 780px; margin: auto; padding: 32px 24px calc(48px + env(safe-area-inset-bottom)); }
 .live-proof-page header { margin: 32px 0; }
 .live-proof-page h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.2; text-wrap: balance; }
-.live-proof-page header p, .live-proof-card small, .live-proof-time { color: #bdb7c8; }
-.live-proof-card { padding: clamp(20px, 4vw, 36px); border: 1px solid #393541; background: #15141b; border-radius: 20px; }
+.live-proof-page header p, .live-proof-card small, .live-proof-time { color: #bbc4c3; }
+.live-proof-card { padding: clamp(20px, 4vw, 36px); border: 1px solid #354141; background: #141b1b; border-radius: 20px; }
 .live-proof-status, .live-proof-time { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 14px; }
-.live-proof-status { color: #c1aaff; margin-bottom: 24px; }
+.live-proof-status { color: #bbeeeb; margin-bottom: 24px; }
 .live-proof-card h2 { font-size: clamp(24px, 4vw, 34px); line-height: 1.25; text-wrap: balance; margin-bottom: 32px; }
 .live-proof-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .live-proof-metrics small { display: block; margin-bottom: 8px; font-size: 13px; }
 .live-proof-metrics strong { font-size: clamp(19px, 4vw, 30px); font-variant-numeric: tabular-nums; }
-.live-proof-track { height: 5px; background: #393541; overflow: hidden; border-radius: 5px; margin: 20px 0; }
-.live-proof-track span { display: block; width: 100%; height: 100%; background: #b49aff; transform-origin: left; transition: transform .5s ease; }
+.live-proof-track { height: 5px; background: #354141; overflow: hidden; border-radius: 5px; margin: 20px 0; }
+.live-proof-track span { display: block; width: 100%; height: 100%; background: #aeebe7; transform-origin: left; transition: transform .5s ease; }
 .live-proof-time { flex-direction: column; margin-bottom: 28px; }
 .live-proof-card .choice-button, .live-proof-card .button, .live-proof-details summary { min-height: 48px; }
 .live-proof-card .choice-section { margin: 24px 0; }
-.live-proof-card .choice-section p { color: #bdb7c8; font-size: 14px; margin-bottom: 16px; }
-.live-proof-details { border-top: 1px solid #393541; margin-top: 24px; padding-top: 12px; }
+.live-proof-card .choice-section p { color: #bbc4c3; font-size: 14px; margin-bottom: 16px; }
+.live-proof-details { border-top: 1px solid #354141; margin-top: 24px; padding-top: 12px; }
 .live-proof-details summary { cursor: pointer; display: flex; align-items: center; font-weight: 600; }
-.live-proof-details p { line-height: 1.6; font-size: 14px; color: #bdb7c8; margin: 16px 0; }
+.live-proof-details p { line-height: 1.6; font-size: 14px; color: #bbc4c3; margin: 16px 0; }
 .live-proof-details code { overflow-wrap: anywhere; }
-.live-proof-card a:focus-visible, .live-proof-details summary:focus-visible { outline: 2px solid #b49aff; outline-offset: 4px; }
+.live-proof-card a:focus-visible, .live-proof-details summary:focus-visible { outline: 2px solid #aeebe7; outline-offset: 4px; }
 .live-proof-card button:disabled { opacity: .5; cursor: wait; }
 .live-list { margin-top: 40px; }
 @media (max-width: 440px) { .live-proof-page { padding-inline: 16px; } .live-proof-metrics { grid-template-columns: 1fr; } }

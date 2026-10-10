@@ -43,33 +43,33 @@ export async function GET(request: NextRequest) {
     return response(account, session);
   } catch (error) {
     if (error instanceof AuthError) return NextResponse.json({ error: error.message }, { status: error.status, headers: privateHeaders });
-    return NextResponse.json({ error: "Saldo server belum bisa dimuat. Data sebelumnya tetap tersimpan." }, { status: 503, headers: privateHeaders });
+    return NextResponse.json({ error: "Could not refresh your balance. Your saved data is safe." }, { status: 503, headers: privateHeaders });
   }
 }
 
 const choiceBody = z.object({ callId: z.string().min(1).max(100), choice: z.enum(["yes", "no"]), amount: z.number().int().min(10).max(500) }).strict();
 export async function POST(request: NextRequest) {
-  if (!trustedOrigin(request)) return NextResponse.json({ error: "Origin tidak valid." }, { status: 403, headers: privateHeaders });
+  if (!trustedOrigin(request)) return NextResponse.json({ error: "Invalid request origin." }, { status: 403, headers: privateHeaders });
   // POST cannot mint a session; initialize the account through GET first.
   let session: Session;
   try { session = await identity(request); }
-  catch (error) { return NextResponse.json({ error: error instanceof AuthError ? error.message : "Verifikasi akun gagal." }, { status: error instanceof AuthError ? error.status : 503, headers: privateHeaders }); }
-  if (!session.id || session.fresh) return NextResponse.json({ error: usesAccounts() ? "Masuk Google untuk memilih Call." : "Muat saldo sebelum memilih." }, { status: 401, headers: privateHeaders });
+  catch (error) { return NextResponse.json({ error: error instanceof AuthError ? error.message : "Account verification failed." }, { status: error instanceof AuthError ? error.status : 503, headers: privateHeaders }); }
+  if (!session.id || session.fresh) return NextResponse.json({ error: usesAccounts() ? "Sign in with Google to make your Call." : "Load your balance before entering a Call." }, { status: 401, headers: privateHeaders });
   const accountId = session.id;
   try {
     const raw = await request.text();
-    if (raw.length > 1024) return response({ ok: false, error: "Permintaan tidak valid." }, session, 400);
+    if (raw.length > 1024) return response({ ok: false, error: "Invalid request." }, session, 400);
     const parsed = choiceBody.safeParse(JSON.parse(raw));
-    if (!parsed.success) return response({ ok: false, error: "Gunakan nominal bulat 10–500 VIBE." }, session, 400);
+    if (!parsed.success) return response({ ok: false, error: "Choose a whole amount between 10 and 500 VIBE." }, session, 400);
     await refreshSourceCalls();
     const result = await vibeStore().transaction((state) => {
-      if (!state.wallets[accountId]) return { ok: false as const, error: "Saldo akun belum dimuat. Muat ulang halaman." };
+      if (!state.wallets[accountId]) return { ok: false as const, error: "Balance not loaded. Refresh the page." };
       const { callId, choice, amount } = parsed.data;
       const placed = placeSourceChoice(state, accountId, callId, choice, amount, Date.now());
       return { ...placed, account: accountSnapshot(state, session, Date.now()) };
     });
     return response(result, session, result.ok ? 200 : 409);
   } catch (error) {
-    return response({ ok: false, error: error instanceof SyntaxError ? "Permintaan tidak valid." : "Pilihan belum berhasil dikonfirmasi. Periksa saldo dan riwayat sebelum mencoba lagi." }, session, error instanceof SyntaxError ? 400 : 503);
+    return response({ ok: false, error: error instanceof SyntaxError ? "Invalid request." : "Confirmation pending. Check your balance and history before retrying." }, session, error instanceof SyntaxError ? 400 : 503);
   }
 }

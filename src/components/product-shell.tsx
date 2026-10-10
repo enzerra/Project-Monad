@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { HiveSidebar } from "@/components/hive-sidebar";
 import { VirtualBalance, type VirtualAccount } from "@/components/virtual-wallet";
 
-export function ProductShell({ children, section = "predictions", title = "Prediksi", account }: {
+export function ProductShell({ children, section = "predictions", title = "Calls", account }: {
   children: React.ReactNode;
   account: VirtualAccount;
   section?: "discover" | "predictions" | "upload" | "profile";
@@ -16,7 +16,7 @@ export function ProductShell({ children, section = "predictions", title = "Predi
   return <div className={`app-shell discover-shell hive-theme product-standard ${expanded ? "is-sidebar-expanded" : ""}`}>
     <HiveSidebar active={section} onExpandedChange={setExpanded} />
     <div className="product-detail-area">
-      <header className="product-topbar"><span>{title}</span><div className="virtual-header-controls"><VirtualBalance account={account} /><Link href={section === "upload" ? "/profile" : section === "discover" ? "/discover" : "/predictions"}>{section === "upload" ? "Lihat profil" : `Jelajahi ${section === "discover" ? "video" : "Call"}`}<ArrowUpRight size={16} aria-hidden="true" /></Link></div></header>
+      <header className="product-topbar"><span>{title}</span><div className="virtual-header-controls"><VirtualBalance account={account} /><Link href={section === "upload" ? "/profile" : section === "discover" ? "/discover" : "/predictions"}>{section === "upload" ? "Your profile" : `Explore ${section === "discover" ? "videos" : "Calls"}`}<ArrowUpRight size={16} aria-hidden="true" /></Link></div></header>
       {children}
     </div>
   </div>;

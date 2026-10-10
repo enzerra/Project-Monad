@@ -106,7 +106,7 @@ export function observeSource(state: SourceState, feed: ObservedContent[], now: 
     const closesAt = new Date(now + HORIZON_MS / 4).toISOString();
     state.calls.push({
       id: `shorts-${item.video.videoId}-${now}`, contentId: item.id, videoId: item.video.videoId,
-      predictionCategory: category, question: `Shorts ini mencapai ${target.toLocaleString("id-ID")} views dalam 6 jam?`,
+      predictionCategory: category, question: `Will this Short reach ${target.toLocaleString("en-US")} views in 6h?`,
       baselineViews: item.youtubeViews, currentViews: item.youtubeViews, peakViews: item.youtubeViews,
       targetViews: target, horizonHours: 6, openedAt, scheduledClosesAt: closesAt, closesAt,
       evaluationAt: new Date(now + HORIZON_MS).toISOString(), observedAt: item.observedAt,
@@ -140,8 +140,8 @@ export function sourceAccount(state: SourceState, accountId: string, now: number
 
 export function placeSourceChoice(state: SourceState, accountId: string, callId: string, choice: Choice, amount: number, now: number): ChoiceResult {
   const call = state.calls.find((item) => item.id === callId);
-  if (!call || call.status !== "open" || now >= Date.parse(call.closesAt)) return { ok: false, error: "Pilihan Call ini sudah ditutup." };
-  if (!fresh(call.observedAt, now)) return { ok: false, error: "Menunggu pembaruan views YouTube. Saldo belum dipotong." };
+  if (!call || call.status !== "open" || now >= Date.parse(call.closesAt)) return { ok: false, error: "This Call is closed." };
+  if (!fresh(call.observedAt, now)) return { ok: false, error: "Waiting for a fresh YouTube snapshot. Your balance has not been deducted." };
   const wallet = sourceAccount(state, accountId, now).wallet;
   const result = placeVirtualChoice(wallet, call, choice, amount, new Date(now).toISOString());
   if (result.result.ok) {

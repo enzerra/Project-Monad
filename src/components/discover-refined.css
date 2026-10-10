@@ -4,7 +4,7 @@ body .viewer-standard.hive-theme .discover-story-bottom {
   background:none; box-shadow:none;
 }
 body .viewer-standard.hive-theme .discover-author { gap:12px; margin-bottom:20px; }
-body .viewer-standard.hive-theme .discover-author-mark { width:36px; height:36px; border:1px solid var(--dv-border); background:var(--dv-surface); color:#c8b7f6; font-size:15px; }
+body .viewer-standard.hive-theme .discover-author-mark { width:36px; height:36px; border:1px solid var(--dv-border); background:var(--dv-surface); color:#beefec; font-size:15px; }
 body .viewer-standard.hive-theme .discover-author strong { font-size:14px; }
 body .viewer-standard.hive-theme .discover-author div span { font-size:12px; color:var(--dv-muted); }
 body .viewer-standard.hive-theme .discover-story h1 { margin:0 0 20px; font:600 clamp(22px,1.8vw,30px)/1.25 Geist,sans-serif; letter-spacing:-.035em; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
@@ -34,7 +34,7 @@ body .viewer-standard.hive-theme .discover-call-question { margin-top:26px; padd
 body .viewer-standard.hive-theme .discover-choices { margin-top:20px; gap:10px; }
 body .viewer-standard.hive-theme .discover-choices button { min-height:52px; padding:0 16px; border-radius:4px; }
 body .viewer-standard.hive-theme .discover-choices strong { font:600 14px Geist,sans-serif; }
-body .viewer-standard.hive-theme .discover-choice-result { margin-top:20px; padding:14px; background:#9b85ff0d; }
+body .viewer-standard.hive-theme .discover-choice-result { margin-top:20px; padding:14px; background:#9de7e20d; }
 body .viewer-standard.hive-theme .discover-call-panel > .discover-disclosure { margin-top:20px; border-top:1px solid var(--dv-border); }
 body .viewer-standard.hive-theme .discover-detail-link { min-height:44px; margin-top:4px; font-weight:500; }
 body .viewer-standard.hive-theme .discover-call-panel .source-progress-compact { padding:0; border:0; margin:0; }
@@ -42,8 +42,8 @@ body .viewer-standard.hive-theme .discover-call-panel .source-progress-compact {
 .source-freshness { display:flex; align-items:center; gap:6px; font-size:11px; }
 .source-compact-number { display:block; max-width:100%; margin-top:7px; font:500 clamp(24px,2vw,32px)/1.2 Geist,sans-serif; letter-spacing:-.035em; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
 .source-progress-compact .source-progress-track { height:8px; margin-top:20px; border-radius:2px; background:var(--dv-border); }
-.source-progress-compact .source-progress-track span { background:linear-gradient(90deg,#7d68cf,#c1b2ff); border-radius:2px; }
-.source-compact-gap { display:flex; align-items:center; gap:5px; margin-top:10px; color:#c1b2ec; font-size:12px; }
+.source-progress-compact .source-progress-track span { background:linear-gradient(90deg,#68cfc9,#c1f0ed); border-radius:2px; }
+.source-compact-gap { display:flex; align-items:center; gap:5px; margin-top:10px; color:#b2ece8; font-size:12px; }
 .source-compact-time { display:flex; align-items:center; gap:8px; margin-top:22px; padding:14px 0 0; border-top:1px solid var(--dv-border); color:var(--dv-muted); font-size:12px; flex-wrap:wrap; }
 .source-compact-time strong { margin-left:auto; color:var(--dv-text); font:500 13px Geist,sans-serif; font-variant-numeric:tabular-nums; }
 body .viewer-standard.hive-theme .source-outcome-compact { display:flex; gap:10px; padding:14px 0; margin:18px 0 0; border:0; border-top:1px solid var(--dv-border); background:none; }
@@ -88,6 +88,6 @@ body .viewer-standard.hive-theme .discover-actions button:active:not(:disabled) 
   body .viewer-standard.hive-theme .discover-actions button:active:not(:disabled),
   body .viewer-standard.hive-theme .discover-call-shortcut:hover svg { transform:none; }
 }
-.discover-upload-caption{color:#d4cedb;font-size:13px;line-height:1.45;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-.discover-upload-caption span{display:block;color:#ceb3ff;margin-top:4px}
+.discover-upload-caption{color:#d2d7d7;font-size:13px;line-height:1.45;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.discover-upload-caption span{display:block;color:#c2f0ed;margin-top:4px}
 @media(max-width:780px){body .discover-shell.viewer-standard.hive-theme .discover-story-bottom .discover-upload-caption{display:-webkit-box;-webkit-line-clamp:2;font-size:12px;margin:0 0 5px}}

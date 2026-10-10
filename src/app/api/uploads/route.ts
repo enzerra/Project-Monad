@@ -30,33 +30,33 @@ export async function GET() {
   try {
     const state = await vibeStore().read();
     return Response.json({ uploads: [...(state.uploads ?? [])].reverse().slice(0, 100) }, { headers: { "Cache-Control": "no-store" } });
-  } catch { return reply("Konten belum bisa dimuat.", 503); }
+  } catch { return reply("Could not load content. Try again.", 503); }
 }
 
 export async function POST(request: Request) {
-  if (!trustedOrigin(request)) return reply("Origin tidak valid.", 403);
+  if (!trustedOrigin(request)) return reply("Invalid request origin.", 403);
   let objectPath = "";
   try {
-    if (!supabaseConfigured()) return reply("Penyimpanan video belum tersedia.", 503);
+    if (!supabaseConfigured()) return reply("Video uploads are temporarily unavailable.", 503);
     const ownerId = await privyUser(request);
     const size = Number(request.headers.get("content-length") ?? 0);
-    if (size > maxBytes + 100_000) return reply("Video maksimal 40 MB.", 413);
+    if (size > maxBytes + 100_000) return reply("Keep your video under 40 MB.", 413);
     const form = await limitedFormData(request, maxBytes + 100_000);
     const file = form.get("video");
     const title = String(form.get("title") ?? "").trim();
     const category = String(form.get("category") ?? "");
     const creator = String(form.get("creator") ?? "").trim().slice(0, 60) || "Kreator VIBE";
     const caption = String(form.get("caption") ?? "").trim();
-    const hashtags = String(form.get("hashtags") ?? "").split(/[\s,]+/).filter(Boolean).map((tag) => tag.replace(/^#+/, "").toLocaleLowerCase("id-ID"));
-    if (!(file instanceof File) || !types[file.type] || !file.size || file.size > maxBytes) return reply("Pilih video MP4 atau WebM maksimal 40 MB.", 400);
-    if (title.length < 3 || title.length > 100) return reply("Judul harus 3–100 karakter.", 400);
+    const hashtags = String(form.get("hashtags") ?? "").split(/[\s,]+/).filter(Boolean).map((tag) => tag.replace(/^#+/, "").toLocaleLowerCase("en-US"));
+    if (!(file instanceof File) || !types[file.type] || !file.size || file.size > maxBytes) return reply("Choose an MP4 or WebM video under 40 MB.", 400);
+    if (title.length < 3 || title.length > 100) return reply("Use a title between 3 and 100 characters.", 400);
     if (caption.length > 500) return reply("Caption maksimal 500 karakter.", 400);
-    if (hashtags.length > 5 || hashtags.some((tag) => !/^[\p{L}\p{N}_]{2,24}$/u.test(tag)) || new Set(hashtags).size !== hashtags.length) return reply("Gunakan maksimal 5 hashtag unik (2–24 karakter).", 400);
-    if (!["Gaming", "Sports", "Crypto"].includes(category)) return reply("Pilih kategori video.", 400);
+    if (hashtags.length > 5 || hashtags.some((tag) => !/^[\p{L}\p{N}_]{2,24}$/u.test(tag)) || new Set(hashtags).size !== hashtags.length) return reply("Use up to 5 unique hashtags, 2–24 characters each.", 400);
+    if (!["Gaming", "Sports", "Crypto"].includes(category)) return reply("Choose a video category.", 400);
     const bytes = new Uint8Array(await file.arrayBuffer());
     const mp4 = file.type === "video/mp4" && String.fromCharCode(...bytes.slice(4, 8)) === "ftyp";
     const webm = file.type === "video/webm" && bytes[0] === 0x1a && bytes[1] === 0x45 && bytes[2] === 0xdf && bytes[3] === 0xa3;
-    if (!mp4 && !webm) return reply("Format video tidak valid.", 400);
+    if (!mp4 && !webm) return reply("Invalid video format.", 400);
     await ensureBucket();
     const id = `upload-${crypto.randomUUID()}`;
     objectPath = `${encodeURIComponent(ownerId)}/${id}.${types[file.type]}`;
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
   } catch (error) {
     if (objectPath) await fetch(`${storageBase()}/object/${bucket}/${objectPath}`, { method: "DELETE", headers: storageHeaders() }).catch(() => {});
     if (error instanceof AuthError) return reply(error.message, error.status);
-    if (error instanceof BodyLimitError) return reply("Video maksimal 40 MB.", 413);
-    return reply("Upload gagal. Coba lagi.", 503);
+    if (error instanceof BodyLimitError) return reply("Keep your video under 40 MB.", 413);
+    return reply("Upload failed. Try again.", 503);
   }
 }

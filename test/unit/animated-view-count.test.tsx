@@ -9,7 +9,7 @@ describe("observed YouTube view counter", () => {
     const after = getViewCountChange(999, 1002);
     expect(after.delta).toBe(3);
     expect(after.direction).toBe(1);
-    expect(after.glyphs.map(glyph => glyph.character).join("")).toBe("1.002");
+    expect(after.glyphs.map(glyph => glyph.character).join("")).toBe("1,002");
     expect(after.glyphs.at(-1)?.key).toBe(before.glyphs.at(-1)?.key);
   });
   it("allows a genuine YouTube correction to roll down instead of inflating the count", () => {
@@ -20,7 +20,7 @@ describe("observed YouTube view counter", () => {
   });
   it("renders the real initial total on the server without a fake entrance or increase", () => {
     const html = renderToStaticMarkup(createElement(AnimatedViewCount, { value: 12000 }));
-    expect(html).toContain('aria-label="12.000"');
+    expect(html).toContain('aria-label="12,000"');
     expect(html).not.toContain("view-count-delta");
     expect(html).not.toContain("translateY");
   });

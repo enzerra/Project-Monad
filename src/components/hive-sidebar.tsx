@@ -11,9 +11,9 @@ type SidebarSection = "discover" | "predictions" | "upload" | "community" | "pro
 
 const links = [
   { section: "discover", href: "/discover", label: "Discover", icon: Compass },
-  { section: "predictions", href: "/predictions", label: "Prediksi", icon: TrendingUp },
+  { section: "predictions", href: "/predictions", label: "Calls", icon: TrendingUp },
   { section: "upload", href: "/upload", label: "Upload", icon: Plus },
-  { section: "community", href: "/community", label: "Komunitas", icon: Users },
+  { section: "community", href: "/community", label: "Community", icon: Users },
 ] as const;
 
 export function HiveSidebar({ active, onExpandedChange }: { active: SidebarSection; onExpandedChange: (expanded: boolean) => void }) {
@@ -29,7 +29,7 @@ export function HiveSidebar({ active, onExpandedChange }: { active: SidebarSecti
     <nav
       className="discover-sidebar"
       data-expanded={expanded}
-      aria-label="Navigasi utama"
+      aria-label="Main navigation"
       onPointerEnter={(event) => { if (event.pointerType === "mouse") expand(true); }}
       onPointerLeave={(event) => {
         if (event.pointerType !== "mouse" || event.currentTarget.contains(document.activeElement)) return;
@@ -44,7 +44,7 @@ export function HiveSidebar({ active, onExpandedChange }: { active: SidebarSecti
           <Link key={section} href={href} className={`discover-nav-link ${section === "upload" ? "discover-upload-link" : ""} ${active === section ? "is-active" : ""}`} aria-current={active === section ? "page" : undefined} aria-label={label} title={label}><Icon size={24} strokeWidth={1.8} aria-hidden="true" /><span>{label}</span></Link>
         ))}
       </div>
-      <Link href="/profile" className={`discover-nav-link discover-profile-link ${active === "profile" ? "is-active" : ""}`} aria-current={active === "profile" ? "page" : undefined} aria-label="Profil" title="Profil"><UserRound size={24} strokeWidth={1.8} /><span>Profil</span></Link>
+      <Link href="/profile" className={`discover-nav-link discover-profile-link ${active === "profile" ? "is-active" : ""}`} aria-current={active === "profile" ? "page" : undefined} aria-label="Profile" title="Profile"><UserRound size={24} strokeWidth={1.8} /><span>Profile</span></Link>
     </nav>
   );
 }

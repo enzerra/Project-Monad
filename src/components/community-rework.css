@@ -16,7 +16,7 @@
 .community-shell.hive-theme .community-channel.is-active { background:#273732; }
 .community-shell.hive-theme .community-channel-icon { width:45px; height:45px; border:0; border-radius:15px; background:#30443d; color:#b7e4cd; }
 .community-shell.hive-theme .community-channel:nth-child(2) .community-channel-icon { background:#493a36; color:#eac7b1; }
-.community-shell.hive-theme .community-channel:nth-child(3) .community-channel-icon { background:#3b394f; color:#cbc8ec; }
+.community-shell.hive-theme .community-channel:nth-child(3) .community-channel-icon { background:#3a4e4d; color:#c8ecea; }
 .community-shell.hive-theme .community-channel:hover .community-channel-icon,
 .community-shell.hive-theme .community-channel.is-active .community-channel-icon { transform:scale(1.03); border-color:transparent; }
 .community-shell.hive-theme .community-channel-copy { flex:1; gap:6px; }

@@ -51,16 +51,16 @@ export function readVirtualWallet(raw: string | null, legacy: string | null, now
 }
 
 export function validateVirtualAmount(amount: number, balance: number): string | null {
-  if (!Number.isSafeInteger(amount) || amount < VIRTUAL_TOKEN.minAmount || amount > VIRTUAL_TOKEN.maxAmount) return `Gunakan ${VIRTUAL_TOKEN.minAmount}–${VIRTUAL_TOKEN.maxAmount} VIBE, tanpa desimal.`;
-  if (amount > balance) return "Saldo VIBE tidak cukup untuk nominal ini.";
+  if (!Number.isSafeInteger(amount) || amount < VIRTUAL_TOKEN.minAmount || amount > VIRTUAL_TOKEN.maxAmount) return `Use a whole amount between ${VIRTUAL_TOKEN.minAmount} and ${VIRTUAL_TOKEN.maxAmount} VIBE.`;
+  if (amount > balance) return "Not enough VIBE. Choose a smaller amount.";
   return null;
 }
 
 export function placeVirtualChoice(wallet: VirtualWallet, call: Call | undefined, choice: Choice, amount: number, now: string): { wallet: VirtualWallet; result: ChoiceResult } {
   const fail = (error: string) => ({ wallet, result: { ok: false, error } as ChoiceResult });
-  if (!call || call.status !== "open") return fail("Call ini tidak menerima pilihan baru.");
-  if (choice !== "yes" && choice !== "no") return fail("Pilihan tidak valid.");
-  if (wallet.choices.some((item) => item.callId === call.id)) return fail("Kamu sudah memilih pada Call ini.");
+  if (!call || call.status !== "open") return fail("This Call is closed to new entries.");
+  if (choice !== "yes" && choice !== "no") return fail("Invalid choice.");
+  if (wallet.choices.some((item) => item.callId === call.id)) return fail("You have already entered this Call.");
   const error = validateVirtualAmount(amount, virtualBalance(wallet));
   if (error) return fail(error);
   return {

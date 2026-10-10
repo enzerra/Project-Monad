@@ -58,8 +58,8 @@ export const contents: Content[] = [
     id: "pixel-rush",
     creator: "Xbox México",
     handle: "@xboxmexico",
-    title: "Aksi Dishonored 2 dalam sepuluh detik",
-    description: "Cuplikan gameplay Dishonored 2. Pertanyaan views di samping adalah skenario VIBE, bukan metrik video ini.",
+    title: "Dishonored 2 in ten seconds",
+    description: "Dishonored 2 gameplay. The attached Call is an example, not this video's real metrics.",
     category: "Action stealth · Demo Call",
     kind: "predictable",
     visual: "purple",
@@ -79,8 +79,8 @@ export const contents: Content[] = [
     id: "indie-world",
     creator: "Xbox México",
     handle: "@xboxmexico",
-    title: "Kembali melihat dunia Minecraft Beta",
-    description: "Cuplikan gameplay Minecraft Beta. Konten insight ini tidak memiliki prediksi.",
+    title: "A look back at Minecraft Beta",
+    description: "Minecraft Beta gameplay. No Call attached.",
     category: "Minecraft · Insight",
     kind: "insight",
     visual: "orange",
@@ -99,8 +99,8 @@ export const contents: Content[] = [
     id: "matchday-highlight",
     creator: "VIBE Demo",
     handle: "@vibe-demo",
-    title: "Cuplikan laga yang jadi bahan obrolan",
-    description: "Contoh konten Sports untuk menguji tampilan katalog. Video dan metrik sumber belum terhubung.",
+    title: "The highlight everyone is talking about",
+    description: "Example Sports content. Source video and metrics are not connected.",
     category: "Sports · Demo Call",
     kind: "predictable",
     visual: "blue",
@@ -111,8 +111,8 @@ export const contents: Content[] = [
     id: "crypto-explainer",
     creator: "VIBE Demo",
     handle: "@vibe-demo",
-    title: "Video edukasi Bitcoin di feed",
-    description: "Contoh konten Crypto untuk menguji katalog. Video dan metrik sumber Call demo ini belum terhubung.",
+    title: "Bitcoin, explained",
+    description: "Example Crypto content. Source video and metrics are not connected.",
     category: "Crypto · Demo Call",
     kind: "predictable",
     visual: "orange",
@@ -123,9 +123,9 @@ export const contents: Content[] = [
     id: "speedrun",
     creator: "Kibo",
     handle: "@kibogames",
-    title: "Speedrun yang diprediksi menembus 30 ribu views",
-    description: "Pilihan sudah ditutup dan hasilnya tersedia bersama bukti pemeriksaan.",
-    category: "Speedrun · Hasil",
+    title: "The 30,000-view speedrun",
+    description: "Entries closed. The example result is available.",
+    category: "Speedrun · Result",
     kind: "resolved",
     visual: "blue",
     callId: "speedrun-views",
@@ -135,8 +135,8 @@ export const contents: Content[] = [
     id: "cozy-game",
     creator: "Mika Plays",
     handle: "@mikaplays",
-    title: "Kenapa cozy games tiba-tiba dibahas lagi?",
-    description: "Potongan pendapat kreator tentang game santai, budaya bermain, dan komunitasnya.",
+    title: "Why are cozy games trending again?",
+    description: "A creator's take on cozy games and their communities.",
     category: "Culture · Insight",
     kind: "insight",
     visual: "green",
@@ -149,7 +149,7 @@ export const calls: Call[] = [
     id: "rush-views",
     contentId: "pixel-rush",
     predictionCategory: "gaming",
-    question: "Tembus 22.000 views dalam 6 jam?",
+    question: "Will it reach 22,000 views in 6h?",
     baselineViews: 12000,
     targetViews: 22000,
     currentViews: 14380,
@@ -162,7 +162,7 @@ export const calls: Call[] = [
     id: "matchday-views",
     contentId: "matchday-highlight",
     predictionCategory: "sport",
-    question: "Cuplikan laga ini tembus 20.000 views dalam 6 jam?",
+    question: "Will it reach 20,000 views in 6h?",
     baselineViews: 9000,
     targetViews: 20000,
     currentViews: 9000,
@@ -175,7 +175,7 @@ export const calls: Call[] = [
     id: "crypto-explainer-views",
     contentId: "crypto-explainer",
     predictionCategory: "crypto",
-    question: "Video edukasi Bitcoin ini tembus 50.000 views dalam 24 jam?",
+    question: "Will it reach 50,000 views in 24h?",
     baselineViews: 35000,
     targetViews: 50000,
     currentViews: 35000,
@@ -188,7 +188,7 @@ export const calls: Call[] = [
     id: "speedrun-views",
     contentId: "speedrun",
     predictionCategory: "gaming",
-    question: "Apakah speedrun ini mencapai 30.000 views dalam 24 jam?",
+    question: "Will it reach 30,000 views in 24h?",
     baselineViews: 17400,
     targetViews: 30000,
     currentViews: 32184,
@@ -200,9 +200,13 @@ export const calls: Call[] = [
   },
 ];
 
-export const formatCount = (value: number) => new Intl.NumberFormat("id-ID").format(value);
+export const formatCount = (value: number) => new Intl.NumberFormat("en-US").format(value);
 export const formatTime = (value: string) =>
-  new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Jakarta" }).format(new Date(value));
+  `${new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Jakarta" }).format(new Date(value))} GMT+7`;
+
+/** Presentation copy also covers Calls persisted before the English UI release. */
+export const callQuestion = (call: Pick<Call, "targetViews" | "horizonHours">) =>
+  `Will this Short reach ${formatCount(call.targetViews)} views in ${call.horizonHours}h?`;
 
 export const findContent = (id: string) => contents.find((item) => item.id === id);
 export const findCall = (id: string) => calls.find((item) => item.id === id);

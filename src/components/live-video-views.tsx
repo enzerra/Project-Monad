@@ -48,8 +48,8 @@ export function LiveVideoViews({ videoId, initialViews, initialObservedAt }: {
     };
   }, [videoId]);
 
-  const description = `${formatCount(snapshot.views)} views YouTube. Diperiksa ${formatTime(snapshot.observedAt)}.${unavailable ? " Pembaruan sementara tidak tersedia; menampilkan angka terakhir." : ""}`;
-  return <div className="discover-view-island" role="status" aria-label={`${formatCount(snapshot.views)} views YouTube${unavailable ? ", pembaruan tertunda" : ""}`} title={description}>
+  const description = `${formatCount(snapshot.views)} views YouTube. Checked ${formatTime(snapshot.observedAt)}.${unavailable ? " Updates are temporarily unavailable. Showing the last observation." : ""}`;
+  return <div className="discover-view-island" role="status" aria-label={`${formatCount(snapshot.views)} views YouTube${unavailable ? ", update delayed" : ""}`} title={description}>
     <AnimatedViewCount value={snapshot.views} />
   </div>;
 }

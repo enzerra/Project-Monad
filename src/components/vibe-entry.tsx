@@ -30,6 +30,8 @@ export function VibeEntry({ children }: { children: ReactNode }) {
   const springY = useSpring(y, { stiffness: 120, damping: 18 });
   const tiltX = useTransform(springY, [-24, 24], [12, -12]);
   const tiltY = useTransform(springX, [-24, 24], [-14, 14]);
+  const landscapeX = useTransform(springX, value => -value * .3);
+  const landscapeY = useTransform(springY, value => -value * .3);
 
   const enter = useCallback(() => {
     if (finished.current) return;
@@ -62,10 +64,10 @@ export function VibeEntry({ children }: { children: ReactNode }) {
 
   const burst = () => { if (!finished.current) setPulse(value => value + 1); };
 
-  if (!checked) return <main className="vibe-entry" aria-label="Memuat VIBE"><div className="vibe-entry-stage"><div className="vibe-entry-symbol"><Image src="/brand/vibe-symbol.png" alt="VIBE" width={280} height={280} priority /></div></div></main>;
+  if (!checked) return <main className="vibe-entry" aria-label="Loading VIBE"><div className="vibe-entry-stage"><div className="vibe-entry-symbol"><Image src="/brand/vibe-symbol.png" alt="VIBE" width={280} height={280} priority /></div></div></main>;
 
   return <AnimatePresence mode="wait">
-    {visible ? <motion.main key="entry" className="vibe-entry" aria-label="Selamat datang di VIBE"
+    {visible ? <motion.main key="entry" className="vibe-entry" aria-label="Welcome to VIBE"
       initial={false} exit={{ opacity: 0 }}
       transition={{ duration: reduced ? 0 : .5, delay: reduced ? 0 : .16 }}
       onKeyDown={event => { if (event.key === "Escape") enter(); }}
@@ -75,6 +77,10 @@ export function VibeEntry({ children }: { children: ReactNode }) {
         x.set(((event.clientX - bounds.left) / bounds.width - .5) * 48);
         y.set(((event.clientY - bounds.top) / bounds.height - .5) * 48);
       }} onPointerLeave={() => { x.set(0); y.set(0); }}>
+      <motion.div className="vibe-entry-landscape" aria-hidden="true"
+        style={reduced ? undefined : { x: landscapeX, y: landscapeY }}
+        initial={reduced ? false : { opacity: 0, scale: 1.06 }} animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: reduced ? 0 : 2.1, ease: [.16, 1, .3, 1] }} />
       <motion.div className="vibe-entry-aura" aria-hidden="true"
         initial={reduced ? false : { opacity: 0, scale: .4 }}
         animate={{ opacity: 1, scale: 1 }} exit={reduced ? { opacity: 0 } : { scale: 2.5, opacity: 0, transition: { duration: .55 } }}
@@ -89,7 +95,7 @@ export function VibeEntry({ children }: { children: ReactNode }) {
             transition={{ duration: reduced ? 0 : 3.2, delay: reduced ? 0 : ring * .14, ease: [.16, 1, .3, 1] }} />)}
         </div>
         <motion.div className="vibe-entry-object" style={reduced ? undefined : { rotateX: tiltX, rotateY: tiltY }}>
-          <motion.button type="button" className="vibe-entry-symbol" aria-label="Sentuh atau gerakkan logo VIBE"
+          <motion.button type="button" className="vibe-entry-symbol" aria-label="Move or tap the VIBE logo"
             drag={!reduced} dragConstraints={{ left: -44, right: 44, top: -44, bottom: 44 }}
             dragElastic={.25} dragSnapToOrigin onDragEnd={burst}
             whileHover={reduced ? undefined : { scale: 1.08, rotate: 8 }}
@@ -125,7 +131,7 @@ export function VibeEntry({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, y: 0, rotateX: 0 }}
               transition={{ duration: reduced ? 0 : .8, delay: reduced ? 0 : .65 + index * .09, ease: [.16, 1, .3, 1] }}>{letter}</motion.span>)}</span>
           <motion.span className="vibe-entry-tagline" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduced ? 0 : .6, delay: reduced ? 0 : 1.2 }}>Temukan lebih awal.</motion.span>
+            transition={{ duration: reduced ? 0 : .6, delay: reduced ? 0 : 1.2 }}>Spot it early.</motion.span>
         </div>
       </motion.div>
     </motion.main> : <motion.div key="content" className="vibe-entry-content" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : .4 }}>{children}</motion.div>}

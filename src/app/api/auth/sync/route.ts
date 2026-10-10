@@ -15,14 +15,14 @@ const profileBody = z.object({
 }).strict();
 
 export async function POST(request: Request) {
-  if (!trustedOrigin(request)) return NextResponse.json({ error: "Origin tidak valid." }, { status: 403, headers });
+  if (!trustedOrigin(request)) return NextResponse.json({ error: "Invalid request origin." }, { status: 403, headers });
   try {
     const userId = await privyUser(request);
-    if (!supabaseConfigured()) return NextResponse.json({ error: "Database akun belum dikonfigurasi." }, { status: 503, headers });
+    if (!supabaseConfigured()) return NextResponse.json({ error: "Account service is unavailable." }, { status: 503, headers });
     const raw = await request.text();
-    if (raw.length > 4096) return NextResponse.json({ error: "Profil tidak valid." }, { status: 400, headers });
+    if (raw.length > 4096) return NextResponse.json({ error: "Invalid profile." }, { status: 400, headers });
     const parsed = profileBody.safeParse(JSON.parse(raw));
-    if (!parsed.success) return NextResponse.json({ error: "Profil tidak valid." }, { status: 400, headers });
+    if (!parsed.success) return NextResponse.json({ error: "Invalid profile." }, { status: 400, headers });
     const body = parsed.data;
     await db("hive_users", "?on_conflict=privy_user_id", {
       method: "POST", headers: { prefer: "resolution=merge-duplicates,return=representation" },
@@ -31,6 +31,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, userId }, { headers });
   } catch (error) {
     const status = error instanceof AuthError ? error.status : error instanceof SyntaxError ? 400 : 503;
-    return NextResponse.json({ error: error instanceof AuthError ? error.message : status === 400 ? "Profil tidak valid." : "Sinkronisasi akun belum berhasil. Coba lagi." }, { status, headers });
+    return NextResponse.json({ error: error instanceof AuthError ? error.message : status === 400 ? "Invalid profile." : "Could not sync your account. Try again." }, { status, headers });
   }
 }

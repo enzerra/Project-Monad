@@ -64,9 +64,9 @@ function DiscoverEmptyFeed() {
   return <div className={`discover-shell hive-theme viewer-standard ${expanded ? "is-sidebar-expanded" : ""}`}>
     <HiveSidebar active="discover" onExpandedChange={setExpanded} />
     <main className="discover-main"><section className="discover-empty-feed" role="status">
-      <h1>Shorts belum bisa dimuat</h1>
-      <p>Coba lagi sebentar. Kamu tetap bisa menjelajahi prediksi dan komunitas.</p>
-      <button type="button" onClick={() => window.location.reload()}>Coba lagi</button>
+      <h1>Shorts are unavailable right now</h1>
+      <p>Try again, or explore Calls and Community.</p>
+      <button type="button" onClick={() => window.location.reload()}>Try again</button>
     </section></main>
   </div>;
 }
@@ -249,7 +249,7 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
     if (isYoutube) { if (muted || !playing) youtubeRef.current?.playWithSound(); else youtubeRef.current?.pause(); return; }
     const video = videoRef.current;
     if (!video) return;
-    if (video.paused) void video.play().catch(() => setFeedback("Video tidak bisa diputar. Coba muat ulang."));
+    if (video.paused) void video.play().catch(() => setFeedback("Could not play this video. Try reloading."));
     else video.pause();
   }, [isYoutube, muted, playing]);
 
@@ -274,9 +274,9 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
     if (call) state.shareCall(call.id);
     try {
       await navigator.clipboard.writeText(url.toString());
-      setFeedback(call ? "Tautan video dan Call disalin. Call juga muncul di Community." : "Tautan video disalin.");
+      setFeedback(call ? "Link copied. Your Call is in Community." : "Video link copied.");
     } catch {
-      setFeedback(`Tautan: ${url.toString()}`);
+      setFeedback(`Link: ${url.toString()}`);
     }
   };
 
@@ -317,27 +317,27 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
   return (
     <div className={`discover-shell hive-theme viewer-standard ${isYoutube ? "is-youtube-video" : "is-local-video"} ${call ? "has-mobile-call" : ""} ${sidebarExpanded ? "is-sidebar-expanded" : ""} ${drawerOpen ? "is-drawer-open" : ""}`} data-direction={transitionDirection}>
       <HiveSidebar active="discover" onExpandedChange={setSidebarExpanded} />
-      {mobileNavOpen && <nav className="discover-mobile-menu" aria-label="Navigasi VIBE"><Link href="/discover">Discover</Link><Link href="/predictions">Prediksi</Link><Link href="/upload">Upload</Link><Link href="/community">Komunitas</Link><Link href="/profile">Profil</Link><button type="button" onClick={() => setMobileNavOpen(false)} aria-label="Tutup navigasi"><X size={20} /></button></nav>}
+      {mobileNavOpen && <nav className="discover-mobile-menu" aria-label="VIBE navigation"><Link href="/discover">Discover</Link><Link href="/predictions">Calls</Link><Link href="/upload">Upload</Link><Link href="/community">Community</Link><Link href="/profile">Profile</Link><button type="button" onClick={() => setMobileNavOpen(false)} aria-label="Close navigation"><X size={20} /></button></nav>}
       {call && <div className="discover-call-dock">
-        <motion.button ref={callPeekRef} type="button" className="discover-call-peek" aria-label={`Buka Call: ${call.question}`} aria-expanded={drawerOpen && panel === "call"} aria-controls="discover-call-sheet" onClick={() => openPanel("call")} drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.15} dragMomentum={false} onDragEnd={(_, info) => { if (info.offset.y < -28 || info.velocity.y < -250) openPanel("call"); }}>
-          <span className="discover-peek-handle" aria-hidden="true" /><TrendingUp size={22} aria-hidden="true" /><span className="discover-peek-copy"><small>CALL · {call.horizonHours} JAM</small><strong>Tembus {formatCount(call.targetViews)} views?</strong></span><ChevronUp size={20} aria-hidden="true" />
+        <motion.button ref={callPeekRef} type="button" className="discover-call-peek" aria-label={`Open Call: ${call.question}`} aria-expanded={drawerOpen && panel === "call"} aria-controls="discover-call-sheet" onClick={() => openPanel("call")} drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.15} dragMomentum={false} onDragEnd={(_, info) => { if (info.offset.y < -28 || info.velocity.y < -250) openPanel("call"); }}>
+          <span className="discover-peek-handle" aria-hidden="true" /><TrendingUp size={22} aria-hidden="true" /><span className="discover-peek-copy"><small>CALL · {call.horizonHours} HOURS</small><strong>Will it reach {formatCount(call.targetViews)} views?</strong></span><ChevronUp size={20} aria-hidden="true" />
         </motion.button>
-        <button type="button" className="discover-dock-menu" onClick={() => setMobileNavOpen(!mobileNavOpen)} aria-expanded={mobileNavOpen} aria-label="Buka navigasi VIBE"><Menu size={21} /><span>Menu</span></button>
+        <button type="button" className="discover-dock-menu" onClick={() => setMobileNavOpen(!mobileNavOpen)} aria-expanded={mobileNavOpen} aria-label="Open VIBE navigation"><Menu size={21} /><span>Menu</span></button>
       </div>}
 
       <main className={`discover-main ${call ? "has-call" : "is-insight"}`} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => { swipeStartRef.current = null; }} onWheel={onWheel}>
         <div className="discover-layout">
           {youtubeStats && <LiveVideoViews key={content.id} videoId={youtubeStats.video.videoId} initialViews={youtubeStats.youtubeViews} initialObservedAt={youtubeStats.observedAt} />}
-          {isYoutube && <div className="discover-swipe-area" aria-label="Geser ke atas atau bawah untuk berganti video" role="region" />}
-          <section className="discover-story" aria-label="Informasi video">
+          {isYoutube && <div className="discover-swipe-area" aria-label="Swipe up or down to change video" role="region" />}
+          <section className="discover-story" aria-label="Video information">
             <div className="discover-story-top"><VirtualBalance account={state} /></div>
             <motion.div className="discover-story-bottom" key={`story-${content.id}`} initial={reduceMotion ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35, ease: [.22, 1, .36, 1] }}>
               <div className="discover-author"><span className="discover-author-mark" aria-hidden="true">{content.creator.slice(0, 1).toUpperCase()}</span><div><strong>{content.creator}</strong><span>{isYoutube ? content.category.split(" · ")[0] : content.category}</span></div></div>
               <h1>{content.title.replace(/\s*#\S+/g, "").trim() || content.title}</h1>
               {content.video.provider === "upload" && (content.description || content.hashtags?.length) && <p className="discover-upload-caption">{content.description}{content.hashtags?.length ? <span>{content.hashtags.map((tag) => `#${tag}`).join(" ")}</span> : null}</p>}
-              <div className="discover-story-footer"><a className="discover-source-link" href={content.video.sourceUrl} target="_blank" rel="noreferrer">{isYoutube ? "YouTube Shorts" : "Sumber video"}<ExternalLink size={12} aria-hidden="true" /></a>
-              <DiscoverDisclosure label="Info video">
-                {youtubeStats && <p><strong>{formatCount(state.contents?.find((item) => item.id === content.id)?.youtubeViews ?? youtubeStats.youtubeViews)} views</strong><br />Diperiksa {formatTime(state.contents?.find((item) => item.id === content.id)?.observedAt ?? youtubeStats.observedAt)}</p>}
+              <div className="discover-story-footer"><a className="discover-source-link" href={content.video.sourceUrl} target="_blank" rel="noreferrer">{isYoutube ? "YouTube Shorts" : "Video source"}<ExternalLink size={12} aria-hidden="true" /></a>
+              <DiscoverDisclosure label="About this video">
+                {youtubeStats && <p><strong>{formatCount(state.contents?.find((item) => item.id === content.id)?.youtubeViews ?? youtubeStats.youtubeViews)} views</strong><br />Checked {formatTime(state.contents?.find((item) => item.id === content.id)?.observedAt ?? youtubeStats.observedAt)}</p>}
                 {content.video.provider === "local" || !content.video.provider ? <p>{content.video.author} · <a href={content.video.licenseUrl} target="_blank" rel="noreferrer">{content.video.license}</a></p> : null}
               </DiscoverDisclosure></div>
             </motion.div>
@@ -365,33 +365,33 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
                 onError={() => { setMediaError(true); setLoading(false); setPlaying(false); }}
                 aria-label={`Gameplay: ${content.title}`}
               />}
-              {loading && !mediaError && <div className="discover-media-state" role="status">Memuat video…</div>}
-              {mediaError && <div className="discover-media-state" role="alert"><strong>Video gagal dimuat.</strong><button type="button" onClick={() => { setMediaError(false); setLoading(true); if (isYoutube) setPlayerAttempt((value) => value + 1); else { videoRef.current?.load(); void videoRef.current?.play().catch(() => setPlaying(false)); } }}>Coba lagi</button><a href={content.video.sourceUrl} target="_blank" rel="noreferrer">Buka sumber video</a></div>}
-              {!isYoutube && !playing && !loading && !mediaError && <button type="button" className="discover-big-play" onClick={togglePlayback} aria-label="Putar video"><Play size={30} fill="currentColor" /></button>}
+              {loading && !mediaError && <div className="discover-media-state" role="status">Loading video…</div>}
+              {mediaError && <div className="discover-media-state" role="alert"><strong>Could not load this video.</strong><button type="button" onClick={() => { setMediaError(false); setLoading(true); if (isYoutube) setPlayerAttempt((value) => value + 1); else { videoRef.current?.load(); void videoRef.current?.play().catch(() => setPlaying(false)); } }}>Try again</button><a href={content.video.sourceUrl} target="_blank" rel="noreferrer">Open original video</a></div>}
+              {!isYoutube && !playing && !loading && !mediaError && <button type="button" className="discover-big-play" onClick={togglePlayback} aria-label="Play video"><Play size={30} fill="currentColor" /></button>}
               {!isYoutube && <><div className="discover-player-top"><span>{content.video.provider === "upload" ? "VIBE" : "VIBE / DEMO"}</span><span>{activeIndex + 1} / {feed.length}</span></div>
-              <div className="discover-player-bottom"><span>{call ? "CALL TERKAIT" : "INSIGHT"}</span><span>{content.video.hasAudio ? muted ? "TANPA SUARA" : "SUARA AKTIF" : "KLIP TANPA AUDIO"}</span></div></>}
+              <div className="discover-player-bottom"><span>{call ? "RELATED CALL" : "INSIGHT"}</span><span>{content.video.hasAudio ? muted ? "MUTED" : "SOUND ON" : "SILENT CLIP"}</span></div></>}
             </div>
           </section>
 
-          <div className="discover-actions" role="group" aria-label="Kontrol video">
+          <div className="discover-actions" role="group" aria-label="Video controls">
             <span className="discover-mobile-avatar" aria-hidden="true">{content.creator.slice(0, 1).toUpperCase()}</span>
-            <button type="button" onClick={togglePlayback} aria-label={isYoutube && muted ? "Putar dengan suara" : playing ? "Jeda video" : "Putar video"} title={isYoutube && muted ? "Putar dengan suara" : playing ? "Jeda" : "Putar"}>{playing && !(isYoutube && muted) ? <Pause size={24} /> : <Play size={24} />}</button>
-            <button type="button" className="discover-mobile-reaction" aria-label={likedVideos.includes(content.id) ? "Batalkan suka" : "Sukai video"} aria-pressed={likedVideos.includes(content.id)} onClick={() => setLikedVideos((ids) => ids.includes(content.id) ? ids.filter((id) => id !== content.id) : [...ids, content.id])}><Heart size={30} fill={likedVideos.includes(content.id) ? "#ff4f7c" : "currentColor"} /><span>{likedVideos.includes(content.id) ? "Disukai" : "Suka"}</span></button>
-            <button type="button" onClick={() => openPanel("comments")} aria-label={`Buka ${comments.length} komentar`} title="Komentar"><MessageCircle size={24} /><span>{comments.length}</span></button>
-            <button type="button" className="discover-mobile-reaction" aria-label={savedVideos.includes(content.id) ? "Hapus simpanan" : "Simpan video"} aria-pressed={savedVideos.includes(content.id)} onClick={() => setSavedVideos((ids) => ids.includes(content.id) ? ids.filter((id) => id !== content.id) : [...ids, content.id])}><Bookmark size={28} fill="currentColor" /><span>{savedVideos.includes(content.id) ? "Tersimpan" : "Simpan"}</span></button>
-            <button type="button" onClick={() => void share()} aria-label="Bagikan video" title="Bagikan"><Share2 size={24} /></button>
-            {call && <button ref={callShortcutRef} type="button" className="discover-call-shortcut" onClick={() => openPanel("call")} aria-label="Buka Call" title="Buka Call"><TrendingUp size={24} /><span>Call</span></button>}
-            <div className="discover-compact-stepper"><button type="button" onClick={() => navigate(-1)} disabled={activeIndex === 0} aria-label="Video sebelumnya"><ArrowUp size={20} /></button><button type="button" onClick={() => navigate(1)} disabled={activeIndex === feed.length - 1} aria-label="Video berikutnya"><ArrowDown size={20} /></button></div>
+            <button type="button" onClick={togglePlayback} aria-label={isYoutube && muted ? "Play with sound" : playing ? "Pause video" : "Play video"} title={isYoutube && muted ? "Play with sound" : playing ? "Pause" : "Play"}>{playing && !(isYoutube && muted) ? <Pause size={24} /> : <Play size={24} />}</button>
+            <button type="button" className="discover-mobile-reaction" aria-label={likedVideos.includes(content.id) ? "Unlike" : "Like video"} aria-pressed={likedVideos.includes(content.id)} onClick={() => setLikedVideos((ids) => ids.includes(content.id) ? ids.filter((id) => id !== content.id) : [...ids, content.id])}><Heart size={30} fill={likedVideos.includes(content.id) ? "#ff4f7c" : "currentColor"} /><span>{likedVideos.includes(content.id) ? "Liked" : "Like"}</span></button>
+            <button type="button" onClick={() => openPanel("comments")} aria-label={`Open ${comments.length} comments`} title="Comments"><MessageCircle size={24} /><span>{comments.length}</span></button>
+            <button type="button" className="discover-mobile-reaction" aria-label={savedVideos.includes(content.id) ? "Remove saved video" : "Save video"} aria-pressed={savedVideos.includes(content.id)} onClick={() => setSavedVideos((ids) => ids.includes(content.id) ? ids.filter((id) => id !== content.id) : [...ids, content.id])}><Bookmark size={28} fill="currentColor" /><span>{savedVideos.includes(content.id) ? "Saved" : "Save"}</span></button>
+            <button type="button" onClick={() => void share()} aria-label="Share video" title="Share"><Share2 size={24} /></button>
+            {call && <button ref={callShortcutRef} type="button" className="discover-call-shortcut" onClick={() => openPanel("call")} aria-label="Open Call" title="Open Call"><TrendingUp size={24} /><span>Call</span></button>}
+            <div className="discover-compact-stepper"><button type="button" onClick={() => navigate(-1)} disabled={activeIndex === 0} aria-label="Previous video"><ArrowUp size={20} /></button><button type="button" onClick={() => navigate(1)} disabled={activeIndex === feed.length - 1} aria-label="Next video"><ArrowDown size={20} /></button></div>
           </div>
 
-          <aside id="discover-call-sheet" className={`discover-aside ${drawerOpen ? "drawer-open" : ""} ${!showAside ? "is-hidden" : ""}`} aria-label={panel === "comments" ? "Komentar" : "Prediksi"}>
-            <motion.button type="button" className="discover-sheet-handle" aria-label="Lipat panel" onClick={closePanel} drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.15} dragMomentum={false} onDragEnd={(_, info) => { if (info.offset.y > 28 || info.velocity.y > 250) closePanel(); }}><span /></motion.button>
-            <div className="discover-aside-top"><span>{panel === "comments" ? "Obrolan" : "Prediksi"}</span><div className="discover-stepper"><button type="button" onClick={() => navigate(-1)} disabled={activeIndex === 0} aria-label="Video sebelumnya"><ArrowUp size={19} /></button><button type="button" onClick={() => navigate(1)} disabled={activeIndex === feed.length - 1} aria-label="Video berikutnya"><ArrowDown size={19} /></button></div>{(panel === "comments" || drawerOpen || (call && callPanelOpen)) && <button type="button" className="discover-drawer-close" onClick={closePanel} aria-label={panel === "call" ? "Tutup Call" : "Tutup komentar"} title={panel === "call" ? "Tutup Call" : "Tutup komentar"}><X size={20} /></button>}</div>
-            {panel === "comments" ? <div className="discover-side-content discover-comments"><div className="discover-side-heading"><span>PERCAKAPAN</span><h2>Komentar <small>{comments.length}</small></h2></div><div className="discover-comment-list">{comments.length ? comments.map((item) => <div className="discover-comment" key={item.id}><span className="discover-comment-avatar">{item.name.slice(0, 1).toUpperCase()}</span><div><div><strong>{item.name}</strong><time>{item.createdAt}</time></div><p>{item.text}</p></div></div>) : <p className="discover-comment-empty">Belum ada komentar. Mulai percakapan tentang video ini.</p>}</div><form className="discover-comment-form" onSubmit={submitComment}><label htmlFor="discover-comment-input">Tambahkan komentar</label><div><input id="discover-comment-input" value={commentDraft} onChange={(event) => setCommentDraft(event.target.value)} placeholder="Tulis pendapatmu…" maxLength={500} /><button type="submit" disabled={!commentDraft.trim()} aria-label="Kirim komentar"><Send size={18} /></button></div><small>Komentar demo tersimpan di browser ini.</small></form>{call && <button type="button" className="discover-back-call" onClick={() => setPanel("call")}>Kembali ke prediksi <ChevronRight size={16} /></button>}</div> : call ? (
+          <aside id="discover-call-sheet" className={`discover-aside ${drawerOpen ? "drawer-open" : ""} ${!showAside ? "is-hidden" : ""}`} aria-label={panel === "comments" ? "Comments" : "Calls"}>
+            <motion.button type="button" className="discover-sheet-handle" aria-label="Collapse panel" onClick={closePanel} drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.15} dragMomentum={false} onDragEnd={(_, info) => { if (info.offset.y > 28 || info.velocity.y > 250) closePanel(); }}><span /></motion.button>
+            <div className="discover-aside-top"><span>{panel === "comments" ? "Conversation" : "Calls"}</span><div className="discover-stepper"><button type="button" onClick={() => navigate(-1)} disabled={activeIndex === 0} aria-label="Previous video"><ArrowUp size={19} /></button><button type="button" onClick={() => navigate(1)} disabled={activeIndex === feed.length - 1} aria-label="Next video"><ArrowDown size={19} /></button></div>{(panel === "comments" || drawerOpen || (call && callPanelOpen)) && <button type="button" className="discover-drawer-close" onClick={closePanel} aria-label={panel === "call" ? "Close Call" : "Close comments"} title={panel === "call" ? "Close Call" : "Close comments"}><X size={20} /></button>}</div>
+            {panel === "comments" ? <div className="discover-side-content discover-comments"><div className="discover-side-heading"><span>CONVERSATION</span><h2>Comments <small>{comments.length}</small></h2></div><div className="discover-comment-list">{comments.length ? comments.map((item) => <div className="discover-comment" key={item.id}><span className="discover-comment-avatar">{item.name.slice(0, 1).toUpperCase()}</span><div><div><strong>{item.name}</strong><time>{item.createdAt}</time></div><p>{item.text}</p></div></div>) : <p className="discover-comment-empty">Be the first to say something.</p>}</div><form className="discover-comment-form" onSubmit={submitComment}><label htmlFor="discover-comment-input">Add a comment</label><div><input id="discover-comment-input" value={commentDraft} onChange={(event) => setCommentDraft(event.target.value)} placeholder="Add a comment…" maxLength={500} /><button type="submit" disabled={!commentDraft.trim()} aria-label="Post comment"><Send size={18} /></button></div><small>Comments stay in this browser.</small></form>{call && <button type="button" className="discover-back-call" onClick={() => setPanel("call")}>Back to Calls <ChevronRight size={16} /></button>}</div> : call ? (
               <motion.div className="discover-side-content discover-call-panel" key={`call-${call.id}`} initial={reduceMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .4, ease: [.22, 1, .36, 1] }}>
-                <div className="discover-call-topline"><span className="discover-call-status"><span />{call.status === "open" ? "Terbuka" : call.status === "resolved" ? "Selesai" : call.status === "void" ? "Dibatalkan" : "Ditutup"}</span><span>{call.horizonHours} jam</span></div>
+                <div className="discover-call-topline"><span className="discover-call-status"><span />{call.status === "open" ? "Open" : call.status === "resolved" ? "Completed" : call.status === "void" ? "Cancelled" : "Closed"}</span><span>{call.horizonHours} h</span></div>
                 <div className="discover-side-heading">
-                  <h2><span>Tembus</span>{formatCount(call.targetViews)}<small>views?</small></h2>
+                  <h2><span>Will it reach</span>{formatCount(call.targetViews)}<small>views?</small></h2>
                 </div>
                 <div className="discover-call-question">
                   <SourceCallProgress call={call} serverNow={state.serverNow} compact />
@@ -399,27 +399,27 @@ function DiscoverVideoFeed({ state, initialVideoId, youtubeFeed, uploads = [] }:
                 </div>
                 {call.status === "open" && !chosen ? (
                   <div className="discover-choices">
-                    <motion.button type="button" whileTap={reduceMotion ? undefined : { scale: .97 }} disabled={!auth.ready || (!state.loginRequired && (!state.walletReady || state.balance < VIRTUAL_TOKEN.minAmount))} onClick={() => requestChoice("yes")}><strong>Ya</strong><ChevronRight size={19} aria-hidden="true" /></motion.button>
-                    <motion.button type="button" whileTap={reduceMotion ? undefined : { scale: .97 }} disabled={!auth.ready || (!state.loginRequired && (!state.walletReady || state.balance < VIRTUAL_TOKEN.minAmount))} onClick={() => requestChoice("no")}><strong>Tidak</strong><ChevronRight size={19} aria-hidden="true" /></motion.button>
+                    <motion.button type="button" whileTap={reduceMotion ? undefined : { scale: .97 }} disabled={!auth.ready || (!state.loginRequired && (!state.walletReady || state.balance < VIRTUAL_TOKEN.minAmount))} onClick={() => requestChoice("yes")}><strong>Yes</strong><ChevronRight size={19} aria-hidden="true" /></motion.button>
+                    <motion.button type="button" whileTap={reduceMotion ? undefined : { scale: .97 }} disabled={!auth.ready || (!state.loginRequired && (!state.walletReady || state.balance < VIRTUAL_TOKEN.minAmount))} onClick={() => requestChoice("no")}><strong>No</strong><ChevronRight size={19} aria-hidden="true" /></motion.button>
                   </div>
                 ) : chosen ? (
-                  <div className="discover-choice-result" role="status"><Check size={19} aria-hidden="true" /><div><strong>Pilihanmu: {chosen.choice === "yes" ? "Ya" : "Tidak"}</strong><p>{formatCount(chosen.amount)} VIBE</p></div></div>
+                  <div className="discover-choice-result" role="status"><Check size={19} aria-hidden="true" /><div><strong>Your choice: {chosen.choice === "yes" ? "Yes" : "No"}</strong><p>{formatCount(chosen.amount)} VIBE</p></div></div>
                 ) : null}
-                {state.loginRequired && <div className="call-login-prompt"><p>Masuk untuk memilih Call dan menyimpan saldo VIBE.</p><AuthControl /></div>}
-                {call.status === "open" && !chosen && state.walletReady && state.balance < VIRTUAL_TOKEN.minAmount && <p className="virtual-error" role="status">Saldo tidak cukup untuk memilih Call.</p>}
-                <DiscoverDisclosure label="Aturan & detail">
-                  <p>Benar: 2× nominal kembali, termasuk nominal awal. Salah: nominal pilihan habis. VIBE gratis, tanpa nilai uang.</p>
-                  <dl><div><dt>Pilihan tutup</dt><dd>{formatTime(call.closesAt)}</dd></div><div><dt>Awal</dt><dd>{formatCount(call.baselineViews)} views</dd></div><div><dt>Data YouTube</dt><dd>{formatTime(call.observedAt)}</dd></div></dl>
-                  <Link href={"/calls/" + call.id} className="discover-detail-link">{call.proof ? "Bukti & aturan lengkap" : "Aturan lengkap"}<ChevronRight size={16} aria-hidden="true" /></Link>
+                {state.loginRequired && <div className="call-login-prompt"><p>Sign in to make your Call.</p><AuthControl /></div>}
+                {call.status === "open" && !chosen && state.walletReady && state.balance < VIRTUAL_TOKEN.minAmount && <p className="virtual-error" role="status">Not enough VIBE. Choose a smaller amount.</p>}
+                <DiscoverDisclosure label="Rules & details">
+                  <p>Correct: 2× return, including your amount. Incorrect: your amount is spent. Free VIBE, no cash value.</p>
+                  <dl><div><dt>Entries close</dt><dd>{formatTime(call.closesAt)}</dd></div><div><dt>Start</dt><dd>{formatCount(call.baselineViews)} views</dd></div><div><dt>YouTube data</dt><dd>{formatTime(call.observedAt)}</dd></div></dl>
+                  <Link href={"/calls/" + call.id} className="discover-detail-link">{call.proof ? "Proof & rules" : "Full rules"}<ChevronRight size={16} aria-hidden="true" /></Link>
                 </DiscoverDisclosure>
               </motion.div>
-            ) : <div className="discover-insight-note"><span>INSIGHT</span><p>Video ini untuk ditonton dan dibicarakan. Tidak ada prediksi terkait.</p></div>}
+            ) : <div className="discover-insight-note"><span>INSIGHT</span><p>Enjoy the video. No Call attached.</p></div>}
           </aside>
         </div>
         <div className="discover-feedback" aria-live="polite">{feedback}</div>
       </main>
 
-      <dialog ref={dialogRef} className="discover-confirm" onClose={() => setPendingChoice(null)} onCancel={() => setPendingChoice(null)} aria-labelledby="discover-confirm-title"><span>KONFIRMASI CALL</span><h2 id="discover-confirm-title">Pilih {pendingChoice === "yes" ? "Ya" : "Tidak"}?</h2><p>Pilihan terkunci setelah konfirmasi. Benar: 2× kembali. Salah: nominal pilihan habis. VIBE tanpa nilai uang.</p><VirtualAmount account={state} amount={amount} onChange={setAmount} disabled={submittingChoice} /><p className="virtual-confirm-summary"><span>Saldo setelah memilih</span><strong>{Number.isFinite(amount) ? formatCount(Math.max(0, state.balance - amount)) : "—"} VIBE</strong></p>{choiceError && <p className="virtual-error" role="alert">{choiceError}</p>}<div><button type="button" onClick={() => { dialogRef.current?.close(); setPendingChoice(null); }}>Batal</button><button type="button" disabled={submittingChoice || !state.walletReady || Boolean(validateVirtualAmount(amount, state.balance))} onClick={() => void confirmChoice()}>{submittingChoice ? "Menyimpan…" : "Konfirmasi pilihan"}</button></div></dialog>
+      <dialog ref={dialogRef} className="discover-confirm" onClose={() => setPendingChoice(null)} onCancel={() => setPendingChoice(null)} aria-labelledby="discover-confirm-title"><span>CONFIRM CALL</span><h2 id="discover-confirm-title">Choose {pendingChoice === "yes" ? "Yes" : "No"}?</h2><p>Your choice locks on confirmation. Correct: 2× return. Incorrect: your amount is spent. No cash value.</p><VirtualAmount account={state} amount={amount} onChange={setAmount} disabled={submittingChoice} /><p className="virtual-confirm-summary"><span>Balance after this Call</span><strong>{Number.isFinite(amount) ? formatCount(Math.max(0, state.balance - amount)) : "—"} VIBE</strong></p>{choiceError && <p className="virtual-error" role="alert">{choiceError}</p>}<div><button type="button" onClick={() => { dialogRef.current?.close(); setPendingChoice(null); }}>Cancel</button><button type="button" disabled={submittingChoice || !state.walletReady || Boolean(validateVirtualAmount(amount, state.balance))} onClick={() => void confirmChoice()}>{submittingChoice ? "Saving…" : "Confirm Call"}</button></div></dialog>
     </div>
   );
 }

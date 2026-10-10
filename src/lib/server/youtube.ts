@@ -102,7 +102,7 @@ async function fetchYoutubeFeed(): Promise<YoutubeFeedItem[]> {
         creator: item.snippet.channelTitle,
         handle: "YouTube Shorts",
         title: item.snippet.title,
-        description: `Shorts ${category} oleh ${item.snippet.channelTitle}. Views diperbarui dari YouTube.`,
+        description: `${category} Shorts by ${item.snippet.channelTitle}. Views from YouTube.`,
         category: `${category} · YouTube Shorts`,
         kind: "insight" as const,
         visual: category === "Sports" ? "blue" as const : category === "Crypto" ? "green" as const : "purple" as const,

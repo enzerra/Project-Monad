@@ -5,31 +5,31 @@ body .market-card.reference-card:hover,
 body .market-card.reference-card:focus-within { border-color:transparent; }
 .market-card-spotlight { position:absolute; inset:0; pointer-events:none; z-index:-1; }
 .market-card-frame { position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); pointer-events:none; overflow:visible; z-index:2; }
-.market-card-frame rect { fill:none; stroke:#b5a4db; stroke-width:.22; }
+.market-card-frame rect { fill:none; stroke:#a4dbd8; stroke-width:.22; }
 body .market-card.reference-card::before,
 body .market-card.reference-card::after { opacity:0; transform:scale(.45); transition:opacity 250ms ease,transform 480ms cubic-bezier(.22,1,.36,1); }
 body .market-card.reference-card::before { transform-origin:top left; }
 body .market-card.reference-card::after { transform-origin:bottom right; }
 body .market-card.reference-card[data-active]::before,
-body .market-card.reference-card[data-active]::after { opacity:1; transform:scale(1); border-color:#e1d7f7; }
+body .market-card.reference-card[data-active]::after { opacity:1; transform:scale(1); border-color:#f4f1e7; }
 body .market-card.reference-card .market-subject { transition:transform 480ms cubic-bezier(.22,1,.36,1),background 300ms,border-color 300ms; }
-body .market-card.reference-card[data-active] .market-subject { transform:translateY(-3px) rotate(-3deg); background:#302a3e; border-color:#7e6e9d; }
+body .market-card.reference-card[data-active] .market-subject { transform:translateY(-3px) rotate(-3deg); background:#2d3b3b; border-color:#7d8e8c; }
 body .market-card.reference-card .market-card-title h3 a { transition:color 250ms; }
-body .market-card.reference-card[data-active] .market-card-title h3 a { color:#f5edff; }
+body .market-card.reference-card[data-active] .market-card-title h3 a { color:#f4f1e7; }
 body .market-card.reference-card .market-outcomes a,
 body .market-card.reference-card .market-result-link,
 body .market-card.reference-card .market-card-details { transition:transform 260ms cubic-bezier(.22,1,.36,1),background 220ms,box-shadow 220ms; }
-body .market-card.reference-card .market-outcome-yes:hover { box-shadow:0 5px 20px #755de42b; }
+body .market-card.reference-card .market-outcome-yes:hover { box-shadow:0 5px 20px #68d9d22b; }
 body .market-card.reference-card .market-card-bottom svg { transition:transform 300ms cubic-bezier(.22,1,.36,1); }
 body .market-card.reference-card .market-outcomes a:hover svg,
 body .market-card.reference-card .market-result-link:hover svg { transform:translate(3px,-3px); }
 body .market-card.reference-card .market-card-details:hover svg { transform:translateX(4px); }
 body .market-card.reference-card .market-card-bottom a:active { transform:scale(.96); }
 body .market-categories button::after { display:none; }
-.market-category-indicator { position:absolute; bottom:0; left:0; right:0; height:2px; background:#ac91ff; box-shadow:0 0 12px #ac91ff30; pointer-events:none; }
+.market-category-indicator { position:absolute; bottom:0; left:0; right:0; height:2px; background:#a7e9e5; box-shadow:0 0 12px #a7e9e530; pointer-events:none; }
 body .market-status-tabs button { position:relative; isolation:isolate; }
 body .market-status-tabs button.is-active { background:transparent; }
-.market-status-indicator { position:absolute; inset:0; z-index:-1; background:#292438; pointer-events:none; }
+.market-status-indicator { position:absolute; inset:0; z-index:-1; background:#283434; pointer-events:none; }
 .market-status-label { position:relative; }
 @media(hover:hover) and (pointer:fine){body .market-card.reference-card .market-card-bottom a:hover { transform:translateY(-2px); }}
 @media(prefers-reduced-motion:reduce){

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { Choice } from "@/lib/demo-data";
+import { callQuestion, type Choice } from "@/lib/demo-data";
 import type { SourceAccountSnapshot } from "@/lib/source-calls";
 import { virtualBalance, VIRTUAL_TOKEN, type ChoiceResult, type VirtualWallet } from "@/lib/virtual-token";
 import { useAccountAuth } from "@/components/auth-provider";
@@ -27,7 +27,7 @@ export function useVirtualWallet() {
     if (auth.configured && next.accountId !== auth.accountId) throw new Error("Account identity mismatch");
     if (revision.current.identity !== identity || next.revision >= revision.current.value) {
       revision.current = { identity, value: next.revision };
-      setSnapshot({ identity, snapshot: next });
+      setSnapshot({ identity, snapshot: { ...next, calls: next.calls.map(call => ({ ...call, question: callQuestion(call) })) } });
       setFailure({ identity, message: "" });
     }
   }, [identity, auth.configured, auth.accountId]);
@@ -42,11 +42,11 @@ export function useVirtualWallet() {
       const timeout = window.setTimeout(() => controller?.abort(), 12_000);
       try {
         const response = await fetch("/api/vibe", { cache: "no-store", headers: await requestHeaders(), signal: controller.signal });
-        if (!response.ok) throw new Error(response.status === 401 ? "Masuk Google untuk memuat saldo akun." : "Pembaruan saldo tertunda. Saldo dan pilihan terakhir tetap ditampilkan.");
+        if (!response.ok) throw new Error(response.status === 401 ? "Sign in with Google to load your balance." : "Balance update delayed. Showing your last saved state.");
         const next = await response.json();
         if (!disposed) publish(next);
       } catch (error) {
-        if (!disposed) setFailure({ identity, message: error instanceof Error ? error.message : "Pembaruan saldo tertunda." });
+        if (!disposed) setFailure({ identity, message: error instanceof Error ? error.message : "Balance update delayed." });
       } finally { window.clearTimeout(timeout); controller = undefined; }
     };
     void refresh();
@@ -58,21 +58,21 @@ export function useVirtualWallet() {
   }, [publish, authReady, requestHeaders, identity]);
 
   const selectChoice = useCallback(async (callId: string, choice: Choice, amount: number = VIRTUAL_TOKEN.defaultAmount): Promise<ChoiceResult> => {
-    if (auth.configured && !auth.authenticated) { auth.login(); return { ok: false, error: "Masuk Google untuk memilih Call." }; }
-    if (!snapshot) return { ok: false, error: "Tunggu sampai saldo VIBE selesai dimuat." };
-    if (selecting.current) return { ok: false, error: "Pilihan sedang dikonfirmasi." };
+    if (auth.configured && !auth.authenticated) { auth.login(); return { ok: false, error: "Sign in with Google to make your Call." }; }
+    if (!snapshot) return { ok: false, error: "Wait for your balance to load." };
+    if (selecting.current) return { ok: false, error: "Confirming your Call." };
     selecting.current = true;
     try {
       const response = await fetch("/api/vibe", { method: "POST", headers: { "Content-Type": "application/json", ...await auth.requestHeaders() }, body: JSON.stringify({ callId, choice, amount }), signal: AbortSignal.timeout(15_000) });
       const result = await response.json();
       if (result.account) publish(result.account);
-      return response.ok && result.ok ? { ok: true } : { ok: false, error: result.error ?? "Pilihan belum berhasil dikonfirmasi." };
+      return response.ok && result.ok ? { ok: true } : { ok: false, error: result.error ?? "Your Call could not be confirmed." };
     } catch {
-      return { ok: false, error: "Konfirmasi belum diterima. Periksa saldo dan riwayat sebelum mencoba lagi; server mencegah potongan ganda." };
+      return { ok: false, error: "Confirmation pending. Check your balance and history before retrying." };
     } finally { selecting.current = false; }
   }, [publish, snapshot, auth]);
 
   const wallet = snapshot?.wallet ?? empty;
   const loginRequired = auth.configured && !auth.authenticated;
-  return { choices: wallet.choices, wallet, balance: virtualBalance(wallet), walletReady: Boolean(snapshot) && !loginRequired, feedReady: Boolean(snapshot), loginRequired, walletError: loginRequired ? "Masuk Google untuk mendapatkan saldo dan memilih Call." : walletError, selectChoice, calls: snapshot?.calls ?? [], contents: snapshot?.contents ?? [], calibrationStartedAt: snapshot?.calibrationStartedAt, lastCheckedAt: snapshot?.lastCheckedAt, serverNow: snapshot?.serverNow };
+  return { choices: wallet.choices, wallet, balance: virtualBalance(wallet), walletReady: Boolean(snapshot) && !loginRequired, feedReady: Boolean(snapshot), loginRequired, walletError: loginRequired ? "Sign in with Google to get VIBE and make Calls." : walletError, selectChoice, calls: snapshot?.calls ?? [], contents: snapshot?.contents ?? [], calibrationStartedAt: snapshot?.calibrationStartedAt, lastCheckedAt: snapshot?.lastCheckedAt, serverNow: snapshot?.serverNow };
 }
