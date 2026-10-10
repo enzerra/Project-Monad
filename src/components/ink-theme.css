@@ -212,6 +212,19 @@ html body .discover-shell.community-shell.hive-theme .community-composer button 
 html body .discover-shell.community-shell.hive-theme .community-composer button:disabled { background:#dfd7c5; color:#786d5b; }
 /* Truthful proof and result surfaces share the visual language. */
 html body :is(.live-proof-card,.proof-card,.rules-panel,.attached-call,.source-preview) { background:#fbf7ec; color:var(--vibe-text); border-color:var(--vibe-border); }
+html body .product-standard.hive-theme :is(.proof-card,.result-answer,.attached-call,.rules-panel,.insight-notice) { background:#fbf7ece6; color:var(--vibe-text); border-color:var(--vibe-border); border-radius:18px; }
+html body .product-standard.hive-theme :is(.result-intro h1,.detail-copy h1,.proof-row strong,.proof-row a) { color:var(--vibe-text); }
+html body .product-standard.hive-theme :is(.back-link,.detail-description,.attached-call p,.source-note,.proof-row>span) { color:var(--vibe-muted); }
+html body .product-standard.hive-theme :is(.result-answer strong,.attached-call-head,.status-badge) { color:var(--vibe-accent); }
+html body .product-standard.hive-theme :is(.proof-row,.proof-head,.detail-author) { border-color:var(--vibe-border); }
+html body .product-standard.hive-theme .status-dot { background:var(--vibe-accent); }
+html body .product-standard.hive-theme :is(.overline,.result-answer>span) { color:var(--vibe-accent); }
+html body .product-standard.hive-theme .proof-warning { background:#ece2cb; color:#715834; border-radius:10px; }
+html body .product-standard.hive-theme .proof-warning :is(p,strong) { color:#715834; }
+html body .product-standard.hive-theme .source-preview { background:#fbf7ece6!important; color:var(--vibe-text)!important; border-color:var(--vibe-border); border-radius:18px; }
+html body .product-standard.hive-theme .source-preview-play { color:var(--vibe-accent); border-color:var(--vibe-border); }
+html body .product-standard.hive-theme .content-actions>* { background:#f9f3e5; color:var(--vibe-text); border-color:var(--vibe-border); border-radius:999px; }
+html body .product-standard.hive-theme .creator-avatar { background:#dfe9db; color:var(--vibe-accent); border-radius:50%; }
 html body .live-proof-page { color:var(--vibe-text); }
 html body .live-proof-page :is(p,small,.live-proof-time) { color:var(--vibe-muted); }
 html body .live-proof-card .choice-button { background:#f2ecdd; color:var(--vibe-text); border-color:var(--vibe-border); }
