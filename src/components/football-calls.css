@@ -7,7 +7,9 @@
 .football-live { color:var(--vibe-accent); font-weight:700; }
 .football-score { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:12px; margin:26px 0 14px; text-align:center; }
 .football-score>div { display:flex; align-items:center; flex-direction:column; gap:10px; min-width:0; }.football-score strong { font-size:15px; font-weight:600; }
-.football-crest { display:grid; place-items:center; width:48px; height:52px; border:1px solid var(--vibe-border); border-radius:10px 10px 24px 24px; color:var(--vibe-accent); background:var(--vibe-accent-soft); font:600 15px Georgia,serif; }
+.football-crest { display:grid; place-items:center; width:56px; height:56px; flex-shrink:0; }
+.football-crest img { display:block; width:56px; height:56px; object-fit:contain; }
+.football-crest-fallback { border:1px solid var(--vibe-border); border-radius:12px; color:var(--vibe-accent); background:var(--vibe-accent-soft); font:600 15px Georgia,serif; }
 .football-scoreline { font:500 clamp(26px,3vw,42px)/1.1 Georgia,serif; font-variant-numeric:tabular-nums; white-space:nowrap; }
 html body .discover-shell.hive-theme .football-scoreline { color:var(--vibe-text); font:500 clamp(26px,3vw,42px)/1.1 Georgia,serif; }
 html body .discover-shell.hive-theme .football-card-link>svg { color:var(--vibe-accent); }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, ArrowUpRight, Trophy } from "lucide-react";
@@ -12,11 +13,27 @@ import { AuthControl } from "./auth-control";
 import { VirtualAmount, type VirtualAccount } from "./virtual-wallet";
 import "./football-calls.css";
 
+const clubCrests: Record<string, string> = {
+  "83": "/images/clubs/barcelona.png",
+  "2922": "/images/clubs/getafe.png",
+  "929": "/images/clubs/al-hilal.png",
+  "2276": "/images/clubs/al-ittihad.png",
+};
+
+function ClubCrest({ id, name }: { id: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const src = clubCrests[id];
+  const initials = name.split(/\s+/).map(word => word[0]).join("").slice(0, 3);
+  return <span className={`football-crest${!src || failed ? " football-crest-fallback" : ""}`} aria-hidden="true">
+    {src && !failed ? <Image src={src} alt="" width={56} height={56} sizes="56px" onError={() => setFailed(true)} /> : initials}
+  </span>;
+}
+
 function MatchScore({ call }: { call: FootballCall }) {
   return <div className="football-score" aria-label={`${call.home} ${call.homeScore ?? "versus"} ${call.awayScore ?? ""} ${call.away}`}>
-    <div><span className="football-crest" aria-hidden="true">{call.home === "Barcelona" ? "FCB" : "HIL"}</span><strong>{call.home}</strong></div>
+    <div><ClubCrest key={call.homeId} id={call.homeId} name={call.home} /><strong>{call.home}</strong></div>
     <span className="football-scoreline">{call.homeScore === undefined ? "vs" : `${call.homeScore} – ${call.awayScore}`}</span>
-    <div><span className="football-crest" aria-hidden="true">{call.away === "Getafe" ? "GET" : "ITT"}</span><strong>{call.away}</strong></div>
+    <div><ClubCrest key={call.awayId} id={call.awayId} name={call.away} /><strong>{call.away}</strong></div>
   </div>;
 }
 const statusLabel = (call: FootballCall) => call.status === "resolved" ? "Full time" : call.status === "void" ? "Refunded" : call.matchState === "live" ? `Live · ${call.statusText}` : call.status === "open" ? "Open until kickoff" : "Entries closed";
