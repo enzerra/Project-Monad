@@ -24,6 +24,7 @@ import {
 } from "@/lib/demo-data";
 import { DiscoverViewer } from "@/components/discover-viewer";
 import { PredictionsPage } from "@/components/predictions-page";
+import { FootballDetail } from "@/components/football-calls";
 import { CommunityPage } from "@/components/community-page";
 import { ProductShell } from "@/components/product-shell";
 import { CallDetailSimple as CallDetail } from "@/components/call-detail-simple";
@@ -114,6 +115,7 @@ function HiveAppContent({ initialVideoId, youtubeFeed = [], uploads = [] }: { in
   if (parts[0] === "profile") page = <Profile state={state} uploads={uploads} />;
   else if (parts[0] === "upload") page = <UploadPage />;
   else if (parts[0] === "content" && parts[1]) page = <ContentDetail id={parts[1]} />;
+  else if ((parts[0] === "calls" || parts[0] === "results") && parts[1]?.startsWith("football-")) page = <FootballDetail id={parts[1]} account={state} />;
   else if (parts[0] === "calls" && parts[1]) page = <CallDetail id={parts[1]} state={state} />;
   else if (parts[0] === "results" && parts[1]) page = parts[1].startsWith("shorts-") ? <CallDetail id={parts[1]} state={state} /> : <Result id={parts[1]} />;
   else page = <NotFound />;

@@ -6,8 +6,9 @@ import { NextRequest } from "next/server";
 import { CALIBRATION_MS } from "../../src/lib/source-calls";
 
 vi.mock("server-only", () => ({}));
+vi.mock("../../src/lib/server/football", () => ({ getFootballObservations: async () => [] }));
 const source = vi.hoisted(() => ({ views: 1000, available: true }));
-vi.mock("../../src/lib/server/youtube", () => ({ getYoutubeFeed: async () => source.available ? [{ id: "youtube-test", creator: "Creator", title: "Shorts", handle: "YouTube Shorts", description: "Source", category: "Gaming", kind: "insight", visual: "purple", minutes: 0, video: { provider: "youtube", videoId: "test", sourceUrl: "https://www.youtube.com/shorts/test", hasAudio: true }, youtubeViews: source.views, observedAt: new Date().toISOString() }] : [] }));
+vi.mock("../../src/lib/server/youtube", () => ({ curatedVideos: [{ id: "test", category: "Gaming" }], getYoutubeCallObservations: async () => source.available ? [{ id: "youtube-test", creator: "Creator", title: "Shorts", handle: "YouTube Shorts", description: "Source", category: "Gaming", kind: "insight", visual: "purple", minutes: 0, video: { provider: "youtube", videoId: "test", sourceUrl: "https://www.youtube.com/shorts/test", hasAudio: true }, youtubeViews: source.views, observedAt: new Date().toISOString() }] : [] }));
 
 let directory: string;
 beforeEach(() => {

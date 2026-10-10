@@ -4,10 +4,11 @@ import { NextRequest } from "next/server";
 import { CALIBRATION_MS } from "../../src/lib/source-calls";
 
 vi.mock("server-only", () => ({}));
+vi.mock("../../src/lib/server/football", () => ({ getFootballObservations: async () => [] }));
 const source = vi.hoisted(() => ({ views: 1000 }));
 const writeProfile = vi.hoisted(() => vi.fn(async () => []));
 vi.mock("../../src/lib/server/database", () => ({ db: writeProfile, supabaseConfigured: () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) }));
-vi.mock("../../src/lib/server/youtube", () => ({ getYoutubeFeed: async () => [{ id: "youtube-test", creator: "Creator", title: "Shorts", handle: "YouTube", description: "Source", category: "Gaming", kind: "insight", visual: "purple", minutes: 0, video: { provider: "youtube", videoId: "test", sourceUrl: "https://www.youtube.com/shorts/test", hasAudio: true }, youtubeViews: source.views, observedAt: new Date().toISOString() }] }));
+vi.mock("../../src/lib/server/youtube", () => ({ curatedVideos: [{ id: "test", category: "Gaming" }], getYoutubeCallObservations: async () => [{ id: "youtube-test", creator: "Creator", title: "Shorts", handle: "YouTube", description: "Source", category: "Gaming", kind: "insight", visual: "purple", minutes: 0, video: { provider: "youtube", videoId: "test", sourceUrl: "https://www.youtube.com/shorts/test", hasAudio: true }, youtubeViews: source.views, observedAt: new Date().toISOString() }] }));
 vi.mock("../../src/lib/server/vibe-store", async (original) => {
   const { VibeStore } = await original<typeof import("../../src/lib/server/vibe-store")>();
   let store: InstanceType<typeof VibeStore>;

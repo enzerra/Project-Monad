@@ -1,10 +1,10 @@
 import "server-only";
 import type { Content } from "@/lib/demo-data";
 
-// Curated Shorts, reviewed by topic on 5 Oct 2026. Search results never flow
+// Curated Shorts, reviewed by topic on 10 Oct 2026. Search results never flow
 // directly into the feed. Public status, embedding, duration and portrait ratio
 // are checked again from YouTube on each batch refresh.
-const curatedVideos = [
+const archivedVideos = [
   { id: "lQ2Q92QOK28", category: "Gaming" },
   { id: "Tqu4sAPVJ28", category: "Gaming" },
   { id: "XzKHvOVIviE", category: "Gaming" },
@@ -27,9 +27,93 @@ const curatedVideos = [
   { id: "R-1x0DPMgkE", category: "Crypto" },
 ] as const;
 
+export const curatedVideos = [
+  {
+    "id": "8Vfwbvbrc7Q",
+    "category": "Gaming"
+  },
+  {
+    "id": "8RIlUZrGUBk",
+    "category": "Gaming"
+  },
+  {
+    "id": "nwlSVobPYsI",
+    "category": "Gaming"
+  },
+  {
+    "id": "Cm3ct-lwtTg",
+    "category": "Gaming"
+  },
+  {
+    "id": "sohv0uEmyDQ",
+    "category": "Gaming"
+  },
+  {
+    "id": "Qz0Cgu4K1NQ",
+    "category": "Gaming"
+  },
+  {
+    "id": "o-rr1gLpCoQ",
+    "category": "Gaming"
+  },
+  {
+    "id": "eHhWGCgcQPY",
+    "category": "Sports"
+  },
+  {
+    "id": "77igIAgeIEU",
+    "category": "Sports"
+  },
+  {
+    "id": "FGuPztow5XM",
+    "category": "Sports"
+  },
+  {
+    "id": "EPtfUG6KSIA",
+    "category": "Sports"
+  },
+  {
+    "id": "jFCnv8DnC8k",
+    "category": "Sports"
+  },
+  {
+    "id": "p9WgPWt_L9Y",
+    "category": "Sports"
+  },
+  {
+    "id": "Byvn9vLHwEg",
+    "category": "Sports"
+  },
+  {
+    "id": "9sakjIQBdrw",
+    "category": "Crypto"
+  },
+  {
+    "id": "riutrRkRdjg",
+    "category": "Crypto"
+  },
+  {
+    "id": "8Kc98IZonCM",
+    "category": "Crypto"
+  },
+  {
+    "id": "IcbtqlJp2wY",
+    "category": "Crypto"
+  },
+  {
+    "id": "2GACq4HKrXA",
+    "category": "Crypto"
+  },
+  {
+    "id": "d26Jfj-3X0k",
+    "category": "Crypto"
+  }
+] as const;
+const trackedVideos = [...curatedVideos, ...archivedVideos];
+
 type YoutubeItem = {
   id: string;
-  snippet?: { title?: string; channelTitle?: string; channelId?: string; description?: string };
+  snippet?: { publishedAt?: string; title?: string; channelTitle?: string; channelId?: string; description?: string };
   status?: { embeddable?: boolean; privacyStatus?: string };
   contentDetails?: { duration?: string };
   player?: { embedWidth?: string | number; embedHeight?: string | number };
@@ -53,6 +137,10 @@ type SharedFeed = { cache?: { items: YoutubeFeedItem[]; expiresAt: number }; req
 const sharedHost = globalThis as typeof globalThis & { __vibeYoutubeFeedCache?: SharedFeed };
 
 export async function getYoutubeFeed(): Promise<YoutubeFeedItem[]> {
+  return (await getYoutubeCallObservations()).filter(item => isCuratedYoutubeVideo(item.video.videoId));
+}
+
+export async function getYoutubeCallObservations(): Promise<YoutubeFeedItem[]> {
   const shared = sharedHost.__vibeYoutubeFeedCache ??= {};
   if (shared.cache && Date.now() < shared.cache.expiresAt) return shared.cache.items;
   if (shared.request) return shared.request;
@@ -72,7 +160,7 @@ async function fetchYoutubeFeed(): Promise<YoutubeFeedItem[]> {
     const url = new URL("https://www.googleapis.com/youtube/v3/videos");
     url.searchParams.set("part", "snippet,status,contentDetails,statistics,player");
     url.searchParams.set("maxWidth", "1080");
-    url.searchParams.set("id", curatedVideos.map((video) => video.id).join(","));
+    url.searchParams.set("id", trackedVideos.map((video) => video.id).join(","));
     const response = await fetch(url, {
       headers: { "x-goog-api-key": key },
       cache: "no-store",
@@ -83,7 +171,7 @@ async function fetchYoutubeFeed(): Promise<YoutubeFeedItem[]> {
     const observedAt = new Date().toISOString();
     const byId = new Map((payload.items ?? []).map((item) => [item.id, item]));
 
-    return curatedVideos.flatMap(({ id, category }) => {
+    return trackedVideos.flatMap(({ id, category }) => {
       const item = byId.get(id);
       const views = Number(item?.statistics?.viewCount);
       const duration = item?.contentDetails?.duration?.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/);

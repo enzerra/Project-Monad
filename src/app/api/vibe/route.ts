@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { sourceAccount, placeSourceChoice } from "@/lib/source-calls";
+import { placeFootballChoice } from "@/lib/football-calls";
 import { refreshSourceCalls, sessionId } from "@/lib/server/vibe";
 import { vibeStore } from "@/lib/server/vibe-store";
 import { AuthError, privyUser } from "@/lib/server/auth";
@@ -32,7 +33,7 @@ function response(data: unknown, session: Session, status = 200) {
 function accountSnapshot(state: SourceState, session: Session, now: number) {
   if (session.id) return { ...sourceAccount(state, session.id, now), accountId: session.id };
   // Anyone can browse Calls; only a verified account gets an initial balance.
-  return { revision: state.revision, accountId: null, wallet: { version: 1, choices: [], entries: [] }, calls: state.calls, contents: state.contents, calibrationStartedAt: Object.values(state.calibration).map((item) => item.first.observedAt).sort()[0], lastCheckedAt: state.lastCheckedAt, serverNow: new Date(now).toISOString() };
+  return { revision: state.revision, accountId: null, wallet: { version: 1, choices: [], entries: [] }, calls: state.calls, footballCalls: state.footballCalls ?? [], contents: state.contents, calibrationStartedAt: Object.values(state.calibration).map((item) => item.first.observedAt).sort()[0], lastCheckedAt: state.lastCheckedAt, serverNow: new Date(now).toISOString() };
 }
 
 export async function GET(request: NextRequest) {
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
     const result = await vibeStore().transaction((state) => {
       if (!state.wallets[accountId]) return { ok: false as const, error: "Balance not loaded. Refresh the page." };
       const { callId, choice, amount } = parsed.data;
-      const placed = placeSourceChoice(state, accountId, callId, choice, amount, Date.now());
+      const placed = callId.startsWith("football-") ? placeFootballChoice(state, accountId, callId, choice, amount, Date.now()) : placeSourceChoice(state, accountId, callId, choice, amount, Date.now());
       return { ...placed, account: accountSnapshot(state, session, Date.now()) };
     });
     return response(result, session, result.ok ? 200 : 409);

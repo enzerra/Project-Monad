@@ -9,6 +9,7 @@ import { findCall, formatCount } from "@/lib/demo-data";
 import { validateVirtualAmount, VIRTUAL_TOKEN, type ChoiceResult, type VirtualChoice, type VirtualWallet } from "@/lib/virtual-token";
 import type { Choice } from "@/lib/demo-data";
 import type { SourceCall, ObservedContent } from "@/lib/source-calls";
+import type { FootballCall } from "@/lib/football-calls";
 import { AuthControl } from "@/components/auth-control";
 import { useAccountAuth } from "@/components/auth-provider";
 
@@ -22,6 +23,7 @@ export type VirtualAccount = {
   walletError: string;
   selectChoice: (callId: string, choice: Choice, amount?: number) => Promise<ChoiceResult>;
   calls?: SourceCall[];
+  footballCalls?: FootballCall[];
   contents?: ObservedContent[];
   calibrationStartedAt?: string;
   lastCheckedAt?: string;
@@ -45,7 +47,7 @@ export function VirtualWalletPanel({ account }: { account: VirtualAccount }) {
     <div className="virtual-history-head"><h3>Balance history</h3><span>ACCOUNT HISTORY</span></div>
     <ul className="virtual-ledger">{[...account.wallet.entries].reverse().map((entry) => <li key={entry.id}>
       <span className={`virtual-ledger-icon ${entry.amount > 0 ? "is-credit" : ""}`}>{entry.amount > 0 ? <ArrowDownLeft size={17} /> : <ArrowUpRight size={17} />}</span>
-      <div><strong>{entry.kind === "welcome" ? "Welcome credits" : entry.kind === "reward" ? "Correct Call · 2× return" : entry.kind === "refund" ? "Cancelled Call refund" : "Call confirmed"}</strong>{entry.callId ? <Link href={`/calls/${entry.callId}`}>{account.calls?.find((call) => call.id === entry.callId)?.question ?? findCall(entry.callId)?.question ?? entry.callId}</Link> : <span>One welcome grant per account</span>}<time dateTime={entry.createdAt}>{new Date(entry.createdAt).toLocaleString("en-US", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })} GMT+7</time></div>
+      <div><strong>{entry.kind === "welcome" ? "Welcome credits" : entry.kind === "reward" ? "Correct Call · 2× return" : entry.kind === "refund" ? "Cancelled Call refund" : "Call confirmed"}</strong>{entry.callId ? <Link href={`/calls/${entry.callId}`}>{account.calls?.find((call) => call.id === entry.callId)?.question ?? account.footballCalls?.find(call => call.id === entry.callId)?.question ?? findCall(entry.callId)?.question ?? entry.callId}</Link> : <span>One welcome grant per account</span>}<time dateTime={entry.createdAt}>{new Date(entry.createdAt).toLocaleString("en-US", { timeZone: "Asia/Jakarta", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })} GMT+7</time></div>
       <strong className={entry.amount > 0 ? "is-credit" : ""}>{entry.amount > 0 ? "+" : "−"}{formatCount(Math.abs(entry.amount))}<small> VIBE</small></strong>
     </li>)}</ul>
     <p className="virtual-wallet-note">A correct Call returns 2×, including your original amount. {auth.configured ? "Your balance follows your Google account across devices." : "This session is linked to your browser cookie."}</p>

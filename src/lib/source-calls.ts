@@ -1,4 +1,5 @@
 import type { Call, Content, Choice, PredictionCategory } from "./demo-data";
+import type { FootballCall } from "./football-calls";
 import { createVirtualWallet, placeVirtualChoice, type ChoiceResult, type VirtualWallet } from "./virtual-token";
 
 export const SOURCE_RULE = "youtube-views-6h-fixed2x-v1";
@@ -20,6 +21,7 @@ export type UploadedContent = Content & { ownerId: string; uploadedAt: string; v
 export type SourceState = {
   version: 1; revision: number; calls: SourceCall[]; contents: ObservedContent[];
   uploads?: UploadedContent[];
+  footballCalls?: FootballCall[];
   calibration: Record<string, { first: ViewObservation; last: ViewObservation }>;
   wallets: Record<string, VirtualWallet>; lastCheckedAt?: string;
 };
@@ -27,6 +29,7 @@ export type SourceAccountSnapshot = {
   revision: number; wallet: VirtualWallet; calls: SourceCall[]; contents: ObservedContent[];
   calibrationStartedAt?: string; lastCheckedAt?: string; serverNow: string;
   accountId?: string | null;
+  footballCalls?: FootballCall[];
 };
 
 export function emptySourceState(): SourceState {
@@ -37,7 +40,7 @@ const fresh = (at: string, now: number) => Number.isFinite(Date.parse(at)) && Da
 const categoryOf = (item: Content): PredictionCategory => item.category.startsWith("Sports") ? "sport" : item.category.startsWith("Crypto") ? "crypto" : "gaming";
 
 /** Pure transition: only observed API data can create/resolve Calls. Never uses fixture views. */
-export function observeSource(state: SourceState, feed: ObservedContent[], now: number, hash: (value: string) => string): void {
+export function observeSource(state: SourceState, feed: ObservedContent[], now: number, hash: (value: string) => string, activeVideoIds?: ReadonlySet<string>): void {
   const eligible = feed.filter((item) => Number.isSafeInteger(item.youtubeViews) && item.youtubeViews >= 0 && fresh(item.observedAt, now) && (!state.calibration[item.video.videoId] || Date.parse(item.observedAt) >= Date.parse(state.calibration[item.video.videoId].last.observedAt)));
   const byVideo = new Map(eligible.map((item) => [item.video.videoId, item]));
   for (const item of eligible) {
@@ -89,8 +92,8 @@ export function observeSource(state: SourceState, feed: ObservedContent[], now: 
 
   // At most one active Call per category; targets use two real observations >=30 min apart.
   for (const category of ["gaming", "sport", "crypto"] as const) {
-    if (state.calls.some((call) => call.predictionCategory === category && call.status !== "resolved" && call.status !== "void")) continue;
-    const candidates = eligible.filter((item) => categoryOf(item) === category).flatMap((item) => {
+    if (state.calls.some((call) => call.predictionCategory === category && (!activeVideoIds || activeVideoIds.has(call.videoId)) && call.status !== "resolved" && call.status !== "void")) continue;
+    const candidates = eligible.filter((item) => categoryOf(item) === category && (!activeVideoIds || activeVideoIds.has(item.video.videoId))).flatMap((item) => {
       const calibration = state.calibration[item.video.videoId];
       const elapsed = Date.parse(calibration.last.observedAt) - Date.parse(calibration.first.observedAt);
       const growth = calibration.last.views - calibration.first.views;
@@ -118,7 +121,7 @@ export function observeSource(state: SourceState, feed: ObservedContent[], now: 
   for (const wallet of Object.values(state.wallets)) settleSourceWallet(wallet, state.calls, new Date(now).toISOString());
 }
 
-export function settleSourceWallet(wallet: VirtualWallet, calls: SourceCall[], now: string): void {
+export function settleSourceWallet(wallet: VirtualWallet, calls: (Pick<Call, "id" | "status" | "result"> & { proof?: object })[], now: string): void {
   for (const choice of wallet.choices) {
     if (choice.settlement) continue;
     const call = calls.find((call) => call.id === choice.callId);
@@ -135,7 +138,7 @@ export function settleSourceWallet(wallet: VirtualWallet, calls: SourceCall[], n
 export function sourceAccount(state: SourceState, accountId: string, now: number): SourceAccountSnapshot {
   const wallet = state.wallets[accountId] ??= createVirtualWallet(new Date(now).toISOString());
   const starts = Object.values(state.calibration).map((item) => item.first.observedAt).sort();
-  return { revision: state.revision, wallet, calls: state.calls, contents: state.contents, calibrationStartedAt: starts[0], lastCheckedAt: state.lastCheckedAt, serverNow: new Date(now).toISOString() };
+  return { revision: state.revision, wallet, calls: state.calls, footballCalls: state.footballCalls ?? [], contents: state.contents, calibrationStartedAt: starts[0], lastCheckedAt: state.lastCheckedAt, serverNow: new Date(now).toISOString() };
 }
 
 export function placeSourceChoice(state: SourceState, accountId: string, callId: string, choice: Choice, amount: number, now: number): ChoiceResult {

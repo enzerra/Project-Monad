@@ -56,7 +56,7 @@ export function validateVirtualAmount(amount: number, balance: number): string |
   return null;
 }
 
-export function placeVirtualChoice(wallet: VirtualWallet, call: Call | undefined, choice: Choice, amount: number, now: string): { wallet: VirtualWallet; result: ChoiceResult } {
+export function placeVirtualChoice(wallet: VirtualWallet, call: Pick<Call, "id" | "status"> | undefined, choice: Choice, amount: number, now: string): { wallet: VirtualWallet; result: ChoiceResult } {
   const fail = (error: string) => ({ wallet, result: { ok: false, error } as ChoiceResult });
   if (!call || call.status !== "open") return fail("This Call is closed to new entries.");
   if (choice !== "yes" && choice !== "no") return fail("Invalid choice.");

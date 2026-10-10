@@ -74,5 +74,5 @@ export function useVirtualWallet() {
 
   const wallet = snapshot?.wallet ?? empty;
   const loginRequired = auth.configured && !auth.authenticated;
-  return { choices: wallet.choices, wallet, balance: virtualBalance(wallet), walletReady: Boolean(snapshot) && !loginRequired, feedReady: Boolean(snapshot), loginRequired, walletError: loginRequired ? "Sign in with Google to get VIBE and make Calls." : walletError, selectChoice, calls: snapshot?.calls ?? [], contents: snapshot?.contents ?? [], calibrationStartedAt: snapshot?.calibrationStartedAt, lastCheckedAt: snapshot?.lastCheckedAt, serverNow: snapshot?.serverNow };
+  return { choices: wallet.choices, wallet, balance: virtualBalance(wallet), walletReady: Boolean(snapshot) && !loginRequired, feedReady: Boolean(snapshot), loginRequired, walletError: loginRequired ? "Sign in with Google to get VIBE and make Calls." : walletError, selectChoice, calls: snapshot?.calls ?? [], footballCalls: snapshot?.footballCalls ?? [], contents: snapshot?.contents ?? [], calibrationStartedAt: snapshot?.calibrationStartedAt, lastCheckedAt: snapshot?.lastCheckedAt, serverNow: snapshot?.serverNow };
 }

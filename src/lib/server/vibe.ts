@@ -1,7 +1,9 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { observeSource, SAMPLE_INTERVAL_MS } from "@/lib/source-calls";
-import { getYoutubeFeed, type YoutubeFeedItem } from "@/lib/server/youtube";
+import { getYoutubeCallObservations, curatedVideos, type YoutubeFeedItem } from "@/lib/server/youtube";
+import { getFootballObservations } from "@/lib/server/football";
+import { observeFootball } from "@/lib/football-calls";
 import { vibeStore } from "@/lib/server/vibe-store";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
@@ -9,9 +11,12 @@ let running: Promise<void> | undefined;
 export async function refreshSourceCalls(): Promise<void> {
   if (running) return running;
   running = (async () => {
-    const feed = await getYoutubeFeed();
+    const [feed, football] = await Promise.all([getYoutubeCallObservations(), getFootballObservations()]);
     const now = Date.now();
-    await vibeStore().transaction((state) => observeSource(state, feed, now, hash));
+    await vibeStore().transaction((state) => {
+      observeSource(state, feed, now, hash, new Set(curatedVideos.map(video => video.id)));
+      observeFootball(state, football, now, hash);
+    });
   })().finally(() => { running = undefined; });
   return running;
 }
