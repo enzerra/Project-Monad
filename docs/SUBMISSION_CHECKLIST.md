@@ -1,59 +1,65 @@
-# VIBE submission handoff
+# Metropolis submission checklist
 
-Work through these gates in order. A code build is not a completed submission.
+**Updated 11 October 2026.** This checklist follows the Rules & Guidelines supplied by the owner (version 3.0, 3 September 2026). Re-check the authenticated portal for changes before submitting.
 
-| Gate | Required evidence | Current state |
+## Required material
+
+| Requirement | Evidence / document | Status |
 | --- | --- | --- |
-| Website | Public HTTPS URL, healthcheck, mobile/desktop checks | Railway SUCCESS; healthcheck passed; intro redirect and small-screen profile verified. Full authenticated acceptance pending |
-| Accounts | Real Google login, two independent accounts, persistent balance/history | Google login and visible balance confirmed by owner; two Google accounts and separate initial balances confirmed by owner; signed commitments verified |
-| Upload | Authenticated upload with preview, caption and hashtags | Implemented; public deployment acceptance pending |
-| YouTube | Source metadata, real observation timestamps, worker runs without open tabs | Public views API and hosted health report fresh observations |
-| Monad | Testnet contract address, create/commit/reveal/result transaction hashes | Deployed on Testnet; create and first signed commit verified. Reveal and final result pending |
-| Repository | Public source, MIT license, README, build history, AI disclosure | Public branch contains tested code release d402cb4, MIT license and AI disclosure |
-| Demo | Public accessible video, maximum 3 minutes, real Monad interaction | English script available; recording pending |
-| Portal | Project/team details, one primary track, requested links/docs and final submit | Pending |
+| Working product | [VIBE on Railway](https://web-production-5e33e.up.railway.app) | Live; health and sources verified |
+| Public source and history | [GitHub](https://github.com/enzerra/Project-Monad) | Final code and English documentation prepared; see release evidence |
+| Open-source license | [MIT](../LICENSE) | Present |
+| Setup and deployment | [Setup](SETUP.md), [Railway](RAILWAY_DEPLOYMENT.md) | Documented |
+| Project, architecture and stack | [README](../README.md), [Product](PRODUCT.md), [Architecture](ARCHITECTURE.md) | Documented in English |
+| External attribution | [Assets](../ASSETS.md), [Dependencies](../THIRD_PARTY_NOTICES.md) | Documented; third-party rights retained |
+| Build window and AI disclosure | README build-history section and Git history | Disclosed |
+| Monad deployment and interaction | [Contract and six successful receipts](MONAD.md) | Create, two commits, two reveals and result verified |
+| Public demo, maximum three minutes | Final video URL | **Not recorded**; planning deferred until repository handoff |
+| Team/project and primary track | Portal draft and track selection | **Not created**, confirmed by owner |
+| Submission confirmation | Portal receipt/status | **Not submitted** |
 
-## Record release evidence
+## Product acceptance still to complete
 
-- Website URL: https://web-production-5e33e.up.railway.app
-- Verified Railway deployment: `029e72d2-7a04-4e3c-9cae-0befd9e5f125` (10 October 2026)
-- GitHub release branch/commit: codex/integrate-privy-supabase / d402cb4
-- Monad network/chain ID: Testnet / 10143
-- Contract address: 0x1a4914ec33c242b8fc781b3780c4bb0ab9bc09a5
-- Create Call transaction: 0xb447a6b8845a34b433cb5c3805ab593b59db9d1fa46f3eb6c9cf9222881ca01b
-- Commit transaction (account A): 0x67de09a9944d654577dc14197f1e433252a34f149270b5988f4e5d21526d9c13
-- Commit transaction (account B): 0x53317003f9d008c7cc79d651584edcf0d880a6f161797a6ba532535902ada4cf
-- Reveal transaction:
-- Resolve/void transaction:
-- Public demo video URL:
-- Selected primary track:
-- Final submission confirmation:
+- [ ] Authenticated Studio upload → publish → Discover/Profile → refresh → playback from another session.
+- [ ] Final demo recording and public access check.
+- [ ] If recording a new signature: publish a genuine open Monad Call and capture its actual lifecycle. Existing completed Call remains valid result evidence.
+- [ ] Final logged-out checks of website, repository, video and explorer links.
+- [ ] Keep Railway, Supabase and source quotas available throughout judging.
 
-## Verified during deployment
+Google login, two accounts, separate grants and signed commitments were previously confirmed by the owner. Direct RPC checks on 11 October verify both reveals and the result. [Dated verification](RELEASE.md).
 
-- Production build and lint pass; 68 application tests and 12 contract tests pass.
-- Public `/api/health` returns HTTP 200 with persistent storage connected and recent collector observations.
-- Guest `/api/vibe` has no account or balance; Call/upload/profile-sync writes without authentication return 401. Foreign origins return 403.
-- Public Short views endpoint returns actual YouTube observations with a timestamp.
-- Railway starts `scripts/start-production.mjs`, listens on port 8080, uses `/api/health`, one replica, sleep disabled, and ON_FAILURE retries.
-- Profile login no longer clips on a narrow viewport. Google login, two balances, and two signed Testnet choices have now been confirmed by the owner and verified against storage/chain.
-- Production dependency audit: 23 moderate findings, zero high/critical at verification time. Development dependencies still have unresolved advisories; this is not a security audit certificate.
-- Code release d402cb4 has been pushed to the public codex/integrate-privy-supabase branch and deployed to Railway. Documentation acceptance notes can have later commits.
+## Track and judging fit
 
-## Demo outline
+Recommended **single primary track: Social, Attention & Culture**. Final selection must be made in the portal. Optional sponsor bounties require their own current requirements; no eligibility is assumed merely from an installed library.
 
-Use `VIBE_3_MINUTE_SCRIPT_EN.md` as a draft. Show the actual deployed experience: Discover, an open Call, Google login and signed onchain choice, receipt/explorer, result evidence, and community context. Clearly distinguish free VIBE balances from Monad proofs. Do not replace missing live interactions with test output or imply an API observation is a trustless oracle.
+The supplied rules weight each of these equally:
 
-Verify the portal's current deadline and mandatory fields before submission. The supplied portal text listed **14 October 2026, 10:59 GMT+7**; preserve time for recording, video permissions and final review. Re-check that public links work in an incognito browser.
+| Criterion | Evidence to emphasize |
+| --- | --- |
+| Product quality and completeness | Working mobile/desktop journeys, concise rules, real result states |
+| Technical excellence | Atomic ledger, source validation, contract tests and explicit failure handling |
+| Monad integration | Real wallet authorization, committed choices, reveals and resolution receipts |
+| Track fit and problem relevance | Fans/viewers participating around discovered content |
+| Innovation and impact | A connected discovery-to-outcome experience; do not invent adoption metrics |
 
-## Monad acceptance, 10 October 2026
+## Portal preparation
 
-- Operator roles and bytecode verified on chain 10143.
-- Google login and balance confirmed by the owner after adding the Railway origin in Privy.
-- First owner-signed choice mined successfully; contract commitment is nonzero.
-- Call URL: https://web-production-5e33e.up.railway.app/live/calls/cc2aafed-4e47-486e-ba0e-ebeb1025f7aa
-- Scheduled close: 2026-10-10T07:02:40.000Z; evaluation: 2026-10-10T11:32:40.000Z.
-- Hosted keeper runs every minute with one replica and serializes transactions with sponsored commits. API smoke check returned polled; anonymous prepare/submit requests returned 401.
-- Full reveal/resolve acceptance, upload and visual checks across phone widths remain pending.
+Prepare the product name and short English description, team members/contact, track, website, current public repository, contract/network, architecture and final video URL. This is a preparation list; exact required fields must be read from the authenticated form.
 
-- Supabase ledger audit confirmed two separate persisted balances of 1,000 VIBE, with one welcome grant each.
+Recommended short description:
+
+> VIBE turns short-video discovery into time-bound predictions. Explore Gaming, Sports and Crypto content, make Calls with free credits, and inspect a separate Monad-powered commitment and result flow.
+
+The portal snapshot supplied on 11 October shows **14 October 2026, 10:59 GMT+7 (WIB)** as the submission cutoff. Aim to finish by 13 October WIB and verify the live dashboard before relying on that date.
+
+## Claims to keep accurate
+
+- VIBE credits are free, offchain and have no cash-out.
+- Standard credit Calls and Monad proof Calls are separate.
+- Views come from periodic YouTube observations, not guaranteed instant updates.
+- The operator and external source are trusted.
+- Community/comments are local prototype data; verified reputation is not shipped.
+- The upload implementation exists, but authenticated publication acceptance is still pending.
+- A successful build, deployment or checklist does not mean the portal has accepted a submission.
+
+The [earlier audit](SUBMISSION_AUDIT_2026-10-11.md) is a historical snapshot of gaps before this documentation handoff.

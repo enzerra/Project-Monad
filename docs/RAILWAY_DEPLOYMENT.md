@@ -91,7 +91,7 @@ Do not open a broad public beta until authenticated tests and operational review
 
 ## 7. Complete the Monad requirement separately
 
-The free VIBE token Call engine is offchain. Website hosting alone does **not** satisfy a working Monad integration. Follow README's live setup: a dedicated funded Monad Testnet operator, contract deployment, encrypted signed choices, create/commit/reveal/resolve receipts, and a trusted scheduled operator tick. Record the address and transaction hashes, test two accounts, then film the public demo. Do not claim the token balance is onchain.
+The free VIBE credit Call engine is offchain. Website hosting alone does **not** satisfy a working Monad integration. Follow the [Monad setup and evidence guide](MONAD.md) for the dedicated funded Testnet operator, contract deployment, encrypted signed choices and create/commit/reveal/resolve receipts. Do not describe the credit balance as onchain.
 
 References: [Railway config](https://docs.railway.com/config-as-code/reference), [sleep/serverless](https://docs.railway.com/deployments/serverless), [restart policy](https://docs.railway.com/deployments/restart-policy).
 

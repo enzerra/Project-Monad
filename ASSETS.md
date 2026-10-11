@@ -1,55 +1,56 @@
-# Video demo Discover
+# Asset attribution
 
-Kedua klip di `public/videos/` adalah potongan gameplay dari video Xbox México. Halaman sumber Wikimedia Commons mencantumkan lisensi Creative Commons Attribution 3.0 Unported. VIBE menampilkan klip dalam bingkai vertikal dengan memotong sisi video; karya aslinya tidak diubah dengan cara lain.
+The repository license applies to original application source. Embedded videos, third-party marks and other external assets keep their owners' rights and applicable licenses.
 
-| File lokal | Sumber dan kredit | Lisensi |
+## Current YouTube Shorts
+
+Discover uses the official YouTube player. It does not download or rehost the creators' Shorts. The app retains source links, creator metadata and timestamped YouTube Data API observations.
+
+The **10 October 2026 selection** has 20 Shorts: 7 Gaming, 7 Sports and 6 Crypto. The complete ID/source/date/duration list is in [the curation record](docs/shorts-curation-2026-10-10.md); [initial observations](docs/shorts-observations-2026-10-10.json) record measured values rather than generated engagement.
+
+The previous 20-video selection remains tracked for existing Call settlement. It is not the active Discover selection. Its attribution record is preserved in [Git history](https://github.com/enzerra/Project-Monad/blob/3bc68b2/ASSETS.md).
+
+Public status, embed permission, duration and portrait orientation are checked before display. API eligibility does not confer ownership of a creator's work. Official playback controls and branding remain visible.
+
+## Legacy demo clips
+
+These two clips are attributed by their source pages as Creative Commons Attribution 3.0 Unported. The demo crops them into a vertical frame; source audio is absent. They are no longer part of the live Shorts selection.
+
+| Local asset | Source / creator | License |
 | --- | --- | --- |
-| `minecraft-beta-gameplay.webm` | [Minecraft Beta Gameplay — Xbox México](https://commons.wikimedia.org/wiki/File:Minecraft_Beta_Gameplay.webm) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
-| `dishonored-2-gameplay.webm` | [Dishonored 2 gameplay clip — Xbox México](https://commons.wikimedia.org/wiki/File:Dishonored_2_gameplay_clip.webm) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| `public/videos/minecraft-beta-gameplay.webm` | [Minecraft Beta Gameplay — Xbox México](https://commons.wikimedia.org/wiki/File:Minecraft_Beta_Gameplay.webm) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| `public/videos/dishonored-2-gameplay.webm` | [Dishonored 2 gameplay clip — Xbox México](https://commons.wikimedia.org/wiki/File:Dishonored_2_gameplay_clip.webm) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| `public/prediction-brands/dishonored-still-dark.jpg` | Still derived from the Dishonored clip above | CC BY 3.0 derivative |
 
-Kedua berkas sumber tidak memiliki audio. Angka prediksi dan komentar yang tampil di produk adalah skenario demo VIBE, bukan data tentang video sumber. Sejak 5 Oktober 2026, kedua klip lokal tidak dimasukkan ke feed Discover; tautan video sumber pada detail Prediksi tetap menuju halaman sumber berlisensi.
+Any legacy fixture counts/questions describe a local demonstration, not verified metrics about those clips.
 
-## YouTube Shorts di Discover
+## Topic and club marks
 
-Daftar pilihan berikut diperiksa melalui YouTube Data API pada 5 Oktober 2026: 20 klip publik, dapat di-embed, berdurasi 7–59 detik, dan berasio sekitar 9:16. Gaming dipilih berdasarkan isi game; Sports berisi cuplikan olahraga dari NBA, Man City, dan FIFA; Crypto berisi edukasi blockchain dan cryptocurrency. Aset video tetap diputar melalui player YouTube resmi, dengan judul, kreator, views, dan tautan sumber. Pemeriksaan durasi/rasio tidak menjadi pengganti kurasi isi; ID baru harus ditinjau sebelum ditambahkan.
+| Asset | Attribution |
+| --- | --- |
+| `public/prediction-brands/dishonored-2.png` | [Arkane Studios logo, Wikimedia Commons source](https://commons.wikimedia.org/wiki/File:Dishonored_2_logo.png). Source marks the text logo public domain; trademark ownership is retained. |
+| `public/prediction-brands/bitcoin.svg` | [Bitcoin.svg, Grayliptrot / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bitcoin.svg). Source marks it public domain. |
+| `public/images/clubs/*.png` | Barcelona, Getafe, Al Hilal and Al Ittihad team marks, sourced from ESPN. [Exact source URLs and team IDs](public/images/clubs/SOURCES.md). Club marks retain their respective owners' rights; they are used to identify fixtures, not to claim affiliation. |
 
-| Kategori | Kreator | Shorts |
-| --- | --- | --- |
-| Gaming | GarrettTheCarrot | [Inventory Parkour](https://www.youtube.com/shorts/lQ2Q92QOK28) |
-| Gaming | Mr Acid | [Minecraft RTX Cave Loop](https://www.youtube.com/shorts/Tqu4sAPVJ28) |
-| Gaming | Jake Fellman | [Minecraft RTX Short Fuse](https://www.youtube.com/shorts/XzKHvOVIviE) |
-| Gaming | Gaming CEDXVI | [Mobile Legends](https://www.youtube.com/shorts/3OQndqwcy4s) |
-| Gaming | Jake Fellman | [Minecraft RTX Timber Twist](https://www.youtube.com/shorts/0LK_pAFG1OA) |
-| Gaming | Yuzuke | [Alucard Ranked](https://www.youtube.com/shorts/X15bum3zQII) |
-| Gaming | Choou | [Mobile Legends Chou](https://www.youtube.com/shorts/fDYgu-WRWSI) |
-| Sports | NBA | [You Gotta Dunk It](https://www.youtube.com/shorts/rvIXz9uwquM) |
-| Sports | Man City | [Phil Foden Ball Control](https://www.youtube.com/shorts/imgdpOw4zCk) |
-| Sports | FIFA | [Ronaldo World Cup Goal](https://www.youtube.com/shorts/hCzwv9RPLkE) |
-| Sports | NBA | [Top Plays in 60 Seconds](https://www.youtube.com/shorts/t0O444z760w) |
-| Sports | NBA | [KD 22 Points](https://www.youtube.com/shorts/2PjKQgzoKcM) |
-| Sports | NBA | [Hustle Pays Off](https://www.youtube.com/shorts/k_MX7XMNgnE) |
-| Sports | NBA | [Bobby Portis Energy](https://www.youtube.com/shorts/hgbJPA86zD4) |
-| Crypto | CoinGecko | [Bitcoin Mining Explained](https://www.youtube.com/shorts/Fl58CntwZ7E) |
-| Crypto | CoinGecko | [Blockchain Oracle](https://www.youtube.com/shorts/mdwBl4YrR9g) |
-| Crypto | CoinGecko | [Ethereum vs Solana](https://www.youtube.com/shorts/WWzksrd21UQ) |
-| Crypto | Binance Academy | [Blocks and Blockchain](https://www.youtube.com/shorts/_XXbjxLjW-E) |
-| Crypto | Binance Academy | [Blockchain Limitations](https://www.youtube.com/shorts/Y1JDo0idA7I) |
-| Crypto | Trustless | [Ethereum Explained](https://www.youtube.com/shorts/R-1x0DPMgkE) |
+Legacy “Match Day” and “SR” badges are VIBE-created typography, not official team or game identities.
 
-Referensi pemeriksaan: [properti player dan durasi API](https://developers.google.com/youtube/v3/docs/videos), [format Shorts](https://support.google.com/youtube/answer/15424877?hl=en). Klip persegi Elgin dan klip horizontal Coinbase dari daftar sebelumnya diganti. Shorts ini belum ditautkan ke Call demo lama; saldo simulasi dan prediksi tetap tersedia di halaman Prediksi.
+## VIBE identity and generated artwork
 
-## Identitas topik di Predictions
+| Asset | Origin / treatment |
+| --- | --- |
+| `public/brand/vibe-symbol.png` and `vibe-wordmark.png` | Supplied by the project owner as VIBE identity assets |
+| `public/brand/vibe-token.png` | Owner-supplied “Futuristic VIBE Unity Coin.png”, 5 October 2026; delivered through Next Image |
+| `public/brand/vibe-ink-landscape.webp` | Original AI-generated watercolor/ink landscape made for VIBE, optimized as WebP for the ivory-paper theme |
+| `public/brand/charcoal-plaster.webp` | Earlier AI-generated charcoal plaster texture, converted from PNG to WebP |
+| `public/brand/hive-contours.svg` | Repository-authored decorative contour artwork |
 
-| File lokal | Sumber dan kredit | Keterangan |
-| --- | --- | --- |
-| `public/prediction-brands/dishonored-2.png` | [Dishonored 2 logo — Arkane Studios, via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Dishonored_2_logo.png) | Wikimedia Commons menandai logo teks ini sebagai public domain; nama dan merek tetap milik pemiliknya. |
-| `public/prediction-brands/bitcoin.svg` | [Bitcoin.svg — Grayliptrot, via Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bitcoin.svg) | Public domain di Wikimedia Commons; penggunaan sebagai identitas topik. |
-| `public/prediction-brands/dishonored-still-dark.jpg` | Cuplikan diam dari video Dishonored 2 di atas | Turunan dari video [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). |
+The supplied website reference images guided palette and composition. They are not bundled as the site's background. Owner-supplied brand assets are recorded as supplied; VIBE does not independently certify their provenance.
 
-Identitas “Match Day” dan “SR” adalah tipografi buatan VIBE untuk Call demo generik. Tidak mewakili klub, game, atau organisasi tertentu.
+Historical charcoal prompt: “Top-down rough charcoal plaster wall, fine mineral grains and irregular cement pores, uniform lighting, near-seamless square texture, no objects, text, or logos.”
 
-Logo VIBE (wordmark dan simbol) di `public/brand/vibe-wordmark.png` dan `public/brand/vibe-symbol.png` berasal dari aset yang diberikan pemilik proyek.
+## Fonts and icons
 
-Ikon token `public/brand/vibe-token.png` berasal dari **Futuristic VIBE Unity Coin.png**, diberikan pemilik proyek pada 5 Oktober 2026. Aset asli dipakai untuk indikator dan rincian saldo VIBE; ukuran pengiriman dioptimalkan oleh Next Image.
+- **DM Sans** and **Instrument Serif** are loaded from Google Fonts through CSS imports; earlier shared styles also request **Geist** and **Manrope**. Font projects retain their own notices. [DM Sans license](https://github.com/google/fonts/blob/main/ofl/dmsans/OFL.txt) and [Instrument Serif license](https://github.com/google/fonts/blob/main/ofl/instrumentserif/OFL.txt) use SIL Open Font License 1.1. Preserve the respective notices if redistributing font files separately.
+- **Lucide** icons use the ISC license. [Dependency notices](THIRD_PARTY_NOTICES.md).
 
-Tekstur `public/brand/charcoal-plaster.webp` dibuat dengan imagegen untuk latar Prediksi dan Komunitas. Prompt: "Top-down rough charcoal plaster wall, fine mineral grains and irregular cement pores, uniform lighting, near-seamless square texture, no objects, text, or logos." Aset PNG hasil generasi dikonversi ke WebP untuk penggunaan web.
+User-uploaded captions and videos belong to their uploaders and are not automatically covered by the repository's MIT license.

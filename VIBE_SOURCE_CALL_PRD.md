@@ -1,52 +1,47 @@
-# VIBE — Call Shorts dan saldo server
+# VIBE source Calls and account credits
 
-Tanggal: 5 Oktober 2026. Pengguna menyetujui saldo gratis, hasil dari views YouTube nyata, dan pengembalian tetap 2× untuk pilihan benar. Ini menggantikan aturan saldo browser/tanpa hadiah kredit di addendum 4 Oktober. VIBE tidak mempunyai nilai uang, pembelian, transfer, token onchain, atau cash-out.
+**Current rules · updated 11 October 2026**
 
-## Saldo dan identitas
+This specification replaces the browser-only credit experiment. It describes the server ledger and YouTube views Calls. [Football](docs/football-calls.md) shares the ledger with different outcome rules; [Monad proof Calls](docs/MONAD.md) are separate.
 
-**Addendum 6 Oktober 2026:** branch autentikasi tim digabung. Saat Privy/Supabase dikonfigurasi, identitas memakai DID dari JWT Privy ES256 yang diverifikasi server (issuer, audience, expiry). Saldo awal diberikan sekali per DID, bukan per perangkat. Profil disinkronkan oleh root provider; metadata tampilan dari client tidak dipakai untuk otorisasi. Pengunjung tanpa login bisa melihat Call tetapi tidak mendapat saldo atau memasang pilihan. Saldo lama langsung disembunyikan saat logout/ganti akun.
+## Identity and balance
 
-Supabase menyimpan engine, kalibrasi, Call, bukti, dan ledger pada `hive_vibe_state`; commit RPC memakai row lock dan revision untuk mencegah kehilangan penulisan bersamaan. RLS dan privilege membatasi akses ke service role server. Tidak ada fallback ke SQLite jika Supabase gagal. Mode sesi/SQLite di bawah berlaku hanya jika Privy dan Supabase sama-sama belum diatur. Sesi lokal lama tetap tersimpan terpisah; tidak diimpor ke akun Google otomatis.
+- With Privy/Supabase configured, the verified Privy DID owns the account. Visitors can inspect Calls but cannot enter or receive credits.
+- Grant **1,000 VIBE once per account**. Accept integer amounts **10–500**, default **50**, bounded by the available balance.
+- Correct: return **2× the amount, including the original amount**. Incorrect: no return. Void: refund the original amount.
+- Example: 1,000 → enter 50 → 950 → correct → 1,050. Incorrect stays 950; void restores 1,000.
+- One choice per account/Call. Debit, return and refund happen once, including retries and concurrent requests.
+- VIBE has no purchase, transfer, monetary value, cash-out or ERC-20 representation.
+- Older browser-local balances are not imported as trusted credits.
 
-- Server memberi 1.000 VIBE sekali per sesi anonim. Nominal bulat 10–500 VIBE; default 50.
-- Cookie HttpOnly, SameSite=Lax, Secure dalam production mengenali sesi. Belum ada login/sinkronisasi lintas perangkat. Menghapus cookie memutus akses ke saldo sesi tersebut.
-- SQLite menyimpan saldo, pilihan, Call, dan bukti. Debit/hasil/hadiah berada dalam transaksi atomik. Duplikat ditolak. Client tidak dapat menentukan saldo, target, hasil, atau multiplier.
-- Benar: kredit kembali = 2 × nominal, termasuk nominal awal. Contoh 1.000 → pasang 50 → 950 → benar → 1.050. Salah: tetap 950. Void: kembali 1.000.
-- Settlement, reward, atau refund hanya sekali setelah polling ulang, restart, maupun request bersamaan.
-- Saldo/riwayat browser lama tidak diimpor karena data tersebut tidak tepercaya. Arsip lokal tidak dihapus; Call fixture tidak menerima kredit server.
+Supabase commits state and the ledger through a row lock and revision check. A database outage never silently switches to a fresh local balance. When Privy and Supabase are both unconfigured, local development uses cookie sessions and SQLite; that is not the deployed account model.
 
-## Penerbitan Call
+## Publishing a views Call
 
-- Hanya 20 Shorts terkurasi. Dua observasi API nyata harus berjarak minimal 30 menit, dengan pertumbuhan views positif.
-- Maksimal satu Call aktif per kategori Gaming, Sports, dan Crypto. Pilih kandidat dengan proyeksi kenaikan terbesar; tidak semua Shorts mempunyai Call.
-- Horizon awal 6 jam. Proyeksi = ceil((views kedua − views pertama) × 6 jam / jarak observasi). Target = baseline + max(100, proyeksi). Proyeksi bukan peluang atau harga pasar.
-- Baseline, target, dua observasi kalibrasi, waktu buka/tutup/evaluasi, multiplier 2, dan ruleVersion dibekukan saat Call diterbitkan.
-- Pilihan tutup setelah 90 menit atau dini saat views mencapai baseline + ceil((target − baseline) / 2).
-- Server memeriksa status, tenggat, saldo, dan views segar (maksimum 90 detik) saat konfirmasi. Pilihan ditolak tanpa debit jika sumber usang.
+1. Use the current 20 curated Shorts. Collect two valid observations at least 30 minutes apart with positive growth.
+2. Select at most one active candidate per category in the current selection, based on projected growth.
+3. Initial horizon: **6 hours**. Projected increase = ceil(observed increase × 6 hours / observation interval). Target = baseline + max(100, projected increase).
+4. Freeze baseline, absolute target, calibration observations, opening/cutoff/evaluation times, multiplier and rule version.
+5. Close entry after **90 minutes**, or earlier when views reach baseline + ceil((target − baseline) / 2).
 
-## Data dan evaluasi
+The projection is not a probability, market price or promised growth. Old videos remain observable for unsettled Calls after a curation refresh; they no longer block fresh selection.
 
-- Worker Node memeriksa YouTube setiap 30 detik. UI saldo/Call memuat snapshot server setiap 15 detik; pill views video setiap 30 detik. Tidak ada interpolasi atau pertambahan views buatan.
-- Angka dapat tetap sama sampai YouTube melaporkan pembaruan. Ini polling data nyata, bukan stream yang dijamin setiap detik.
-- Hasil memakai observasi valid pertama pada/setelah evaluasi, maksimal 30 menit terlambat. Views ≥ target = Ya; views < target = Tidak. Snapshot sebelum tenggat tidak dapat menyelesaikan Call.
-- API gagal: pertahankan angka terakhir dan waktu observasinya. Tunggu dalam jendela evaluasi. Setelah habis tanpa bukti valid, void dan refund.
-- Views saat evaluasi di bawah puncak yang pernah diamati juga void karena koreksi metrik.
-- Bukti menyimpan video ID, views, waktu observasi, sumber, target, ruleVersion, dan SHA-256. Ini pemeriksaan oleh server tepercaya, bukan oracle trustless atau proof Monad. Polling berikutnya tidak mengubah hasil final.
+## Entry and evaluation
 
-## Operasional
+The server verifies identity, status, cutoff, balance, amount and an observation no older than 90 seconds. Rejected entry causes no debit.
 
-- Memerlukan Node.js 22.15+ dengan node:sqlite (experimental pada Node versi ini).
-- Development memakai .vibe-data/vibe.sqlite, diabaikan Git. Production wajib VIBE_STORE_PATH pada volume persisten dan satu host Node yang terus hidup; bukan filesystem sementara/serverless.
-- Collector pada src/instrumentation.ts berjalan saat tab ditutup selama server hidup. Restart mempertahankan saldo, kalibrasi, Call, dan settlement.
-- Jika server mati hingga lewat jendela hasil tanpa snapshot, Call void; tidak merekonstruksi views historis dari angka sekarang.
-- Cadangkan SQLite menggunakan mekanisme backup SQLite yang konsisten dengan WAL. Backend saldo menolak production tanpa path persisten.
-- Privy/Supabase terhubung ke saldo gratis setelah konfigurasi dan migrasi diterapkan. Jalur commit–reveal HiveCallV2/relayer tetap terpisah. Saldo gratis ini tidak menandatangani transaksi blockchain.
-- Community/komentar tetap tersimpan lokal. Tidak ada klaim chat tersinkron antaruser.
+The first valid observation at or after evaluation, within a **30-minute grace window**, decides the outcome: views at least target means Yes; otherwise No. A snapshot before evaluation cannot settle the Call.
 
-## Verifikasi
+If evidence stays unavailable through the window, void and refund. A metric correction below the previously observed peak also causes void. A terminal result is not rewritten by later source updates.
 
-Tes mencakup debit/duplikat/overspend, tenggat, early close, kedua sisi hasil, target tepat tercapai, hadiah sekali, source outage, koreksi views, rollback SQLite, restart penyimpanan, origin request, dan isolasi sesi. Tes hasil 6 jam memakai waktu terkontrol; hasil live tidak diklaim sebelum evaluasi nyata.
+The proof records video ID, views, observation time, source, target, rule version and a SHA-256 hash. This is a trusted server observation, not an onchain proof or trustless YouTube oracle.
 
-Tes integrasi tambahan memverifikasi JWT bertanda tangan (termasuk expired/audience salah), isolasi DID, login ulang tanpa welcome tambahan, sync profil/body tak tepercaya, konflik commit Supabase, dan outage tanpa reset saldo. Transport Supabase dalam tes terkendali; pengujian OAuth Google dan migrasi pada proyek Supabase live memerlukan konfigurasi pemilik proyek.
+## Refresh and operation
 
-Verifikasi SQL lokal pada PostgreSQL WASM (PGlite) berhasil menerapkan migrasi profil/state, menerima revision yang benar, menolak revision lama/tidak valid, serta menolak SELECT/EXECUTE untuk role anon dan authenticated. Ini menguji SQL dan privilege pada engine PostgreSQL lokal, bukan koneksi proyek Supabase live.
+The Node collector checks sources every 30 seconds. Account/Call views refresh every 15 seconds; the video count refreshes every 30 seconds. Source values may stay unchanged until YouTube publishes new data. No interpolation or artificial increments are used.
+
+Keep one always-on Node instance. Supabase persists state but does not run the worker. Local SQLite production needs a persistent volume and consistent backups. If an outage spans the evaluation window without valid evidence, refund instead of reconstructing past views from present values.
+
+## Verification
+
+Tests cover invalid amounts, duplicate/overspending entries, deadlines, early close, exact-target results, both outcomes, one-time settlement, source outage, corrections, rollback, account isolation and Supabase revision conflicts. Live evidence is recorded separately in [release verification](docs/RELEASE.md).

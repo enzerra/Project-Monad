@@ -40,6 +40,6 @@ Guest balances stay hidden. Entry actions require sign-in. Never describe period
 
 ## Release verification
 
-Checked Discover, Calls, Call detail, Profile, Studio and Community at 375px, 430px and 1440px. No horizontal overflow or browser runtime errors. The production build, lint and 68 unit tests pass.
+The original theme release checked Discover, Calls, Call detail, Profile, Studio and Community at 375px, 430px and 1440px, with no horizontal overflow or browser runtime errors. These are dated checks, not a claim about every future change. See [current release evidence](../../docs/RELEASE.md) for the expanded application/contract suite and the latest verification.
 
 Browser interaction checks cover automatic intro entry, logo response, stable sidebar positioning, swipe in both directions, URL/Back navigation, a single active player, guest balance visibility, Call sheets, browser-local comments, and file/caption/category preview in Studio. Browser QA uses isolated fixtures for Call data and does not submit uploads or wallet transactions to production.

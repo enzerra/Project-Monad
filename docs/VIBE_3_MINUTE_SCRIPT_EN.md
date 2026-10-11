@@ -1,5 +1,7 @@
 # VIBE — Three-minute demo script (English)
 
+> Historical draft, not the approved final recording plan. The owner deferred script decisions until the GitHub/documentation handoff is complete. The first Call has now resolved; verified reveal/result receipts are in [MONAD.md](MONAD.md). Future-tense recording notes below describe the earlier preparation state.
+
 Screen recording with voice-over. Aim for 130–140 words per minute and leave time for taps and the wallet prompt. Record the result segment after the real evaluation, then edit the recording to three minutes or less.
 
 | Time | Show | Voice-over |
